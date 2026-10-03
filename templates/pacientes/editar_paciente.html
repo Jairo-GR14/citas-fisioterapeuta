@@ -1,372 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Editar Paciente</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar paciente</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<body class="bg-slate-50 text-slate-800">
 
-<body class="bg-stone-100 text-stone-800">
+<main class="mx-auto max-w-5xl px-6 py-8">
 
+    <div class="mb-6">
+        <p class="text-sm font-semibold text-emerald-600">
+            Actualización de información
+        </p>
 
-    <!-- Barra de navegacion -->
-
-    <header class="bg-white border-b border-stone-200">
-
-        <nav class="mx-auto flex max-w-5xl items-center justify-between p-4">
-
-            <span class="text-lg font-semibold">
-                Clinica Fisio
-            </span>
-
-
-            <ul class="hidden gap-6 text-sm sm:flex">
-
-                <li>
-                    <a href="#" class="hover:text-green-600">
-                        Inicio
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'lista_pacientes' %}"
-                       class="text-green-600">
-                        Pacientes
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" class="hover:text-green-600">
-                        Fisioterapeutas
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" class="hover:text-green-600">
-                        Administracion
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <a href="{% url 'detalle_paciente' paciente.id %}"
-               class="rounded-lg bg-stone-800 px-4 py-2 text-sm text-white hover:bg-stone-700">
-
-                Regresar
-
-            </a>
-
-        </nav>
-
-    </header>
-
-
-    <main class="mx-auto max-w-5xl space-y-8 p-4 py-8">
-
-
-        <h1 class="text-3xl font-semibold">
-            Editar Paciente
+        <h1 class="text-3xl font-bold text-blue-950">
+            Editar paciente
         </h1>
 
-
-        <!-- Datos principales -->
-
-        <section class="grid gap-4 sm:grid-cols-3">
-
-
-            <article class="rounded-xl border border-stone-200 bg-white p-5">
-
-                <p class="text-sm text-stone-500">
-                    Paciente
-                </p>
-
-                <p class="mt-1 text-xl font-semibold text-cyan-600">
-
-                    {{ paciente.nombre }}
-                    {{ paciente.apellidos }}
-
-                </p>
-
-            </article>
+        <p class="mt-2 text-sm text-slate-500">
+            Modifica la información registrada del paciente.
+        </p>
+    </div>
 
 
-            <article class="rounded-xl border border-stone-200 bg-white p-5">
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-5">
 
-                <p class="text-sm text-stone-500">
-                    Telefono
-                </p>
+        <h2 class="font-semibold text-blue-950">
+            {{ paciente.nombre }} {{ paciente.apellidos }}
+        </h2>
 
-                <p class="mt-1 font-semibold">
+        <p class="text-sm text-slate-500">
+            Paciente #{{ paciente.id }}
+        </p>
 
-                    {{ paciente.telefono|default:"No registrado" }}
-
-                </p>
-
-            </article>
+    </div>
 
 
-            <article class="rounded-xl border border-stone-200 bg-white p-5">
+    <form method="POST"
+          class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
-                <p class="text-sm text-stone-500">
-                    Estado
-                </p>
+        {% csrf_token %}
 
-                <p class="mt-1 font-semibold text-green-600">
-                    Activo
-                </p>
+        <section class="border-b border-slate-100 p-6">
 
-            </article>
+            <h3 class="mb-5 text-lg font-semibold text-blue-900">
+                Información personal
+            </h3>
 
-        </section>
-
-
-        <!-- Formulario -->
-
-        <section class="rounded-xl border border-stone-300 bg-white p-6">
-
-
-            <h2 class="text-xl font-semibold">
-                Actualizar informacion
-            </h2>
-
-
-            <p class="mt-1 text-sm text-stone-500">
-                Modifica los datos necesarios del paciente.
-            </p>
-
-
-            <form method="POST"
-                  class="mt-6 grid gap-4 sm:grid-cols-2">
-
-                {% csrf_token %}
-
-
-                <!-- Nombre -->
+            <div class="grid gap-5 md:grid-cols-2">
 
                 <div>
-
-                    <label for="nombre"
-                           class="block text-sm text-stone-600">
-
+                    <label class="mb-2 block text-sm font-medium">
                         Nombre
-
                     </label>
 
-                    <input
-                        id="nombre"
-                        name="nombre"
-                        type="text"
-                        value="{{ paciente.nombre }}"
-                        required
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
-
+                    <input type="text"
+                           name="nombre"
+                           value="{{ paciente.nombre }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-blue-500">
                 </div>
 
-
-                <!-- Apellidos -->
-
                 <div>
-
-                    <label for="apellidos"
-                           class="block text-sm text-stone-600">
-
+                    <label class="mb-2 block text-sm font-medium">
                         Apellidos
-
                     </label>
 
-                    <input
-                        id="apellidos"
-                        name="apellidos"
-                        type="text"
-                        value="{{ paciente.apellidos }}"
-                        required
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
-
+                    <input type="text"
+                           name="apellidos"
+                           value="{{ paciente.apellidos }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-blue-500">
                 </div>
 
-
-                <!-- Telefono -->
-
                 <div>
-
-                    <label for="telefono"
-                           class="block text-sm text-stone-600">
-
-                        Telefono
-
-                    </label>
-
-                    <input
-                        id="telefono"
-                        name="telefono"
-                        type="tel"
-                        value="{{ paciente.telefono }}"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
-
-                </div>
-
-
-                <!-- Correo -->
-
-                <div>
-
-                    <label for="correo"
-                           class="block text-sm text-stone-600">
-
-                        Correo
-
-                    </label>
-
-                    <input
-                        id="correo"
-                        name="correo"
-                        type="email"
-                        value="{{ paciente.correo }}"
-                        required
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
-
-                </div>
-
-
-                <!-- Fecha de nacimiento -->
-
-                <div>
-
-                    <label for="fecha_nacimiento"
-                           class="block text-sm text-stone-600">
-
+                    <label class="mb-2 block text-sm font-medium">
                         Fecha de nacimiento
-
                     </label>
 
-                    <input
-                        id="fecha_nacimiento"
-                        name="fecha_nacimiento"
-                        type="date"
-                        value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
-
+                    <input type="date"
+                           name="fecha_nacimiento"
+                           value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3">
                 </div>
-
-
-                <!-- Direccion -->
 
                 <div>
-
-                    <label for="direccion"
-                           class="block text-sm text-stone-600">
-
-                        Direccion
-
+                    <label class="mb-2 block text-sm font-medium">
+                        Sexo
                     </label>
 
-                    <input
-                        id="direccion"
-                        name="direccion"
-                        type="text"
-                        value="{{ paciente.direccion }}"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">
+                    <select name="sexo"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
 
+                        <option value="{{ paciente.sexo }}">
+                            {{ paciente.sexo }}
+                        </option>
+
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+
+                    </select>
                 </div>
 
-
-                <!-- Diagnostico -->
-
-                <div class="sm:col-span-2">
-
-                    <label for="diagnostico"
-                           class="block text-sm text-stone-600">
-
-                        Diagnostico
-
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Teléfono
                     </label>
 
-                    <textarea
-                        id="diagnostico"
-                        name="diagnostico"
-                        rows="3"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">{{ paciente.diagnostico }}</textarea>
-
+                    <input type="tel"
+                           name="telefono"
+                           value="{{ paciente.telefono }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3">
                 </div>
 
-
-                <!-- Antecedentes -->
-
-                <div class="sm:col-span-2">
-
-                    <label for="antecedentes"
-                           class="block text-sm text-stone-600">
-
-                        Antecedentes
-
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Correo
                     </label>
 
-                    <textarea
-                        id="antecedentes"
-                        name="antecedentes"
-                        rows="3"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">{{ paciente.antecedentes }}</textarea>
-
+                    <input type="email"
+                           name="email"
+                           value="{{ paciente.email }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3">
                 </div>
 
-
-                <!-- Observaciones -->
-
-                <div class="sm:col-span-2">
-
-                    <label for="observaciones"
-                           class="block text-sm text-stone-600">
-
-                        Observaciones
-
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-medium">
+                        Dirección
                     </label>
 
-                    <textarea
-                        id="observaciones"
-                        name="observaciones"
-                        rows="3"
-                        class="mt-1 w-full rounded-lg border border-stone-300 p-2 hover:border-green-500 focus:border-green-500 focus:outline-none">{{ paciente.observaciones }}</textarea>
-
+                    <input type="text"
+                           name="direccion"
+                           value="{{ paciente.direccion }}"
+                           class="w-full rounded-xl border border-slate-300 px-4 py-3">
                 </div>
 
-
-                <!-- Botones -->
-
-                <div class="flex gap-3 sm:col-span-2 sm:justify-end">
-
-
-                    <a href="{% url 'detalle_paciente' paciente.id %}"
-                       class="rounded-lg border border-stone-300 px-5 py-2 hover:bg-stone-100">
-
-                        Cancelar
-
-                    </a>
-
-
-                    <button
-                        type="submit"
-                        class="rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700">
-
-                        Guardar Cambios
-
-                    </button>
-
-                </div>
-
-            </form>
+            </div>
 
         </section>
 
-    </main>
+
+        <section class="border-b border-slate-100 p-6">
+
+            <h3 class="mb-5 text-lg font-semibold text-emerald-700">
+                Contacto de emergencia
+            </h3>
+
+            <div class="grid gap-5 md:grid-cols-2">
+
+                <input type="text"
+                       name="contacto_emergencia"
+                       value="{{ paciente.contacto_emergencia }}"
+                       class="w-full rounded-xl border border-slate-300 px-4 py-3">
+
+                <input type="tel"
+                       name="telefono_emergencia"
+                       value="{{ paciente.telefono_emergencia }}"
+                       class="w-full rounded-xl border border-slate-300 px-4 py-3">
+
+            </div>
+
+        </section>
+
+
+        <section class="p-6">
+
+            <label class="mb-2 block text-sm font-medium">
+                Notas
+            </label>
+
+            <textarea name="notas"
+                      rows="4"
+                      class="w-full rounded-xl border border-slate-300 px-4 py-3">{{ paciente.notas }}</textarea>
+
+        </section>
+
+
+        <div class="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 p-6">
+
+            <a href="#"
+               class="rounded-xl border border-slate-300 bg-white px-6 py-3">
+                Cancelar
+            </a>
+
+            <button type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 font-semibold text-white">
+                Guardar cambios
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
 
 </body>
-
 </html>

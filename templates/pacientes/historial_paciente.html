@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Historial del paciente</title>
+    <title>Historial</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -18,19 +18,21 @@
 <body class="bg-stone-100 text-stone-800">
 
 
-<header class="border-b border-stone-200 bg-white">
+<header class="bg-white border-b border-stone-200">
 
-    <nav class="mx-auto flex max-w-6xl items-center justify-between p-4">
+    <nav class="mx-auto flex max-w-5xl items-center justify-between p-4">
 
         <span class="text-lg font-semibold">
-            Clínica Fisio
+
+            Clinica Fisio
+
         </span>
 
 
         <a href="{% url 'detalle_paciente' paciente.id %}"
-           class="text-sm hover:text-green-600">
+           class="rounded-lg bg-stone-800 px-4 py-2 text-sm text-white hover:bg-stone-700">
 
-            Regresar al expediente
+            Regresar
 
         </a>
 
@@ -39,34 +41,84 @@
 </header>
 
 
-<main class="mx-auto max-w-6xl space-y-6 p-4 py-8">
+<main class="mx-auto max-w-5xl space-y-8 p-4 py-8">
 
 
-    <div>
+    <h1 class="text-3xl font-semibold">
 
-        <h1 class="text-3xl font-semibold">
+        Historial de {{ paciente.nombre }}
 
-            Historial de {{ paciente.nombre }}
-
-        </h1>
+    </h1>
 
 
-        <p class="mt-2 text-stone-500">
+    <!-- Indicadores -->
 
-            Consulta las citas anteriores y el seguimiento del paciente.
-
-        </p>
-
-    </div>
+    <section class="grid gap-4 sm:grid-cols-3">
 
 
-    <section class="overflow-x-auto rounded-xl border border-stone-200 bg-white">
+        <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+            <p class="text-sm text-stone-500">
+
+                Total de citas
+
+            </p>
+
+            <p class="mt-1 text-3xl font-semibold text-cyan-600">
+
+                {{ citas|length }}
+
+            </p>
+
+        </article>
+
+
+        <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+            <p class="text-sm text-stone-500">
+
+                Paciente
+
+            </p>
+
+            <p class="mt-1 text-xl font-semibold">
+
+                {{ paciente.nombre }}
+
+            </p>
+
+        </article>
+
+
+        <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+            <p class="text-sm text-stone-500">
+
+                Estado
+
+            </p>
+
+            <p class="mt-1 text-xl font-semibold text-green-600">
+
+                Activo
+
+            </p>
+
+        </article>
+
+    </section>
+
+
+    <!-- Tabla -->
+
+    <section class="overflow-x-auto rounded-xl border border-stone-300 bg-white">
 
 
         <table class="w-full text-left text-sm">
 
 
             <thead class="border-b border-stone-200 text-stone-500">
+
 
                 <tr>
 
@@ -87,6 +139,7 @@
                     </th>
 
                 </tr>
+
 
             </thead>
 
@@ -124,33 +177,11 @@
                     <td class="p-4">
 
 
-                        {% if cita.estado == "Finalizada" %}
-
-                        <span class="rounded-full bg-green-100 px-3 py-1 text-green-700">
-
-                            Finalizada
-
-                        </span>
-
-
-                        {% elif cita.estado == "Cancelada" %}
-
-                        <span class="rounded-full bg-red-100 px-3 py-1 text-red-700">
-
-                            Cancelada
-
-                        </span>
-
-
-                        {% else %}
-
-                        <span class="rounded-full bg-cyan-100 px-3 py-1 text-cyan-700">
+                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-green-700">
 
                             {{ cita.estado }}
 
                         </span>
-
-                        {% endif %}
 
 
                     </td>
@@ -165,9 +196,9 @@
                 <tr>
 
                     <td colspan="4"
-                        class="p-8 text-center text-stone-500">
+                        class="p-6 text-center text-stone-500">
 
-                        Este paciente todavía no tiene citas registradas.
+                        No existen citas registradas.
 
                     </td>
 

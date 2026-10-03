@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar fisioterapeuta</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- HEADER -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Gestión de fisioterapeutas
+                </p>
+
+            </div>
+
+
+            <a
+                href="#"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+            >
+                Volver al detalle
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-5xl px-6 py-8">
+
+        <!-- ENCABEZADO -->
+        <div class="mb-6">
+
+            <p class="mb-1 text-sm font-semibold text-emerald-600">
+                Actualización de información
+            </p>
+
+            <h2 class="text-3xl font-bold text-blue-950">
+                Editar fisioterapeuta
+            </h2>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Modifica la información personal y profesional del fisioterapeuta.
+            </p>
+
+        </div>
+
+
+        <!-- INFORMACIÓN DEL FISIOTERAPEUTA -->
+        <div class="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-5">
+
+            <div class="flex items-center gap-4">
+
+                <!-- AVATAR -->
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-emerald-600 text-xl font-bold text-white">
+                    {{ fisioterapeuta.nombre|slice:":1" }}
+                </div>
+
+
+                <div>
+
+                    <p class="font-semibold text-blue-950">
+                        {{ fisioterapeuta.nombre }}
+                        {{ fisioterapeuta.apellidos }}
+                    </p>
+
+                    <p class="text-sm text-slate-500">
+                        {{ fisioterapeuta.especialidad }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORMULARIO -->
+        <form
+            method="POST"
+            action="#"
+            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- INFORMACIÓN PERSONAL -->
+            <section class="border-b border-slate-100 p-6">
+
+                <div class="mb-5">
+
+                    <h3 class="text-lg font-semibold text-blue-900">
+                        Información personal
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Modifica los datos generales del fisioterapeuta.
+                    </p>
+
+                </div>
+
+
+                <div class="grid gap-5 md:grid-cols-2">
+
+                    <!-- NOMBRE -->
+                    <div>
+
+                        <label
+                            for="nombre"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            value="{{ fisioterapeuta.nombre }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- APELLIDOS -->
+                    <div>
+
+                        <label
+                            for="apellidos"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Apellidos
+                        </label>
+
+                        <input
+                            type="text"
+                            id="apellidos"
+                            name="apellidos"
+                            value="{{ fisioterapeuta.apellidos }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- FECHA NACIMIENTO -->
+                    <div>
+
+                        <label
+                            for="fecha_nacimiento"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Fecha de nacimiento
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fecha_nacimiento"
+                            name="fecha_nacimiento"
+                            value="{{ fisioterapeuta.fecha_nacimiento|date:'Y-m-d' }}"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- TELÉFONO -->
+                    <div>
+
+                        <label
+                            for="telefono"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="telefono"
+                            name="telefono"
+                            value="{{ fisioterapeuta.telefono }}"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- CORREO -->
+                    <div class="md:col-span-2">
+
+                        <label
+                            for="email"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ fisioterapeuta.email }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- INFORMACIÓN PROFESIONAL -->
+            <section class="border-b border-slate-100 p-6">
+
+                <div class="mb-5">
+
+                    <h3 class="text-lg font-semibold text-emerald-700">
+                        Información profesional
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Actualiza los datos relacionados con su perfil profesional.
+                    </p>
+
+                </div>
+
+
+                <div class="grid gap-5 md:grid-cols-2">
+
+                    <!-- CÉDULA -->
+                    <div>
+
+                        <label
+                            for="cedula"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Cédula profesional
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cedula"
+                            name="cedula"
+                            value="{{ fisioterapeuta.cedula }}"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        >
+
+                    </div>
+
+
+                    <!-- ESPECIALIDAD -->
+                    <div>
+
+                        <label
+                            for="especialidad"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Especialidad
+                        </label>
+
+                        <select
+                            id="especialidad"
+                            name="especialidad"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        >
+
+                            <option value="{{ fisioterapeuta.especialidad }}">
+                                {{ fisioterapeuta.especialidad }}
+                            </option>
+
+                            <option value="deportiva">
+                                Fisioterapia deportiva
+                            </option>
+
+                            <option value="neurologica">
+                                Fisioterapia neurológica
+                            </option>
+
+                            <option value="traumatologica">
+                                Fisioterapia traumatológica
+                            </option>
+
+                            <option value="geriatrica">
+                                Fisioterapia geriátrica
+                            </option>
+
+                            <option value="pediatrica">
+                                Fisioterapia pediátrica
+                            </option>
+
+                            <option value="respiratoria">
+                                Fisioterapia respiratoria
+                            </option>
+
+                            <option value="otra">
+                                Otra
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- FECHA DE INGRESO -->
+                    <div>
+
+                        <label
+                            for="fecha_ingreso"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Fecha de ingreso
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fecha_ingreso"
+                            name="fecha_ingreso"
+                            value="{{ fisioterapeuta.fecha_ingreso|date:'Y-m-d' }}"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        >
+
+                    </div>
+
+
+                    <!-- ESTADO -->
+                    <div>
+
+                        <label
+                            for="estado"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Estado
+                        </label>
+
+                        <select
+                            id="estado"
+                            name="estado"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        >
+
+                            {% if fisioterapeuta.activo %}
+
+                                <option value="activo" selected>
+                                    Activo
+                                </option>
+
+                                <option value="inactivo">
+                                    Inactivo
+                                </option>
+
+                            {% else %}
+
+                                <option value="activo">
+                                    Activo
+                                </option>
+
+                                <option value="inactivo" selected>
+                                    Inactivo
+                                </option>
+
+                            {% endif %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- NOTAS -->
+            <section class="p-6">
+
+                <label
+                    for="notas"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
+                    Notas adicionales
+                </label>
+
+                <textarea
+                    id="notas"
+                    name="notas"
+                    rows="4"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >{{ fisioterapeuta.notas }}</textarea>
+
+            </section>
+
+
+            <!-- BOTONES -->
+            <div class="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 px-6 py-5 sm:flex-row sm:justify-between">
+
+                <a
+                    href="#"
+                    class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                >
+                    Cancelar
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

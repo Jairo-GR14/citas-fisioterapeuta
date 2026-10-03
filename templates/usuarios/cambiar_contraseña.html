@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cambiar contraseña</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Seguridad de la cuenta
+                </p>
+
+            </div>
+
+            <a
+                href="#"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver a iniciar sesión
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-5xl px-6 py-12">
+
+        <div class="mx-auto max-w-md">
+
+            <!-- Encabezado -->
+            <div class="mb-6 text-center">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Actualización de acceso
+                </p>
+
+                <h1 class="mt-1 text-3xl font-bold text-blue-950">
+                    Cambiar contraseña
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Ingresa una nueva contraseña para actualizar el acceso a tu cuenta.
+                </p>
+
+            </div>
+
+
+            <!-- Formulario -->
+            <form
+                method="POST"
+                class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+            >
+
+                {% csrf_token %}
+
+                <section class="space-y-5 p-6">
+
+                    <!-- Nueva contraseña -->
+                    <div>
+
+                        <label
+                            for="password"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Nueva contraseña
+                        </label>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                            placeholder="Ingresa tu nueva contraseña"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- Confirmar contraseña -->
+                    <div>
+
+                        <label
+                            for="password2"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Confirmar nueva contraseña
+                        </label>
+
+                        <input
+                            id="password2"
+                            name="password2"
+                            type="password"
+                            required
+                            placeholder="Confirma tu nueva contraseña"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- Aviso -->
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                        <p class="text-sm text-blue-700">
+                            Utiliza una contraseña segura y evita compartirla con otras personas.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Botones -->
+                <div class="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 p-6">
+
+                    <a
+                        href="#"
+                        class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Cambiar contraseña
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

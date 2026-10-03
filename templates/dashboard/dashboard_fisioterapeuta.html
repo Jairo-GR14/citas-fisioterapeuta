@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel del Fisioterapeuta</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Panel del Fisioterapeuta
+                </p>
+
+            </div>
+
+
+            <div class="flex items-center gap-3">
+
+                <a
+                    href="#"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                >
+                    Mi perfil
+                </a>
+
+                <a
+                    href="#"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Ver agenda
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-7xl px-6 py-8">
+
+        <!-- Bienvenida -->
+        <div class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Jornada de trabajo
+            </p>
+
+            <h1 class="text-3xl font-bold text-blue-950">
+                Hola, {{ user.first_name }}
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Consulta tus citas del día, pacientes y seguimientos pendientes.
+            </p>
+
+        </div>
+
+
+        <!-- Tarjetas de resumen -->
+        <section class="grid gap-5 md:grid-cols-3">
+
+            <!-- Citas de hoy -->
+            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+                <p class="text-sm font-medium text-slate-500">
+                    Citas de hoy
+                </p>
+
+                <p class="mt-2 text-3xl font-bold text-blue-950">
+                    {{ citas_hoy }}
+                </p>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Sesiones programadas
+                </p>
+
+            </article>
+
+
+            <!-- Pacientes atendidos -->
+            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+                <p class="text-sm font-medium text-slate-500">
+                    Pacientes atendidos
+                </p>
+
+                <p class="mt-2 text-3xl font-bold text-emerald-700">
+                    {{ pacientes_atendidos }}
+                </p>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Consultas finalizadas
+                </p>
+
+            </article>
+
+
+            <!-- Citas pendientes -->
+            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+                <p class="text-sm font-medium text-slate-500">
+                    Citas pendientes
+                </p>
+
+                <p class="mt-2 text-3xl font-bold text-blue-950">
+                    {{ citas_pendientes }}
+                </p>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Sesiones por atender
+                </p>
+
+            </article>
+
+        </section>
+
+
+        <!-- Próxima cita -->
+        <section class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <div class="border-b border-slate-100 p-6">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Próxima atención
+                </p>
+
+                <h2 class="text-xl font-semibold text-blue-900">
+                    Próxima cita
+                </h2>
+
+            </div>
+
+
+            <div class="grid gap-5 p-6 md:grid-cols-2">
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Paciente
+                    </p>
+
+                    <p class="mt-1 text-lg font-semibold text-blue-950">
+                        {{ proxima_cita.paciente }}
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Hora
+                    </p>
+
+                    <p class="mt-1 text-lg font-semibold text-emerald-700">
+                        {{ proxima_cita.hora }}
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Motivo de consulta
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ proxima_cita.motivo }}
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Estado
+                    </p>
+
+                    <span class="mt-1 inline-block rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+                        {{ proxima_cita.estado }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="flex justify-end border-t border-slate-100 bg-slate-50 p-6">
+
+                <a
+                    href="#"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Iniciar consulta
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- Agenda del día -->
+        <section class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <div class="border-b border-slate-100 p-6">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Agenda
+                </p>
+
+                <h2 class="text-xl font-semibold text-blue-900">
+                    Citas del día
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Consulta las sesiones programadas para hoy.
+                </p>
+
+            </div>
+
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-left text-sm">
+
+                    <thead class="border-b border-slate-100 bg-slate-50 text-slate-500">
+
+                        <tr>
+
+                            <th class="px-6 py-4 font-medium">
+                                Hora
+                            </th>
+
+                            <th class="px-6 py-4 font-medium">
+                                Paciente
+                            </th>
+
+                            <th class="px-6 py-4 font-medium">
+                                Motivo
+                            </th>
+
+                            <th class="px-6 py-4 font-medium">
+                                Estado
+                            </th>
+
+                            <th class="px-6 py-4 font-medium">
+                                Acción
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100">
+
+                        {% for cita in citas %}
+
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-6 py-4 font-medium text-slate-700">
+                                {{ cita.hora }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ cita.paciente }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ cita.motivo }}
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+                                    {{ cita.estado }}
+                                </span>
+
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                <a
+                                    href="#"
+                                    class="font-medium text-emerald-700 hover:text-emerald-800"
+                                >
+                                    Ver cita
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="px-6 py-8 text-center text-slate-500"
+                            >
+                                No tienes citas programadas para hoy.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Accesos rápidos -->
+        <section class="mt-8">
+
+            <div class="mb-5">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Accesos rápidos
+                </p>
+
+                <h2 class="text-xl font-semibold text-blue-900">
+                    Gestión clínica
+                </h2>
+
+            </div>
+
+
+            <div class="grid gap-5 md:grid-cols-3">
+
+                <a
+                    href="#"
+                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50"
+                >
+
+                    <h3 class="font-semibold text-blue-900">
+                        Mis pacientes
+                    </h3>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Consulta pacientes y expedientes registrados.
+                    </p>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50"
+                >
+
+                    <h3 class="font-semibold text-emerald-700">
+                        Seguimientos
+                    </h3>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Registra y consulta el progreso de los tratamientos.
+                    </p>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50"
+                >
+
+                    <h3 class="font-semibold text-blue-900">
+                        Tratamientos
+                    </h3>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Consulta tratamientos e indicaciones asignadas.
+                    </p>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="mt-8 border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar perfil</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Configuración de usuario
+                </p>
+
+            </div>
+
+            <a
+                href="#"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver al perfil
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-5xl px-6 py-8">
+
+        <!-- Encabezado -->
+        <div class="mb-6">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Actualización de información
+            </p>
+
+            <h1 class="text-3xl font-bold text-blue-950">
+                Editar perfil
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Modifica los datos de tu cuenta y guarda los cambios realizados.
+            </p>
+
+        </div>
+
+
+        <!-- Formulario -->
+        <form
+            method="POST"
+            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- Información personal -->
+            <section class="border-b border-slate-100 p-6">
+
+                <h2 class="text-lg font-semibold text-blue-900">
+                    Información personal
+                </h2>
+
+                <p class="mb-5 mt-1 text-sm text-slate-500">
+                    Actualiza tus datos personales.
+                </p>
+
+
+                <div class="grid gap-5 md:grid-cols-2">
+
+                    <!-- Nombre -->
+                    <div>
+
+                        <label
+                            for="nombre"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Nombre
+                        </label>
+
+                        <input
+                            id="nombre"
+                            name="nombre"
+                            type="text"
+                            value="{{ user.first_name }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- Apellidos -->
+                    <div>
+
+                        <label
+                            for="apellidos"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Apellidos
+                        </label>
+
+                        <input
+                            id="apellidos"
+                            name="apellidos"
+                            type="text"
+                            value="{{ user.last_name }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- Correo -->
+                    <div>
+
+                        <label
+                            for="correo"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            id="correo"
+                            name="correo"
+                            type="email"
+                            value="{{ user.email }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+
+                    <!-- Teléfono -->
+                    <div>
+
+                        <label
+                            for="telefono"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Teléfono
+                        </label>
+
+                        <input
+                            id="telefono"
+                            name="telefono"
+                            type="tel"
+                            value="{{ user.telefono }}"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Información de cuenta -->
+            <section class="border-b border-slate-100 p-6">
+
+                <h2 class="text-lg font-semibold text-emerald-700">
+                    Información de cuenta
+                </h2>
+
+                <p class="mb-5 mt-1 text-sm text-slate-500">
+                    Datos utilizados para identificar tu cuenta dentro del sistema.
+                </p>
+
+
+                <div class="grid gap-5 md:grid-cols-2">
+
+                    <!-- Usuario -->
+                    <div>
+
+                        <label
+                            for="usuario"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Usuario
+                        </label>
+
+                        <input
+                            id="usuario"
+                            name="usuario"
+                            type="text"
+                            value="{{ user.username }}"
+                            required
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
+                        >
+
+                    </div>
+
+
+                    <!-- Rol -->
+                    <div>
+
+                        <label
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Rol
+                        </label>
+
+                        <div class="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+
+                            <p class="font-medium text-blue-700">
+                                {{ user.rol }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 p-6">
+
+                <a
+                    href="#"
+                    class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

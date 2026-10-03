@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recuperar contraseña</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Recuperación de acceso
+                </p>
+
+            </div>
+
+            <a
+                href="#"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver a iniciar sesión
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-5xl px-6 py-12">
+
+        <div class="mx-auto max-w-md">
+
+            <!-- Encabezado -->
+            <div class="mb-6 text-center">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Recuperación de cuenta
+                </p>
+
+                <h1 class="mt-1 text-3xl font-bold text-blue-950">
+                    Recuperar contraseña
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Ingresa tu correo electrónico para recuperar el acceso a tu cuenta.
+                </p>
+
+            </div>
+
+
+            <!-- Formulario -->
+            <form
+                method="POST"
+                class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+            >
+
+                {% csrf_token %}
+
+                <section class="space-y-5 p-6">
+
+                    <div>
+
+                        <label
+                            for="correo"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            id="correo"
+                            name="correo"
+                            type="email"
+                            required
+                            placeholder="ejemplo@correo.com"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+
+                    </div>
+
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                        <p class="text-sm text-blue-700">
+                            Si el correo está registrado en el sistema, recibirás instrucciones para cambiar tu contraseña.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Botones -->
+                <div class="border-t border-slate-100 bg-slate-50 p-6">
+
+                    <button
+                        type="submit"
+                        class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Enviar instrucciones
+                    </button>
+
+                    <p class="mt-4 text-center text-sm text-slate-500">
+
+                        ¿Recordaste tu contraseña?
+
+                        <a
+                            href="#"
+                            class="font-semibold text-emerald-600 hover:text-emerald-700"
+                        >
+                            Iniciar sesión
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

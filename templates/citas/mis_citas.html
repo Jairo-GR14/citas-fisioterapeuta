@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis Citas</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-stone-100 text-stone-800">
+
+    <!-- Barra de navegacion -->
+    <header class="bg-white border-b border-stone-200">
+        <nav class="mx-auto flex max-w-5xl items-center justify-between p-4">
+
+            <span class="text-lg font-semibold">
+                Clínica de Fisioterapia
+            </span>
+
+            <ul class="hidden gap-6 text-sm sm:flex">
+                <li>
+                    <a href="#" class="text-blue-600">
+                        Citas
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" class="hover:text-blue-600">
+                        Progreso
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" class="hover:text-blue-600">
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+
+            <button
+                class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+            >
+                Nueva Cita
+            </button>
+
+        </nav>
+    </header>
+
+
+    <main class="mx-auto max-w-5xl space-y-8 p-4 py-8">
+
+        <!-- Encabezado -->
+        <section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <h1 class="text-3xl font-semibold">
+                    Mis Citas
+                </h1>
+
+                <p class="mt-2 text-sm text-stone-500">
+                    Consulta y administra tus citas de fisioterapia.
+                </p>
+            </div>
+
+            <button
+                class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+            >
+                Agendar Cita
+            </button>
+
+        </section>
+
+
+        <!-- Indicadores -->
+        <section class="grid gap-4 sm:grid-cols-3">
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Próximas
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-blue-600">
+                    3
+                </p>
+
+            </article>
+
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Finalizadas
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-green-600">
+                    8
+                </p>
+
+            </article>
+
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Canceladas
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-red-600">
+                    1
+                </p>
+
+            </article>
+
+        </section>
+
+
+        <!-- Filtros -->
+        <section class="rounded-xl border border-stone-200 bg-white p-5">
+
+            <div class="grid gap-4 sm:grid-cols-3">
+
+                <!-- Buscar -->
+                <div>
+                    <label
+                        for="buscar"
+                        class="block text-sm text-stone-600"
+                    >
+                        Buscar
+                    </label>
+
+                    <input
+                        id="buscar"
+                        type="text"
+                        placeholder="Fisioterapeuta..."
+                        class="mt-1 w-full rounded-lg border border-stone-300 p-2
+                               focus:border-blue-500 focus:outline-none
+                               hover:border-blue-300"
+                    >
+                </div>
+
+
+                <!-- Estado -->
+                <div>
+                    <label
+                        for="estado"
+                        class="block text-sm text-stone-600"
+                    >
+                        Estado
+                    </label>
+
+                    <select
+                        id="estado"
+                        class="mt-1 w-full rounded-lg border border-stone-300 p-2
+                               focus:border-blue-500 focus:outline-none
+                               hover:border-blue-300"
+                    >
+                        <option>Todos</option>
+                        <option>Programada</option>
+                        <option>Confirmada</option>
+                        <option>En proceso</option>
+                        <option>Finalizada</option>
+                        <option>Cancelada</option>
+                    </select>
+                </div>
+
+
+                <!-- Fecha -->
+                <div>
+                    <label
+                        for="fecha"
+                        class="block text-sm text-stone-600"
+                    >
+                        Fecha
+                    </label>
+
+                    <input
+                        id="fecha"
+                        type="date"
+                        class="mt-1 w-full rounded-lg border border-stone-300 p-2
+                               focus:border-blue-500 focus:outline-none
+                               hover:border-blue-300"
+                    >
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Tabla de citas -->
+        <section class="overflow-x-auto rounded-xl border border-stone-200 bg-white">
+
+            <table class="w-full text-left text-sm">
+
+                <thead class="border-b border-stone-200 text-stone-500">
+
+                    <tr>
+                        <th class="p-4 font-medium">
+                            Fecha
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Hora
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Fisioterapeuta
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Motivo
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Estado
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Acciones
+                        </th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-stone-100">
+
+                    <!-- Cita 1 -->
+                    <tr class="hover:bg-stone-50">
+
+                        <td class="p-4 font-medium">
+                            12 Oct 2026
+                        </td>
+
+                        <td class="p-4">
+                            10:30 AM
+                        </td>
+
+                        <td class="p-4">
+                            Lic. María López
+                        </td>
+
+                        <td class="p-4">
+                            Lesión deportiva
+                        </td>
+
+                        <td class="p-4">
+
+                            <span class="rounded-full bg-green-100 px-3 py-1 text-green-800">
+                                Confirmada
+                            </span>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <div class="flex gap-2">
+
+                                <button
+                                    class="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                                >
+                                    Ver
+                                </button>
+
+                                <button
+                                    class="rounded-lg bg-yellow-100 px-3 py-1 text-yellow-700 hover:bg-yellow-200"
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    class="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                                >
+                                    Cancelar
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Cita 2 -->
+                    <tr class="hover:bg-stone-50">
+
+                        <td class="p-4 font-medium">
+                            15 Oct 2026
+                        </td>
+
+                        <td class="p-4">
+                            12:00 PM
+                        </td>
+
+                        <td class="p-4">
+                            Lic. Carlos Hernández
+                        </td>
+
+                        <td class="p-4">
+                            Dolor de espalda
+                        </td>
+
+                        <td class="p-4">
+
+                            <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-800">
+                                Programada
+                            </span>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <div class="flex gap-2">
+
+                                <button
+                                    class="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                                >
+                                    Ver
+                                </button>
+
+                                <button
+                                    class="rounded-lg bg-yellow-100 px-3 py-1 text-yellow-700 hover:bg-yellow-200"
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    class="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                                >
+                                    Cancelar
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Cita 3 -->
+                    <tr class="hover:bg-stone-50">
+
+                        <td class="p-4 font-medium">
+                            05 Oct 2026
+                        </td>
+
+                        <td class="p-4">
+                            09:00 AM
+                        </td>
+
+                        <td class="p-4">
+                            Lic. Ana Martínez
+                        </td>
+
+                        <td class="p-4">
+                            Valoración inicial
+                        </td>
+
+                        <td class="p-4">
+
+                            <span class="rounded-full bg-stone-200 px-3 py-1 text-stone-700">
+                                Finalizada
+                            </span>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <button
+                                class="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                            >
+                                Ver
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Cita 4 -->
+                    <tr class="hover:bg-stone-50">
+
+                        <td class="p-4 font-medium">
+                            01 Oct 2026
+                        </td>
+
+                        <td class="p-4">
+                            04:00 PM
+                        </td>
+
+                        <td class="p-4">
+                            Lic. José Ramírez
+                        </td>
+
+                        <td class="p-4">
+                            Dolor cervical
+                        </td>
+
+                        <td class="p-4">
+
+                            <span class="rounded-full bg-red-100 px-3 py-1 text-red-800">
+                                Cancelada
+                            </span>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <button
+                                class="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                            >
+                                Ver
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- Paginacion -->
+        <section class="flex items-center justify-between">
+
+            <p class="text-sm text-stone-500">
+                Mostrando 4 citas
+            </p>
+
+            <div class="flex gap-2">
+
+                <button
+                    class="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm hover:bg-stone-50"
+                >
+                    Anterior
+                </button>
+
+                <button
+                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                >
+                    1
+                </button>
+
+                <button
+                    class="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm hover:bg-stone-50"
+                >
+                    Siguiente
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario del fisioterapeuta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+<header class="border-b border-blue-100 bg-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+            <p class="text-sm text-slate-500">
+                Horarios de atención
+            </p>
+        </div>
+
+        <a href="#"
+           class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100">
+            Volver al fisioterapeuta
+        </a>
+    </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-6 py-8">
+
+    <div class="mb-6">
+        <p class="text-sm font-semibold text-emerald-600">
+            Disponibilidad
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Horario del fisioterapeuta
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta los días y horarios disponibles.
+        </p>
+    </div>
+
+
+    <!-- FISIOTERAPEUTA -->
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+
+        <div class="flex items-center gap-4">
+
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-emerald-600 text-xl font-bold text-white">
+                {{ fisioterapeuta.nombre|slice:":1" }}
+            </div>
+
+            <div>
+                <h3 class="font-semibold text-blue-950">
+                    {{ fisioterapeuta.nombre }}
+                    {{ fisioterapeuta.apellidos }}
+                </h3>
+
+                <p class="text-sm text-slate-500">
+                    {{ fisioterapeuta.especialidad }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HORARIOS -->
+    <div class="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm">
+
+        <div class="border-b border-slate-100 p-6">
+            <h3 class="text-lg font-semibold text-emerald-700">
+                Horario semanal
+            </h3>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Horarios asignados actualmente.
+            </p>
+        </div>
+
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-slate-500">
+                            Día
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-slate-500">
+                            Hora de inicio
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-slate-500">
+                            Hora de salida
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-slate-500">
+                            Estado
+                        </th>
+                    </tr>
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for horario in horarios %}
+
+                    <tr class="hover:bg-slate-50">
+
+                        <td class="px-6 py-4 font-medium text-blue-900">
+                            {{ horario.dia }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ horario.hora_inicio }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ horario.hora_fin }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Disponible
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4"
+                            class="px-6 py-10 text-center text-sm text-slate-500">
+                            No hay horarios registrados.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- NUEVO HORARIO -->
+    <div class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+        <h3 class="text-lg font-semibold text-blue-900">
+            Agregar horario
+        </h3>
+
+        <form method="POST" class="mt-5 grid gap-5 md:grid-cols-3">
+
+            {% csrf_token %}
+
+            <div>
+                <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Día
+                </label>
+
+                <select name="dia"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-blue-500">
+                    <option>Lunes</option>
+                    <option>Martes</option>
+                    <option>Miércoles</option>
+                    <option>Jueves</option>
+                    <option>Viernes</option>
+                    <option>Sábado</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Hora de inicio
+                </label>
+
+                <input type="time"
+                       name="hora_inicio"
+                       class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Hora de salida
+                </label>
+
+                <input type="time"
+                       name="hora_fin"
+                       class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-emerald-500">
+            </div>
+
+            <div class="md:col-span-3 flex justify-end">
+
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700">
+                    Guardar horario
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

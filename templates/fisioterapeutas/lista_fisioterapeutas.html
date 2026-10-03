@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de fisioterapeutas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Gestión de fisioterapeutas
+            </p>
+
+        </div>
+
+
+        <a href="#"
+           class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-emerald-700">
+            + Registrar fisioterapeuta
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Personal clínico
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Fisioterapeutas
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta y administra los fisioterapeutas registrados en la clínica.
+        </p>
+
+    </div>
+
+
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+
+        <form method="GET" class="flex flex-col gap-4 md:flex-row">
+
+            <div class="flex-1">
+
+                <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Buscar fisioterapeuta
+                </label>
+
+                <input type="text"
+                       name="buscar"
+                       value="{{ request.GET.buscar }}"
+                       placeholder="Nombre, especialidad o correo"
+                       class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+            </div>
+
+
+            <div class="flex items-end">
+
+                <button type="submit"
+                        class="w-full rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 md:w-auto">
+                    Buscar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-gradient-to-r from-blue-50 to-emerald-50">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-blue-900">
+                            Fisioterapeuta
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-blue-900">
+                            Especialidad
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-blue-900">
+                            Teléfono
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-blue-900">
+                            Correo
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-emerald-700">
+                            Estado
+                        </th>
+
+                        <th class="px-6 py-4 text-right text-xs font-semibold uppercase text-slate-500">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for fisioterapeuta in fisioterapeutas %}
+
+                    <tr class="transition hover:bg-blue-50/40">
+
+                        <td class="px-6 py-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-emerald-600 font-semibold text-white">
+                                    {{ fisioterapeuta.nombre|slice:":1" }}
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-blue-950">
+                                        {{ fisioterapeuta.nombre }}
+                                        {{ fisioterapeuta.apellidos }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ fisioterapeuta.especialidad }}
+                        </td>
+
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ fisioterapeuta.telefono }}
+                        </td>
+
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ fisioterapeuta.email }}
+                        </td>
+
+
+                        <td class="px-6 py-4">
+
+                            {% if fisioterapeuta.activo %}
+
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Activo
+                            </span>
+
+                            {% else %}
+
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                Inactivo
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td class="px-6 py-4">
+
+                            <div class="flex justify-end gap-2">
+
+                                <a href="#"
+                                   class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100">
+                                    Ver
+                                </a>
+
+                                <a href="#"
+                                   class="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100">
+                                    Horario
+                                </a>
+
+                                <a href="#"
+                                   class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+                                    Editar
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="px-6 py-12 text-center">
+
+                            <p class="font-semibold text-blue-900">
+                                No hay fisioterapeutas registrados.
+                            </p>
+
+                            <p class="mt-1 text-sm text-slate-500">
+                                Los fisioterapeutas aparecerán aquí cuando sean registrados.
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

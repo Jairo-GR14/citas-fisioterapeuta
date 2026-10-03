@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivo de consulta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex min-h-screen items-center justify-center bg-stone-50 px-6 text-stone-900">
+
+<main class="w-full max-w-2xl">
+
+    <section class="rounded-2xl border border-stone-200 bg-white p-7">
+
+        <div class="mb-7">
+
+            <p class="text-sm text-stone-400">
+                Consulta inicial
+            </p>
+
+            <h1 class="mt-2 text-2xl font-semibold">
+                Motivo de consulta
+            </h1>
+
+            <p class="mt-2 text-sm leading-6 text-stone-500">
+                Selecciona la razón principal por la que el paciente solicita atención.
+            </p>
+
+        </div>
+
+
+        <form class="space-y-6">
+
+            <div>
+
+                <label class="mb-2 block text-sm font-medium">
+                    Motivo principal
+                </label>
+
+                <select
+                    class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400"
+                >
+                    <option>Selecciona un motivo</option>
+                    <option>Dolor muscular</option>
+                    <option>Lesión deportiva</option>
+                    <option>Dolor lumbar</option>
+                    <option>Dolor cervical</option>
+                    <option>Rehabilitación postquirúrgica</option>
+                    <option>Problemas de movilidad</option>
+                    <option>Problemas posturales</option>
+                    <option>Valoración inicial</option>
+                    <option>Otro</option>
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label class="mb-2 block text-sm font-medium">
+                    Descripción
+                </label>
+
+                <textarea
+                    rows="5"
+                    placeholder="Describe síntomas, molestias o antecedentes relevantes..."
+                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                ></textarea>
+
+            </div>
+
+
+            <div>
+
+                <label class="mb-2 block text-sm font-medium">
+                    Tiempo de evolución
+                </label>
+
+                <select
+                    class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400"
+                >
+                    <option>Selecciona una opción</option>
+                    <option>Menos de 24 horas</option>
+                    <option>1 a 7 días</option>
+                    <option>1 a 4 semanas</option>
+                    <option>Más de un mes</option>
+                    <option>Problema recurrente</option>
+                </select>
+
+            </div>
+
+
+            <div class="flex justify-end gap-3">
+
+                <button
+                    type="button"
+                    class="rounded-xl border border-stone-200 px-5 py-2.5 text-sm hover:bg-stone-50"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-stone-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
+                >
+                    Guardar motivo
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

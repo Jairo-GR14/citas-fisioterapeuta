@@ -1,95 +1,247 @@
-{% extends 'base/base.html' %}
+<!DOCTYPE html>
+<html lang="es">
 
-{% block title %}Pacientes{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+    <title>Pacientes</title>
 
-<div class="container mt-4">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Pacientes registrados</h2>
+<body class="bg-stone-100 text-stone-800">
 
-        <a href="{% url 'registrar_paciente' %}" class="btn btn-primary">
-            Registrar paciente
-        </a>
-    </div>
+    <!-- Barra de navegacion -->
+    <header class="bg-white border-b border-stone-200">
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+        <nav class="mx-auto flex max-w-5xl items-center justify-between p-4">
 
-            <div class="table-responsive">
+            <span class="text-lg font-semibold">
+                Clinica Fisio
+            </span>
 
-                <table class="table table-hover align-middle">
+            <ul class="hidden gap-6 text-sm sm:flex">
 
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Teléfono</th>
-                            <th>Correo</th>
-                            <th>Diagnóstico</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
+                <li>
+                    <a href="#" class="hover:text-green-600">
+                        Inicio
+                    </a>
+                </li>
 
-                    <tbody>
+                <li>
+                    <a href="#" class="text-green-600">
+                        Pacientes
+                    </a>
+                </li>
 
-                        {% for paciente in pacientes %}
+                <li>
+                    <a href="#" class="hover:text-green-600">
+                        Fisioterapeutas
+                    </a>
+                </li>
 
-                        <tr>
-                            <td>{{ paciente.nombre }} {{ paciente.apellidos }}</td>
+                <li>
+                    <a href="#" class="hover:text-green-600">
+                        Administracion
+                    </a>
+                </li>
 
-                            <td>
-                                {{ paciente.telefono }}
-                            </td>
+            </ul>
 
-                            <td>
-                                {{ paciente.correo }}
-                            </td>
+            <a href="{% url 'registrar_paciente' %}"
+               class="rounded-lg bg-stone-800 px-4 py-2 text-sm text-white hover:bg-stone-700">
 
-                            <td>
-                                {{ paciente.diagnostico|default:"Sin diagnóstico" }}
-                            </td>
+                Nuevo Paciente
 
-                            <td>
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="mx-auto max-w-5xl space-y-8 p-4 py-8">
+
+        <h1 class="text-3xl font-semibold">
+            Pacientes Registrados
+        </h1>
+
+
+        <!-- Indicadores -->
+
+        <section class="grid gap-4 sm:grid-cols-3">
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Total de pacientes
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-cyan-600">
+
+                    {{ total_pacientes|default:"0" }}
+
+                </p>
+
+            </article>
+
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Pacientes activos
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-cyan-600">
+
+                    {{ pacientes_activos|default:"0" }}
+
+                </p>
+
+            </article>
+
+
+            <article class="rounded-xl border border-stone-200 bg-white p-5">
+
+                <p class="text-sm text-stone-500">
+                    Nuevos pacientes
+                </p>
+
+                <p class="mt-1 text-3xl font-semibold text-cyan-600">
+
+                    {{ pacientes_mes|default:"0" }}
+
+                </p>
+
+            </article>
+
+        </section>
+
+
+        <!-- Tabla -->
+
+        <section class="overflow-x-auto rounded-xl border border-stone-300 bg-white">
+
+            <table class="w-full text-left text-sm">
+
+                <thead class="border-b border-stone-200 text-stone-500">
+
+                    <tr>
+
+                        <th class="p-4 font-medium">
+                            Paciente
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Telefono
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Correo
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Diagnostico
+                        </th>
+
+                        <th class="p-4 font-medium">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-stone-100">
+
+                    {% for paciente in pacientes %}
+
+                    <tr class="hover:bg-stone-50">
+
+                        <td class="p-4 font-medium">
+
+                            {{ paciente.nombre }}
+                            {{ paciente.apellidos }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            {{ paciente.telefono }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            {{ paciente.correo }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            {{ paciente.diagnostico|default:"Sin diagnostico" }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <div class="flex gap-2">
 
                                 <a href="{% url 'detalle_paciente' paciente.id %}"
-                                   class="btn btn-sm btn-info">
+                                   class="rounded-lg bg-green-600 px-3 py-1 text-white hover:bg-green-700">
+
                                     Ver
+
                                 </a>
+
 
                                 <a href="{% url 'editar_paciente' paciente.id %}"
-                                   class="btn btn-sm btn-warning">
+                                   class="rounded-lg bg-cyan-600 px-3 py-1 text-white hover:bg-cyan-700">
+
                                     Editar
+
                                 </a>
+
 
                                 <a href="{% url 'historial_paciente' paciente.id %}"
-                                   class="btn btn-sm btn-secondary">
+                                   class="rounded-lg bg-stone-800 px-3 py-1 text-white hover:bg-stone-700">
+
                                     Historial
+
                                 </a>
 
-                            </td>
+                            </div>
 
-                        </tr>
+                        </td>
 
-                        {% empty %}
+                    </tr>
 
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                No hay pacientes registrados.
-                            </td>
-                        </tr>
 
-                        {% endfor %}
+                    {% empty %}
 
-                    </tbody>
+                    <tr>
 
-                </table>
+                        <td colspan="5"
+                            class="p-6 text-center text-stone-500">
 
-            </div>
+                            No hay pacientes registrados.
 
-        </div>
-    </div>
+                        </td>
 
-</div>
+                    </tr>
 
-{% endblock %}
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

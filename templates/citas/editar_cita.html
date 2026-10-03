@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar cita</title>
+    <title>Editar Cita</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-stone-50 text-stone-900">
+<body class="min-h-screen bg-slate-50 text-slate-900">
 
 <main class="mx-auto max-w-3xl px-6 py-10">
 
-    <div class="mb-8">
-        <a href="#" class="text-sm text-stone-400 hover:text-stone-900">
-            ← Regresar
-        </a>
+    <a
+        href="detalle_cita.html"
+        class="text-sm text-slate-500 hover:text-blue-700"
+    >
+        ← Regresar
+    </a>
 
-        <h1 class="mt-4 text-3xl font-semibold">
-            Editar cita
-        </h1>
+    <h1 class="mt-5 text-3xl font-semibold">
+        Editar cita
+    </h1>
 
-        <p class="mt-2 text-sm text-stone-500">
-            Modifica la fecha, horario o información de la sesión.
-        </p>
-    </div>
+    <p class="mt-2 text-sm text-slate-500">
+        Modifica la información necesaria.
+    </p>
 
 
-    <form class="rounded-2xl border border-stone-200 bg-white p-6">
+    <form class="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
 
         <div class="grid gap-5 sm:grid-cols-2">
 
@@ -35,10 +36,9 @@
                     Fisioterapeuta
                 </label>
 
-                <select class="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400">
+                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
                     <option>Lic. María López</option>
                     <option>Lic. Carlos Hernández</option>
-                    <option>Lic. Ana Martínez</option>
                 </select>
             </div>
 
@@ -48,10 +48,9 @@
                     Servicio
                 </label>
 
-                <select class="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400">
+                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
                     <option>Fisioterapia general</option>
                     <option>Terapia deportiva</option>
-                    <option>Valoración inicial</option>
                 </select>
             </div>
 
@@ -64,34 +63,20 @@
                 <input
                     type="date"
                     value="2026-10-12"
-                    class="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400"
+                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
                 >
             </div>
 
 
             <div>
                 <label class="mb-2 block text-sm font-medium">
-                    Hora
+                    Horario
                 </label>
 
-                <select class="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400">
+                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
                     <option>10:30 AM</option>
                     <option>11:00 AM</option>
-                    <option>12:00 PM</option>
-                    <option>01:00 PM</option>
                 </select>
-            </div>
-
-
-            <div class="sm:col-span-2">
-                <label class="mb-2 block text-sm font-medium">
-                    Motivo
-                </label>
-
-                <textarea
-                    rows="4"
-                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400"
-                >Dolor lumbar persistente relacionado con actividad física.</textarea>
             </div>
 
         </div>
@@ -99,16 +84,17 @@
 
         <div class="mt-7 flex justify-end gap-3">
 
-            <button
-                type="button"
-                class="rounded-xl border border-stone-200 px-5 py-2.5 text-sm hover:bg-stone-50"
+            <a
+                href="detalle_cita.html"
+                class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm hover:bg-slate-50"
             >
                 Cancelar
-            </button>
+            </a>
 
             <button
-                type="submit"
-                class="rounded-xl bg-stone-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
+                type="button"
+                onclick="window.location.href='detalle_cita.html'"
+                class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
             >
                 Guardar cambios
             </button>

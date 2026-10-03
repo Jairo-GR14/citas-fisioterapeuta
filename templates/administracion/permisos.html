@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permisos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<main class="mx-auto max-w-6xl px-6 py-8">
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Administración
+        </p>
+
+        <h1 class="text-3xl font-bold text-blue-950">
+            Permisos del sistema
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Configura las acciones disponibles para cada rol.
+        </p>
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                            Permiso
+                        </th>
+
+                        <th class="px-6 py-4 text-center text-sm font-semibold text-blue-700">
+                            Administrador
+                        </th>
+
+                        <th class="px-6 py-4 text-center text-sm font-semibold text-emerald-700">
+                            Fisioterapeuta
+                        </th>
+
+                        <th class="px-6 py-4 text-center text-sm font-semibold text-blue-700">
+                            Recepción
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    <tr>
+                        <td class="px-6 py-4 font-medium">
+                            Ver pacientes
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="px-6 py-4 font-medium">
+                            Editar pacientes
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox">
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="px-6 py-4 font-medium">
+                            Gestionar citas
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="px-6 py-4 font-medium">
+                            Gestionar tratamientos
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox">
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="px-6 py-4 font-medium">
+                            Administrar usuarios
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox" checked>
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox">
+                        </td>
+
+                        <td class="text-center">
+                            <input type="checkbox">
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="mt-6 flex justify-end">
+
+            <button type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 font-semibold text-white">
+                Guardar permisos
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+</body>
+</html>

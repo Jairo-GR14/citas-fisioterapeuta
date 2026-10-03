@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registrar Tratamiento</title>
+</head>
+
+<body>
+
+    <h1>Registrar Tratamiento</h1>
+
+    <form>
+
+        <div>
+            <label for="paciente">Paciente:</label>
+            <select id="paciente" name="paciente" required>
+                <option value="">Seleccione un paciente</option>
+                <option value="1">Juan Pérez</option>
+                <option value="2">María López</option>
+                <option value="3">Carlos Hernández</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="fecha">Fecha de la sesión:</label>
+            <input type="date" id="fecha" name="fecha" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="tipo_tratamiento">Tipo de tratamiento:</label>
+            <select id="tipo_tratamiento" name="tipo_tratamiento" required>
+                <option value="">Seleccione una opción</option>
+                <option value="valoracion">Valoración inicial</option>
+                <option value="general">Sesión general</option>
+                <option value="especializada">Terapia especializada</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="dolor">Nivel de dolor:</label>
+            <input
+                type="number"
+                id="dolor"
+                name="dolor"
+                min="0"
+                max="10"
+                placeholder="0 - 10"
+                required
+            >
+        </div>
+
+        <br>
+
+        <div>
+            <label for="movilidad">Estado de movilidad:</label>
+            <select id="movilidad" name="movilidad">
+                <option value="">Seleccione una opción</option>
+                <option value="normal">Normal</option>
+                <option value="leve">Limitación leve</option>
+                <option value="moderada">Limitación moderada</option>
+                <option value="severa">Limitación severa</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="ejercicios">Ejercicios realizados:</label>
+            <textarea
+                id="ejercicios"
+                name="ejercicios"
+                rows="4"
+                placeholder="Describa los ejercicios realizados durante la sesión"
+            ></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="avance">Avances observados:</label>
+            <textarea
+                id="avance"
+                name="avance"
+                rows="4"
+                placeholder="Describa los avances del paciente"
+            ></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="observaciones">Observaciones:</label>
+            <textarea
+                id="observaciones"
+                name="observaciones"
+                rows="4"
+                placeholder="Ingrese observaciones de la sesión"
+            ></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="indicaciones">Indicaciones para el paciente:</label>
+            <textarea
+                id="indicaciones"
+                name="indicaciones"
+                rows="4"
+                placeholder="Ejercicios, repeticiones, frecuencia, duración, etc."
+            ></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label for="recomendaciones">Recomendaciones:</label>
+            <textarea
+                id="recomendaciones"
+                name="recomendaciones"
+                rows="4"
+                placeholder="Ingrese recomendaciones para continuar el tratamiento"
+            ></textarea>
+        </div>
+
+        <br>
+
+        <button type="submit">
+            Guardar tratamiento
+        </button>
+
+        <button type="reset">
+            Limpiar
+        </button>
+
+    </form>
+
+</body>
+</html>

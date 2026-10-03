@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar cita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-stone-50 text-stone-900">
+
+<header class="border-b border-stone-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+
+        <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-900 text-sm font-semibold text-white">
+                CF
+            </div>
+
+            <div>
+                <p class="font-semibold">Clínica de Fisioterapia</p>
+                <p class="text-xs text-stone-400">Portal del paciente</p>
+            </div>
+        </div>
+
+        <a href="#" class="text-sm text-stone-500 hover:text-stone-900">
+            Mis citas
+        </a>
+
+    </div>
+</header>
+
+
+<main class="mx-auto max-w-4xl px-6 py-10">
+
+    <div class="mb-8">
+        <p class="mb-2 text-sm text-stone-400">Nueva reservación</p>
+
+        <h1 class="text-3xl font-semibold tracking-tight">
+            Agendar cita
+        </h1>
+
+        <p class="mt-2 text-sm text-stone-500">
+            Selecciona el servicio, fisioterapeuta y horario para tu próxima sesión.
+        </p>
+    </div>
+
+
+    <form class="space-y-6">
+
+        <section class="rounded-2xl border border-stone-200 bg-white p-6">
+
+            <h2 class="mb-6 font-semibold">
+                Información de la cita
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Servicio
+                    </label>
+
+                    <select class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400">
+                        <option>Selecciona un servicio</option>
+                        <option>Valoración inicial</option>
+                        <option>Fisioterapia general</option>
+                        <option>Terapia deportiva</option>
+                        <option>Terapia especializada</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Fisioterapeuta
+                    </label>
+
+                    <select class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400">
+                        <option>Selecciona un fisioterapeuta</option>
+                        <option>Lic. María López</option>
+                        <option>Lic. Carlos Hernández</option>
+                        <option>Lic. Ana Martínez</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        class="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-stone-400"
+                    >
+                </div>
+
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Horario
+                    </label>
+
+                    <select class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400">
+                        <option>Selecciona un horario</option>
+                        <option>09:00 AM</option>
+                        <option>10:00 AM</option>
+                        <option>11:00 AM</option>
+                        <option>12:00 PM</option>
+                    </select>
+                </div>
+
+
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium">
+                        Motivo de consulta
+                    </label>
+
+                    <select class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:border-stone-400">
+                        <option>Selecciona un motivo</option>
+                        <option>Dolor muscular</option>
+                        <option>Lesión deportiva</option>
+                        <option>Dolor de espalda</option>
+                        <option>Dolor cervical</option>
+                        <option>Rehabilitación postquirúrgica</option>
+                        <option>Problemas de movilidad</option>
+                        <option>Valoración inicial</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+
+
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium">
+                        Información adicional
+                    </label>
+
+                    <textarea
+                        rows="4"
+                        placeholder="Describe brevemente tu motivo de consulta..."
+                        class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                    ></textarea>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="flex flex-col justify-between gap-4 rounded-2xl bg-stone-900 p-6 text-white sm:flex-row sm:items-center">
+
+            <div>
+                <p class="text-sm text-stone-400">
+                    Costo aproximado
+                </p>
+
+                <p class="mt-1 text-2xl font-semibold">
+                    $350 MXN
+                </p>
+
+                <p class="mt-1 text-xs text-stone-400">
+                    El precio puede variar según el servicio.
+                </p>
+            </div>
+
+            <button
+                type="submit"
+                class="rounded-xl bg-white px-6 py-3 text-sm font-medium text-stone-900 hover:bg-stone-100"
+            >
+                Continuar
+            </button>
+
+        </section>
+
+    </form>
+
+</main>
+
+</body>
+</html>

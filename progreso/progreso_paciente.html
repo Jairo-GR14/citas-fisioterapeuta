@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Progreso del Paciente</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+<header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="font-semibold text-blue-800">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Seguimiento clínico
+            </p>
+        </div>
+
+
+        <nav class="hidden gap-6 text-sm md:flex">
+
+            <a
+                href="../citas/mis_citas.html"
+                class="text-slate-500 hover:text-blue-700"
+            >
+                Mis citas
+            </a>
+
+            <a
+                href="progreso_paciente.html"
+                class="font-medium text-blue-700"
+            >
+                Mi progreso
+            </a>
+
+        </nav>
+
+
+        <a
+            href="registrar_progreso.html"
+            class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
+        >
+            Registrar progreso
+        </a>
+
+    </div>
+</header>
+
+
+<main class="mx-auto max-w-6xl px-6 py-10">
+
+    <section class="mb-8">
+
+        <p class="text-sm font-medium text-blue-700">
+            Seguimiento
+        </p>
+
+        <h2 class="mt-2 text-3xl font-semibold">
+            Progreso del paciente
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta la evolución registrada durante las sesiones.
+        </p>
+
+    </section>
+
+
+    <!-- Resumen -->
+    <section class="mb-8 grid gap-4 sm:grid-cols-3">
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5">
+
+            <p class="text-sm text-slate-500">
+                Sesiones registradas
+            </p>
+
+            <p class="mt-2 text-3xl font-semibold text-blue-700">
+                3
+            </p>
+
+        </div>
+
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5">
+
+            <p class="text-sm text-slate-500">
+                Dolor inicial
+            </p>
+
+            <p class="mt-2 text-3xl font-semibold">
+                8/10
+            </p>
+
+        </div>
+
+
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+
+            <p class="text-sm text-emerald-700">
+                Dolor actual
+            </p>
+
+            <p class="mt-2 text-3xl font-semibold text-emerald-700">
+                4/10
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Paciente -->
+    <section class="mb-6 rounded-2xl border border-slate-200 bg-white p-5">
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <p class="text-xs text-slate-400">
+                    Paciente
+                </p>
+
+                <h3 class="mt-1 text-lg font-semibold">
+                    Juan Pérez
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Dolor lumbar · Fisioterapia general
+                </p>
+            </div>
+
+            <span class="w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                Evolución favorable
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- Línea de progreso -->
+    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+
+        <div class="mb-6 flex items-center justify-between">
+
+            <h3 class="text-lg font-semibold">
+                Historial de sesiones
+            </h3>
+
+            <span class="text-sm text-slate-400">
+                3 registros
+            </span>
+
+        </div>
+
+
+        <div class="space-y-4">
+
+            <!-- Sesión 3 -->
+            <article class="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+
+                <div class="flex flex-col gap-4 md:flex-row md:items-center">
+
+                    <div class="w-28 shrink-0">
+
+                        <p class="text-sm font-semibold text-emerald-800">
+                            Sesión 3
+                        </p>
+
+                        <p class="mt-1 text-xs text-emerald-600">
+                            12 Oct 2026
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex-1">
+
+                        <p class="font-medium">
+                            Dolor: 4/10
+                        </p>
+
+                        <p class="mt-1 text-sm text-slate-600">
+                            Mejor movilidad y disminución de molestia durante la flexión.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="detalle_progreso.html"
+                        class="rounded-lg bg-emerald-600 px-4 py-2 text-center text-sm text-white hover:bg-emerald-700"
+                    >
+                        Ver detalle
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Sesión 2 -->
+            <article class="rounded-xl border border-slate-200 p-5">
+
+                <div class="flex flex-col gap-4 md:flex-row md:items-center">
+
+                    <div class="w-28 shrink-0">
+
+                        <p class="text-sm font-semibold">
+                            Sesión 2
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            08 Oct 2026
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex-1">
+
+                        <p class="font-medium">
+                            Dolor: 6/10
+                        </p>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Disminución ligera del dolor y mayor tolerancia al movimiento.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="detalle_progreso.html"
+                        class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-center text-sm text-blue-700 hover:bg-blue-100"
+                    >
+                        Ver detalle
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Sesión 1 -->
+            <article class="rounded-xl border border-slate-200 p-5">
+
+                <div class="flex flex-col gap-4 md:flex-row md:items-center">
+
+                    <div class="w-28 shrink-0">
+
+                        <p class="text-sm font-semibold">
+                            Sesión 1
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            04 Oct 2026
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex-1">
+
+                        <p class="font-medium">
+                            Dolor: 8/10
+                        </p>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Valoración inicial con limitación notable de movilidad.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="detalle_progreso.html"
+                        class="rounded-lg border border-slate-200 px-4 py-2 text-center text-sm hover:bg-slate-50"
+                    >
+                        Ver detalle
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

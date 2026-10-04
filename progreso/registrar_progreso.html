@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Progreso</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+<header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="font-semibold text-blue-800">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Seguimiento del paciente
+            </p>
+        </div>
+
+        <a
+            href="../consultas/detalle_consulta.html"
+            class="text-sm text-slate-500 hover:text-blue-700"
+        >
+            ← Regresar a consulta
+        </a>
+
+    </div>
+</header>
+
+
+<main class="mx-auto max-w-4xl px-6 py-10">
+
+    <section class="mb-8">
+
+        <p class="text-sm font-medium text-blue-700">
+            Evolución clínica
+        </p>
+
+        <h2 class="mt-2 text-3xl font-semibold">
+            Registrar progreso
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Registra los cambios observados durante la sesión del paciente.
+        </p>
+
+    </section>
+
+
+    <!-- Paciente -->
+    <section class="mb-6 rounded-2xl border border-blue-100 bg-blue-50 p-5">
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <p class="text-xs uppercase tracking-wide text-blue-500">
+                    Paciente
+                </p>
+
+                <h3 class="mt-1 text-lg font-semibold text-blue-900">
+                    Juan Pérez
+                </h3>
+
+                <p class="mt-1 text-sm text-blue-700">
+                    Fisioterapia general
+                </p>
+            </div>
+
+            <div class="text-sm text-blue-700">
+                Sesión 3
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <!-- Fecha -->
+            <div>
+                <label class="mb-2 block text-sm font-medium">
+                    Fecha de sesión
+                </label>
+
+                <input
+                    type="date"
+                    value="2026-10-12"
+                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                >
+            </div>
+
+
+            <!-- Dolor -->
+            <div>
+                <label class="mb-2 block text-sm font-medium">
+                    Nivel de dolor
+                </label>
+
+                <select
+                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                >
+                    <option>Selecciona un nivel</option>
+                    <option>0 - Sin dolor</option>
+                    <option>1 - 3 Leve</option>
+                    <option>4 - 6 Moderado</option>
+                    <option>7 - 10 Intenso</option>
+                </select>
+            </div>
+
+
+            <!-- Movilidad -->
+            <div>
+                <label class="mb-2 block text-sm font-medium">
+                    Movilidad
+                </label>
+
+                <select
+                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                >
+                    <option>Selecciona una opción</option>
+                    <option>Limitada</option>
+                    <option>Moderada</option>
+                    <option>Buena</option>
+                    <option>Completa</option>
+                </select>
+            </div>
+
+
+            <!-- Estado -->
+            <div>
+                <label class="mb-2 block text-sm font-medium">
+                    Estado general
+                </label>
+
+                <select
+                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                >
+                    <option>Selecciona una opción</option>
+                    <option>Sin cambios</option>
+                    <option>Mejorando</option>
+                    <option>Mejoría significativa</option>
+                    <option>Requiere valoración</option>
+                </select>
+            </div>
+
+
+            <!-- Ejercicios -->
+            <div class="sm:col-span-2">
+
+                <label class="mb-2 block text-sm font-medium">
+                    Ejercicios realizados
+                </label>
+
+                <textarea
+                    rows="4"
+                    placeholder="Describe los ejercicios realizados durante la sesión..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Avances -->
+            <div class="sm:col-span-2">
+
+                <label class="mb-2 block text-sm font-medium">
+                    Avances observados
+                </label>
+
+                <textarea
+                    rows="4"
+                    placeholder="Describe los avances observados..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Limitaciones -->
+            <div class="sm:col-span-2">
+
+                <label class="mb-2 block text-sm font-medium">
+                    Limitaciones
+                </label>
+
+                <textarea
+                    rows="3"
+                    placeholder="Registra cualquier limitación detectada..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Observaciones -->
+            <div class="sm:col-span-2">
+
+                <label class="mb-2 block text-sm font-medium">
+                    Observaciones
+                </label>
+
+                <textarea
+                    rows="4"
+                    placeholder="Agrega observaciones adicionales..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-end">
+
+            <a
+                href="../consultas/detalle_consulta.html"
+                class="rounded-xl border border-slate-200 px-5 py-2.5 text-center text-sm hover:bg-slate-50"
+            >
+                Cancelar
+            </a>
+
+            <a
+                href="progreso_paciente.html"
+                class="rounded-xl bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700"
+            >
+                Guardar progreso
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

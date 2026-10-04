@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle de consulta</title>
+    <title>Detalle de Consulta</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-stone-50 text-stone-900">
+<body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-stone-200 bg-white">
+<header class="border-b border-slate-200 bg-white">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
-        <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-900 text-sm font-semibold text-white">
-                CF
-            </div>
-
-            <span class="font-semibold">
+        <div>
+            <h1 class="font-semibold text-blue-800">
                 Clínica de Fisioterapia
-            </span>
+            </h1>
+            <p class="text-xs text-slate-400">
+                Consulta en proceso
+            </p>
         </div>
 
-        <a href="#" class="text-sm text-stone-500 hover:text-stone-900">
-            Regresar
+        <a
+            href="../citas/agenda.html"
+            class="text-sm text-slate-500 hover:text-blue-700"
+        >
+            Agenda
         </a>
 
     </div>
@@ -35,76 +37,56 @@
     <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
         <div>
-            <p class="text-sm text-stone-400">
+            <p class="text-sm font-medium text-blue-700">
                 Consulta #0024
             </p>
 
-            <h1 class="mt-2 text-3xl font-semibold">
+            <h2 class="mt-2 text-3xl font-semibold">
                 Detalle de consulta
-            </h1>
+            </h2>
 
-            <p class="mt-2 text-sm text-stone-500">
+            <p class="mt-2 text-sm text-slate-500">
                 12 de octubre de 2026 · 10:30 AM
             </p>
         </div>
 
-        <span class="w-fit rounded-full bg-stone-900 px-4 py-2 text-xs text-white">
+        <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-xs font-medium text-blue-700">
             En proceso
         </span>
 
     </section>
 
 
-    <div class="grid gap-6 lg:grid-cols-[1fr_300px]">
+    <div class="grid gap-6 lg:grid-cols-[1fr_280px]">
 
         <section class="space-y-6">
 
-            <article class="rounded-2xl border border-stone-200 bg-white p-6">
+            <article class="rounded-2xl border border-slate-200 bg-white p-6">
 
-                <h2 class="mb-6 font-semibold">
-                    Paciente
-                </h2>
+                <h3 class="mb-6 font-semibold">
+                    Información clínica
+                </h3>
 
                 <div class="grid gap-5 sm:grid-cols-2">
 
                     <div>
-                        <p class="text-xs text-stone-400">
-                            Nombre
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            Juan Pérez
-                        </p>
+                        <p class="text-xs text-slate-400">Paciente</p>
+                        <p class="mt-1 font-medium">Juan Pérez</p>
                     </div>
 
                     <div>
-                        <p class="text-xs text-stone-400">
-                            Fisioterapeuta
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            Lic. María López
-                        </p>
+                        <p class="text-xs text-slate-400">Fisioterapeuta</p>
+                        <p class="mt-1 font-medium">Lic. María López</p>
                     </div>
 
                     <div>
-                        <p class="text-xs text-stone-400">
-                            Servicio
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            Fisioterapia general
-                        </p>
+                        <p class="text-xs text-slate-400">Motivo</p>
+                        <p class="mt-1 font-medium">Dolor lumbar</p>
                     </div>
 
                     <div>
-                        <p class="text-xs text-stone-400">
-                            Nivel de dolor
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            5 / 10
-                        </p>
+                        <p class="text-xs text-slate-400">Dolor actual</p>
+                        <p class="mt-1 font-medium">5 / 10</p>
                     </div>
 
                 </div>
@@ -112,51 +94,30 @@
             </article>
 
 
-            <article class="rounded-2xl border border-stone-200 bg-white p-6">
+            <article class="rounded-2xl border border-slate-200 bg-white p-6">
 
-                <h2 class="mb-5 font-semibold">
+                <h3 class="mb-5 font-semibold">
                     Evaluación
-                </h2>
+                </h3>
 
-                <div class="space-y-5">
-
-                    <div>
-                        <p class="text-xs text-stone-400">
-                            Motivo de consulta
-                        </p>
-
-                        <p class="mt-2 text-sm leading-6 text-stone-600">
-                            Dolor lumbar persistente relacionado con actividad física.
-                        </p>
-                    </div>
-
-
-                    <div class="border-t border-stone-100 pt-5">
-                        <p class="text-xs text-stone-400">
-                            Observaciones
-                        </p>
-
-                        <p class="mt-2 text-sm leading-6 text-stone-600">
-                            Se observa limitación ligera de movilidad y molestia durante
-                            movimientos de flexión.
-                        </p>
-                    </div>
-
-                </div>
+                <p class="text-sm leading-6 text-slate-600">
+                    Se observa limitación ligera de movilidad y molestia durante
+                    movimientos de flexión lumbar.
+                </p>
 
             </article>
 
 
-            <article class="rounded-2xl border border-stone-200 bg-white p-6">
+            <article class="rounded-2xl border border-slate-200 bg-white p-6">
 
-                <h2 class="mb-5 font-semibold">
+                <label class="mb-3 block font-semibold">
                     Tratamiento realizado
-                </h2>
+                </label>
 
                 <textarea
                     rows="5"
-                    placeholder="Describe el tratamiento realizado..."
-                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                    placeholder="Describe las técnicas y procedimientos aplicados..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
                 ></textarea>
 
             </article>
@@ -166,23 +127,26 @@
 
         <aside class="space-y-3">
 
-            <button
-                class="w-full rounded-xl bg-stone-900 px-5 py-3 text-sm font-medium text-white hover:bg-stone-700"
+            <a
+                href="../progreso/registrar_progreso.html"
+                class="block w-full rounded-xl bg-emerald-600 px-5 py-3 text-center text-sm font-medium text-white hover:bg-emerald-700"
             >
                 Registrar progreso
-            </button>
+            </a>
 
-            <button
-                class="w-full rounded-xl border border-stone-200 bg-white px-5 py-3 text-sm hover:bg-stone-50"
+            <a
+                href="motivo_consulta.html"
+                class="block w-full rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm text-blue-700 hover:bg-blue-100"
             >
-                Editar información
-            </button>
+                Editar valoración
+            </a>
 
-            <button
-                class="w-full rounded-xl border border-stone-200 bg-white px-5 py-3 text-sm hover:bg-stone-50"
+            <a
+                href="finalizar_consulta.html"
+                class="block w-full rounded-xl bg-blue-700 px-5 py-3 text-center text-sm font-medium text-white hover:bg-blue-800"
             >
                 Finalizar consulta
-            </button>
+            </a>
 
         </aside>
 

@@ -3,37 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalizar consulta</title>
+    <title>Finalizar Consulta</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-stone-50 text-stone-900">
+<body class="min-h-screen bg-slate-50 text-slate-900">
 
-<main class="mx-auto max-w-3xl px-6 py-12">
+<header class="border-b border-slate-200 bg-white">
 
-    <section class="rounded-2xl border border-stone-200 bg-white p-7">
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
 
-        <div class="mb-7">
+        <h1 class="font-semibold text-blue-800">
+            Clínica de Fisioterapia
+        </h1>
 
-            <p class="text-sm text-stone-400">
-                Consulta #0024
-            </p>
+        <a
+            href="detalle_consulta.html"
+            class="text-sm text-slate-500 hover:text-blue-700"
+        >
+            ← Regresar
+        </a>
 
-            <h1 class="mt-2 text-2xl font-semibold">
-                Finalizar consulta
-            </h1>
+    </div>
 
-            <p class="mt-2 text-sm leading-6 text-stone-500">
-                Completa la información final antes de cerrar la sesión.
-            </p>
-
-        </div>
+</header>
 
 
-        <form class="space-y-6">
+<main class="mx-auto max-w-3xl px-6 py-10">
+
+    <section class="mb-8">
+
+        <p class="text-sm font-medium text-blue-700">
+            Consulta #0024
+        </p>
+
+        <h2 class="mt-2 text-3xl font-semibold">
+            Finalizar consulta
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Registra el cierre de la sesión antes de marcarla como finalizada.
+        </p>
+
+    </section>
+
+
+    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+
+        <div class="space-y-5">
 
             <div>
-
                 <label class="mb-2 block text-sm font-medium">
                     Tratamiento realizado
                 </label>
@@ -41,84 +60,79 @@
                 <textarea
                     rows="4"
                     placeholder="Describe el tratamiento aplicado..."
-                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
                 ></textarea>
-
             </div>
 
 
             <div>
-
                 <label class="mb-2 block text-sm font-medium">
                     Respuesta del paciente
                 </label>
 
                 <textarea
                     rows="3"
-                    placeholder="Describe la respuesta durante la sesión..."
-                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                    placeholder="Describe la respuesta del paciente..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
                 ></textarea>
-
             </div>
 
 
             <div>
-
                 <label class="mb-2 block text-sm font-medium">
-                    Indicaciones para seguimiento
+                    Indicaciones de seguimiento
                 </label>
 
                 <textarea
                     rows="4"
-                    placeholder="Agrega indicaciones o recomendaciones..."
-                    class="w-full resize-none rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none placeholder:text-stone-400 focus:border-stone-400"
+                    placeholder="Agrega recomendaciones para la siguiente sesión..."
+                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
                 ></textarea>
-
             </div>
 
 
-            <div class="rounded-xl bg-stone-50 p-4">
+            <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
-                <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
 
-                    <div>
-                        <p class="text-sm font-medium">
-                            Juan Pérez
-                        </p>
-
-                        <p class="mt-1 text-xs text-stone-500">
-                            Fisioterapia general · 12 octubre 2026
-                        </p>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        ✓
                     </div>
 
-                    <span class="rounded-full bg-stone-200 px-3 py-1 text-xs text-stone-600">
-                        En proceso
-                    </span>
+                    <div>
+                        <p class="text-sm font-medium text-emerald-800">
+                            Consulta lista para finalizar
+                        </p>
+
+                        <p class="mt-1 text-xs text-emerald-600">
+                            Verifica que la información esté completa.
+                        </p>
+                    </div>
 
                 </div>
 
             </div>
 
+        </div>
 
-            <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
 
-                <button
-                    type="button"
-                    class="rounded-xl border border-stone-200 px-5 py-2.5 text-sm hover:bg-stone-50"
-                >
-                    Volver
-                </button>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-end">
 
-                <button
-                    type="submit"
-                    class="rounded-xl bg-stone-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
-                >
-                    Finalizar consulta
-                </button>
+            <a
+                href="detalle_consulta.html"
+                class="rounded-xl border border-slate-200 px-5 py-2.5 text-center text-sm hover:bg-slate-50"
+            >
+                Regresar
+            </a>
 
-            </div>
+            <a
+                href="../progreso/registrar_progreso.html"
+                class="rounded-xl bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700"
+            >
+                Finalizar y registrar progreso
+            </a>
 
-        </form>
+        </div>
 
     </section>
 

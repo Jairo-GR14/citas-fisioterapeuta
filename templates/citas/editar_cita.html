@@ -9,92 +9,215 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<main class="mx-auto max-w-3xl px-6 py-10">
+<header class="border-b border-blue-100 bg-white">
 
-    <a
-        href="detalle_cita.html"
-        class="text-sm text-slate-500 hover:text-blue-700"
-    >
-        ← Regresar
-    </a>
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
 
-    <h1 class="mt-5 text-3xl font-semibold">
+        <div>
+            <h1 class="font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Gestión de citas
+            </p>
+        </div>
+
+        <a
+            href="detalle_cita.html"
+            class="text-sm font-medium text-blue-700 hover:text-blue-800"
+        >
+            ← Regresar
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-4xl px-6 py-10">
+
+    <p class="text-sm font-semibold text-emerald-600">
+        Modificar información
+    </p>
+
+    <h1 class="mt-2 text-3xl font-bold text-blue-950">
         Editar cita
     </h1>
 
     <p class="mt-2 text-sm text-slate-500">
-        Modifica la información necesaria.
+        Modifica la información necesaria de la cita.
     </p>
 
 
-    <form class="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+    <form
+        method="POST"
+        action="#"
+        class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <div class="grid gap-5 sm:grid-cols-2">
+        {% csrf_token %}
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Fisioterapeuta
-                </label>
+        <div class="p-6">
 
-                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
-                    <option>Lic. María López</option>
-                    <option>Lic. Carlos Hernández</option>
-                </select>
-            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+
+                    <label
+                        for="fisioterapeuta"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fisioterapeuta
+                    </label>
+
+                    <select
+                        id="fisioterapeuta"
+                        name="fisioterapeuta"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                        {% for fisioterapeuta in fisioterapeutas %}
+
+                        <option
+                            value="{{ fisioterapeuta.id }}"
+                            {% if fisioterapeuta.id == cita.fisioterapeuta.id %}selected{% endif %}
+                        >
+                            {{ fisioterapeuta.nombre }}
+                            {{ fisioterapeuta.apellidos }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
 
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Servicio
-                </label>
+                <!-- SERVICIO -->
+                <div>
 
-                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
-                    <option>Fisioterapia general</option>
-                    <option>Terapia deportiva</option>
-                </select>
-            </div>
+                    <label
+                        for="servicio"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Servicio
+                    </label>
+
+                    <select
+                        id="servicio"
+                        name="servicio"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                        <option value="{{ cita.servicio }}" selected>
+                            {{ cita.servicio }}
+                        </option>
+
+                        <option value="Valoración inicial">
+                            Valoración inicial
+                        </option>
+
+                        <option value="Fisioterapia general">
+                            Fisioterapia general
+                        </option>
+
+                        <option value="Terapia deportiva">
+                            Terapia deportiva
+                        </option>
+
+                        <option value="Rehabilitación">
+                            Rehabilitación
+                        </option>
+
+                    </select>
+
+                </div>
 
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Fecha
-                </label>
+                <!-- FECHA -->
+                <div>
 
-                <input
-                    type="date"
-                    value="2026-10-12"
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                >
-            </div>
+                    <label
+                        for="fecha"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        name="fecha"
+                        value="{{ cita.fecha|date:'Y-m-d' }}"
+                        required
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                </div>
 
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Horario
-                </label>
+                <!-- HORARIO -->
+                <div>
 
-                <select class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
-                    <option>10:30 AM</option>
-                    <option>11:00 AM</option>
-                </select>
+                    <label
+                        for="hora"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Horario
+                    </label>
+
+                    <input
+                        type="time"
+                        id="hora"
+                        name="hora"
+                        value="{{ cita.hora|time:'H:i' }}"
+                        required
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                </div>
+
+
+                <!-- MOTIVO -->
+                <div class="sm:col-span-2">
+
+                    <label
+                        for="motivo"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Motivo
+                    </label>
+
+                    <textarea
+                        id="motivo"
+                        name="motivo"
+                        rows="4"
+                        class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >{{ cita.motivo }}</textarea>
+
+                </div>
+
             </div>
 
         </div>
 
 
-        <div class="mt-7 flex justify-end gap-3">
+        <div class="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
                 href="detalle_cita.html"
-                class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm hover:bg-slate-50"
+                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
                 Cancelar
             </a>
 
             <button
-                type="button"
-                onclick="window.location.href='detalle_cita.html'"
-                class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
+                type="submit"
+                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
             >
                 Guardar cambios
             </button>

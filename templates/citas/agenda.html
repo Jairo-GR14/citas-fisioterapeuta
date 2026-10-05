@@ -3,399 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de Citas</title>
+
+    <title>Agendar Cita</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+<!-- HEADER -->
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
         <div>
-            <h1 class="font-semibold text-blue-800">
+            <h1 class="font-semibold text-blue-900">
                 Clínica de Fisioterapia
             </h1>
+
             <p class="text-xs text-slate-400">
-                Gestión de agenda
+                Gestión de citas
             </p>
         </div>
 
-        <nav class="hidden gap-6 text-sm md:flex">
-            <a href="agenda.html" class="font-medium text-blue-700">
-                Agenda
-            </a>
-
-            <a href="mis_citas.html" class="text-slate-500 hover:text-blue-700">
-                Citas
-            </a>
-        </nav>
-
         <a
-            href="agendar_cita.html"
-            class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
+            href="mis_citas.html"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
         >
-            Nueva cita
+            ← Mis citas
         </a>
 
     </div>
+
 </header>
 
 
-<main class="mx-auto max-w-7xl px-6 py-10">
+<!-- CONTENIDO -->
+<main class="mx-auto max-w-4xl px-6 py-10">
 
-    <section class="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+    <!-- ENCABEZADO -->
+    <section class="mb-8">
 
-        <div>
-            <p class="text-sm font-medium text-blue-700">
-                Agenda clínica
-            </p>
+        <p class="text-sm font-semibold text-emerald-600">
+            Reservación
+        </p>
 
-            <h2 class="mt-2 text-3xl font-semibold">
-                Agenda del día
-            </h2>
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
+            Agendar cita
+        </h2>
 
-            <p class="mt-2 text-sm text-slate-500">
-                Viernes, 2 de octubre de 2026
-            </p>
-        </div>
-
-        <div class="flex flex-col gap-3 sm:flex-row">
-
-            <select
-                class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500"
-            >
-                <option>Todos los fisioterapeutas</option>
-                <option>Lic. María López</option>
-                <option>Lic. Carlos Hernández</option>
-                <option>Lic. Ana Martínez</option>
-            </select>
-
-            <input
-                type="date"
-                value="2026-10-02"
-                class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500"
-            >
-
-        </div>
+        <p class="mt-2 text-sm text-slate-500">
+            Ingresa la información requerida para programar una nueva sesión.
+        </p>
 
     </section>
 
 
-    <div class="grid gap-6 lg:grid-cols-[270px_1fr]">
+    <!-- FORMULARIO -->
+    <form
+        method="POST"
+        action="#"
+        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <!-- Resumen -->
-        <aside class="space-y-4">
+        {% csrf_token %}
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-5">
+        <div class="p-6">
 
-                <h3 class="font-semibold">
-                    Resumen
-                </h3>
+            <div class="grid gap-5 sm:grid-cols-2">
 
-                <div class="mt-5 space-y-4">
+                <!-- SERVICIO -->
+                <div>
 
-                    <div class="flex justify-between border-b border-slate-100 pb-4">
-                        <span class="text-sm text-slate-500">
-                            Citas
-                        </span>
-                        <span class="font-semibold text-blue-700">
-                            5
-                        </span>
-                    </div>
-
-                    <div class="flex justify-between border-b border-slate-100 pb-4">
-                        <span class="text-sm text-slate-500">
-                            Confirmadas
-                        </span>
-                        <span class="font-semibold text-emerald-600">
-                            3
-                        </span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span class="text-sm text-slate-500">
-                            Disponibles
-                        </span>
-                        <span class="font-semibold">
-                            3
-                        </span>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <section class="rounded-2xl bg-blue-700 p-5 text-white">
-
-                <p class="text-xs uppercase tracking-widest text-blue-100">
-                    Horario
-                </p>
-
-                <p class="mt-4 text-xl font-semibold">
-                    09:00 - 17:00
-                </p>
-
-                <p class="mt-2 text-sm text-blue-100">
-                    Jornada programada del día.
-                </p>
-
-            </section>
-
-
-            <a
-                href="mis_citas.html"
-                class="block rounded-xl border border-slate-200 bg-white px-4 py-3 text-center text-sm text-slate-600 hover:bg-slate-50"
-            >
-                Ver todas las citas
-            </a>
-
-        </aside>
-
-
-        <!-- Horarios -->
-        <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-
-            <div class="border-b border-slate-200 px-6 py-5">
-                <h3 class="font-semibold">
-                    Horarios programados
-                </h3>
-            </div>
-
-
-            <!-- 09:00 -->
-            <div class="grid grid-cols-[80px_1fr] border-b border-slate-100">
-
-                <div class="border-r border-slate-100 px-4 py-6 text-sm text-slate-400">
-                    09:00
-                </div>
-
-                <div class="p-4">
-
-                    <article class="rounded-xl border border-blue-100 bg-blue-50 p-4">
-
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-medium">
-                                        Juan Pérez
-                                    </h4>
-
-                                    <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs text-emerald-700">
-                                        Confirmada
-                                    </span>
-                                </div>
-
-                                <p class="mt-1 text-sm text-slate-500">
-                                    Dolor lumbar
-                                </p>
-
-                                <p class="mt-1 text-xs text-slate-400">
-                                    Lic. María López
-                                </p>
-                            </div>
-
-                            <div class="flex gap-2">
-
-                                <a
-                                    href="detalle_cita.html"
-                                    class="rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm text-blue-700 hover:bg-blue-100"
-                                >
-                                    Detalle
-                                </a>
-
-                                <a
-                                    href="../consultas/iniciar_consulta.html"
-                                    class="rounded-lg bg-blue-700 px-4 py-2 text-sm text-white hover:bg-blue-800"
-                                >
-                                    Iniciar
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-
-            <!-- 10:00 -->
-            <div class="grid grid-cols-[80px_1fr] border-b border-slate-100">
-
-                <div class="border-r border-slate-100 px-4 py-6 text-sm text-slate-400">
-                    10:00
-                </div>
-
-                <div class="p-4">
-
-                    <a
-                        href="agendar_cita.html"
-                        class="flex items-center justify-between rounded-xl border border-dashed border-emerald-300 bg-emerald-50 px-4 py-5 hover:bg-emerald-100"
+                    <label
+                        for="servicio"
+                        class="mb-2 block text-sm font-medium text-slate-700"
                     >
-                        <div>
-                            <p class="text-sm font-medium text-emerald-700">
-                                Horario disponible
-                            </p>
+                        Servicio
+                    </label>
 
-                            <p class="mt-1 text-xs text-emerald-600">
-                                No hay citas programadas.
-                            </p>
-                        </div>
-
-                        <span class="text-sm font-medium text-emerald-700">
-                            + Agendar
-                        </span>
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- 11:00 -->
-            <div class="grid grid-cols-[80px_1fr] border-b border-slate-100">
-
-                <div class="border-r border-slate-100 px-4 py-6 text-sm text-slate-400">
-                    11:00
-                </div>
-
-                <div class="p-4">
-
-                    <article class="rounded-xl border border-slate-200 p-4">
-
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                            <div>
-                                <div class="flex items-center gap-2">
-
-                                    <h4 class="font-medium">
-                                        María Rodríguez
-                                    </h4>
-
-                                    <span class="rounded-full bg-blue-100 px-2.5 py-1 text-xs text-blue-700">
-                                        Programada
-                                    </span>
-
-                                </div>
-
-                                <p class="mt-1 text-sm text-slate-500">
-                                    Rehabilitación postquirúrgica
-                                </p>
-
-                                <p class="mt-1 text-xs text-slate-400">
-                                    Lic. Carlos Hernández
-                                </p>
-                            </div>
-
-                            <a
-                                href="detalle_cita.html"
-                                class="rounded-lg border border-slate-200 px-4 py-2 text-sm hover:bg-slate-50"
-                            >
-                                Detalles
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-
-            <!-- 12:00 -->
-            <div class="grid grid-cols-[80px_1fr] border-b border-slate-100">
-
-                <div class="border-r border-slate-100 px-4 py-6 text-sm text-slate-400">
-                    12:00
-                </div>
-
-                <div class="p-4">
-
-                    <article class="rounded-xl border border-blue-100 bg-blue-50 p-4">
-
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                            <div>
-
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-medium">
-                                        Carlos Hernández
-                                    </h4>
-
-                                    <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs text-emerald-700">
-                                        Confirmada
-                                    </span>
-                                </div>
-
-                                <p class="mt-1 text-sm text-slate-500">
-                                    Lesión deportiva
-                                </p>
-
-                                <p class="mt-1 text-xs text-slate-400">
-                                    Lic. Ana Martínez
-                                </p>
-
-                            </div>
-
-                            <a
-                                href="detalle_cita.html"
-                                class="rounded-lg bg-blue-700 px-4 py-2 text-sm text-white hover:bg-blue-800"
-                            >
-                                Ver cita
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-
-            <!-- 13:00 -->
-            <div class="grid grid-cols-[80px_1fr]">
-
-                <div class="border-r border-slate-100 px-4 py-6 text-sm text-slate-400">
-                    13:00
-                </div>
-
-                <div class="p-4">
-
-                    <a
-                        href="agendar_cita.html"
-                        class="flex items-center justify-between rounded-xl border border-dashed border-emerald-300 bg-emerald-50 px-4 py-5 hover:bg-emerald-100"
+                    <select
+                        id="servicio"
+                        name="servicio"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     >
 
-                        <div>
-                            <p class="text-sm font-medium text-emerald-700">
-                                Horario disponible
-                            </p>
+                        <option value="">
+                            Selecciona un servicio
+                        </option>
 
-                            <p class="mt-1 text-xs text-emerald-600">
-                                Disponible para nueva cita.
-                            </p>
-                        </div>
+                        <option value="valoracion">
+                            Valoración inicial
+                        </option>
 
-                        <span class="text-sm font-medium text-emerald-700">
-                            + Agendar
-                        </span>
+                        <option value="fisioterapia_general">
+                            Fisioterapia general
+                        </option>
 
-                    </a>
+                        <option value="terapia_deportiva">
+                            Terapia deportiva
+                        </option>
+
+                        <option value="rehabilitacion">
+                            Rehabilitación
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+
+                    <label
+                        for="fisioterapeuta"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fisioterapeuta
+                    </label>
+
+                    <select
+                        id="fisioterapeuta"
+                        name="fisioterapeuta"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                        <option value="">
+                            Selecciona un fisioterapeuta
+                        </option>
+
+                        {% for fisioterapeuta in fisioterapeutas %}
+
+                        <option value="{{ fisioterapeuta.id }}">
+                            {{ fisioterapeuta.nombre }}
+                            {{ fisioterapeuta.apellidos }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+
+                    <label
+                        for="fecha"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        name="fecha"
+                        required
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                </div>
+
+
+                <!-- MOTIVO -->
+                <div>
+
+                    <label
+                        for="motivo"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Motivo
+                    </label>
+
+                    <select
+                        id="motivo"
+                        name="motivo"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                        <option value="">
+                            Selecciona un motivo
+                        </option>
+
+                        <option value="dolor_muscular">
+                            Dolor muscular
+                        </option>
+
+                        <option value="lesion_deportiva">
+                            Lesión deportiva
+                        </option>
+
+                        <option value="dolor_lumbar">
+                            Dolor lumbar
+                        </option>
+
+                        <option value="dolor_cervical">
+                            Dolor cervical
+                        </option>
+
+                        <option value="valoracion_inicial">
+                            Valoración inicial
+                        </option>
+
+                        <option value="rehabilitacion">
+                            Rehabilitación
+                        </option>
+
+                        <option value="otro">
+                            Otro
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- INFORMACIÓN ADICIONAL -->
+                <div class="sm:col-span-2">
+
+                    <label
+                        for="informacion_adicional"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Información adicional
+                    </label>
+
+                    <textarea
+                        id="informacion_adicional"
+                        name="informacion_adicional"
+                        rows="4"
+                        placeholder="Describe brevemente el motivo de consulta..."
+                        class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    ></textarea>
 
                 </div>
 
             </div>
 
-        </section>
+        </div>
 
-    </div>
+
+        <!-- BOTONES -->
+        <div class="border-t border-slate-100 bg-slate-50 px-6 py-5">
+
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <a
+                    href="cita_emergencia.html"
+                    class="text-sm font-semibold text-emerald-700 transition hover:text-emerald-800"
+                >
+                    ¿Necesitas atención prioritaria?
+                </a>
+
+
+                <div class="flex flex-col gap-3 sm:flex-row">
+
+                    <a
+                        href="mis_citas.html"
+                        class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Continuar y ver horarios
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
 
 </main>
 

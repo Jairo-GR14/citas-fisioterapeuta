@@ -1,146 +1,299 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Registrar Tratamiento</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-slate-50">
 
-    <h1>Registrar Tratamiento</h1>
-
-    <form>
-
-        <div>
-            <label for="paciente">Paciente:</label>
-            <select id="paciente" name="paciente" required>
-                <option value="">Seleccione un paciente</option>
-                <option value="1">Juan Pérez</option>
-                <option value="2">María López</option>
-                <option value="3">Carlos Hernández</option>
-            </select>
-        </div>
-
-        <br>
+<header class="border-b border-blue-100 bg-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
         <div>
-            <label for="fecha">Fecha de la sesión:</label>
-            <input type="date" id="fecha" name="fecha" required>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Tratamientos
+            </p>
         </div>
 
-        <br>
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+            Ver historial
+        </a>
 
-        <div>
-            <label for="tipo_tratamiento">Tipo de tratamiento:</label>
-            <select id="tipo_tratamiento" name="tipo_tratamiento" required>
-                <option value="">Seleccione una opción</option>
-                <option value="valoracion">Valoración inicial</option>
-                <option value="general">Sesión general</option>
-                <option value="especializada">Terapia especializada</option>
-            </select>
-        </div>
+    </div>
+</header>
 
-        <br>
 
-        <div>
-            <label for="dolor">Nivel de dolor:</label>
-            <input
-                type="number"
-                id="dolor"
-                name="dolor"
-                min="0"
-                max="10"
-                placeholder="0 - 10"
-                required
-            >
-        </div>
+<main class="mx-auto max-w-7xl px-6 py-8">
 
-        <br>
+    <!-- Encabezado -->
+    <div class="mb-6">
 
-        <div>
-            <label for="movilidad">Estado de movilidad:</label>
-            <select id="movilidad" name="movilidad">
-                <option value="">Seleccione una opción</option>
-                <option value="normal">Normal</option>
-                <option value="leve">Limitación leve</option>
-                <option value="moderada">Limitación moderada</option>
-                <option value="severa">Limitación severa</option>
-            </select>
-        </div>
+        <p class="text-sm font-semibold text-emerald-600">
+            Tratamientos
+        </p>
 
-        <br>
+        <h2 class="text-3xl font-bold text-blue-950">
+            Registrar tratamiento
+        </h2>
 
-        <div>
-            <label for="ejercicios">Ejercicios realizados:</label>
-            <textarea
-                id="ejercicios"
-                name="ejercicios"
-                rows="4"
-                placeholder="Describa los ejercicios realizados durante la sesión"
-            ></textarea>
-        </div>
+        <p class="mt-2 text-sm text-slate-500">
+            Registra la información correspondiente a la sesión del paciente.
+        </p>
 
-        <br>
+    </div>
 
-        <div>
-            <label for="avance">Avances observados:</label>
-            <textarea
-                id="avance"
-                name="avance"
-                rows="4"
-                placeholder="Describa los avances del paciente"
-            ></textarea>
-        </div>
 
-        <br>
+    <!-- Formulario -->
+    <div class="rounded-2xl border border-blue-100 bg-white p-6">
 
-        <div>
-            <label for="observaciones">Observaciones:</label>
-            <textarea
-                id="observaciones"
-                name="observaciones"
-                rows="4"
-                placeholder="Ingrese observaciones de la sesión"
-            ></textarea>
-        </div>
+        <form method="POST">
 
-        <br>
+            {% csrf_token %}
 
-        <div>
-            <label for="indicaciones">Indicaciones para el paciente:</label>
-            <textarea
-                id="indicaciones"
-                name="indicaciones"
-                rows="4"
-                placeholder="Ejercicios, repeticiones, frecuencia, duración, etc."
-            ></textarea>
-        </div>
+            <div class="grid gap-6 md:grid-cols-2">
 
-        <br>
 
-        <div>
-            <label for="recomendaciones">Recomendaciones:</label>
-            <textarea
-                id="recomendaciones"
-                name="recomendaciones"
-                rows="4"
-                placeholder="Ingrese recomendaciones para continuar el tratamiento"
-            ></textarea>
-        </div>
+                <!-- Paciente -->
+                <div>
+                    <label for="paciente"
+                        class="block text-sm font-semibold text-slate-600">
+                        Paciente
+                    </label>
 
-        <br>
+                    <select id="paciente"
+                            name="paciente"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
 
-        <button type="submit">
-            Guardar tratamiento
-        </button>
+                        <option value="">
+                            Seleccionar paciente
+                        </option>
 
-        <button type="reset">
-            Limpiar
-        </button>
+                        {% for paciente in pacientes %}
 
-    </form>
+                        <option value="{{ paciente.id }}">
+                            {{ paciente.nombre }}
+                        </option>
+
+                        {% empty %}
+
+                        <option disabled>
+                            No hay pacientes registrados
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+
+                <!-- Fecha -->
+                <div>
+                    <label for="fecha"
+                        class="block text-sm font-semibold text-slate-600">
+                        Fecha de la sesión
+                    </label>
+
+                    <input type="date"
+                        id="fecha"
+                        name="fecha"
+                        required
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+                </div>
+
+
+                <!-- Tipo de tratamiento -->
+                <div>
+                    <label for="tipo_tratamiento"
+                        class="block text-sm font-semibold text-slate-600">
+                        Tipo de tratamiento
+                    </label>
+
+                    <select id="tipo_tratamiento"
+                            name="tipo_tratamiento"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar tratamiento
+                        </option>
+
+                        <option value="valoracion">
+                            Valoración inicial
+                        </option>
+
+                        <option value="general">
+                            Sesión general
+                        </option>
+
+                        <option value="especializada">
+                            Terapia especializada
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- Nivel de dolor -->
+                <div>
+                    <label for="nivel_dolor"
+                        class="block text-sm font-semibold text-slate-600">
+                        Nivel de dolor
+                    </label>
+
+                    <input type="number"
+                        id="nivel_dolor"
+                        name="nivel_dolor"
+                        min="0"
+                        max="10"
+                        placeholder="0 a 10"
+                        required
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+                </div>
+
+
+                <!-- Movilidad -->
+                <div class="md:col-span-2">
+                    <label for="movilidad"
+                        class="block text-sm font-semibold text-slate-600">
+                        Estado de movilidad
+                    </label>
+
+                    <select id="movilidad"
+                            name="movilidad"
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar estado
+                        </option>
+
+                        <option value="normal">
+                            Normal
+                        </option>
+
+                        <option value="leve">
+                            Limitación leve
+                        </option>
+
+                        <option value="moderada">
+                            Limitación moderada
+                        </option>
+
+                        <option value="severa">
+                            Limitación severa
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- Ejercicios -->
+                <div class="md:col-span-2">
+                    <label for="ejercicios"
+                        class="block text-sm font-semibold text-slate-600">
+                        Ejercicios realizados
+                    </label>
+
+                    <textarea id="ejercicios"
+                            name="ejercicios"
+                            rows="3"
+                            placeholder="Describe los ejercicios realizados durante la sesión..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+                </div>
+
+
+                <!-- Avances -->
+                <div class="md:col-span-2">
+                    <label for="avances"
+                        class="block text-sm font-semibold text-slate-600">
+                        Avances del paciente
+                    </label>
+
+                    <textarea id="avances"
+                            name="avances"
+                            rows="3"
+                            placeholder="Describe los avances observados..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+                </div>
+
+
+                <!-- Observaciones -->
+                <div class="md:col-span-2">
+                    <label for="observaciones"
+                        class="block text-sm font-semibold text-slate-600">
+                        Observaciones
+                    </label>
+
+                    <textarea id="observaciones"
+                            name="observaciones"
+                            rows="3"
+                            placeholder="Escribe las observaciones de la sesión..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+                </div>
+
+
+                <!-- Indicaciones -->
+                <div class="md:col-span-2">
+                    <label for="indicaciones"
+                        class="block text-sm font-semibold text-slate-600">
+                        Indicaciones
+                    </label>
+
+                    <textarea id="indicaciones"
+                            name="indicaciones"
+                            rows="3"
+                            placeholder="Ejercicios para casa, repeticiones, frecuencia, duración..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+                </div>
+
+
+                <!-- Recomendaciones -->
+                <div class="md:col-span-2">
+                    <label for="recomendaciones"
+                        class="block text-sm font-semibold text-slate-600">
+                        Recomendaciones
+                    </label>
+
+                    <textarea id="recomendaciones"
+                            name="recomendaciones"
+                            rows="3"
+                            placeholder="Escribe las recomendaciones para el paciente..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+                </div>
+
+            </div>
+
+
+            <!-- Botones -->
+            <div class="mt-6 flex justify-end gap-3">
+
+                <a href="#"
+                class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white">
+                    Guardar tratamiento
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
 
 </body>
 </html>

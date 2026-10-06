@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar Tratamiento</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Tratamientos
+            </p>
+        </div>
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Ver historial
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Tratamientos
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Editar tratamiento
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Modifica la información registrada durante la sesión del paciente.
+        </p>
+
+    </div>
+
+
+    <!-- Formulario -->
+
+    <div class="rounded-2xl border border-blue-100 bg-white p-6">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="grid gap-6 md:grid-cols-2">
+
+
+                <!-- Paciente -->
+
+                <div>
+
+                    <label for="paciente"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Paciente
+
+                    </label>
+
+                    <select id="paciente"
+                            name="paciente"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar paciente
+                        </option>
+
+                        {% for paciente in pacientes %}
+
+                        <option value="{{ paciente.id }}"
+                            {% if paciente.id == tratamiento.paciente.id %}
+                                selected
+                            {% endif %}>
+
+                            {{ paciente.nombre }}
+
+                        </option>
+
+                        {% empty %}
+
+                        <option disabled>
+                            No hay pacientes registrados
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Fecha -->
+
+                <div>
+
+                    <label for="fecha"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Fecha de la sesión
+
+                    </label>
+
+                    <input type="date"
+                        id="fecha"
+                        name="fecha"
+                        value="{{ tratamiento.fecha|date:'Y-m-d' }}"
+                        required
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Tipo de tratamiento -->
+
+                <div>
+
+                    <label for="tipo_tratamiento"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Tipo de tratamiento
+
+                    </label>
+
+                    <select id="tipo_tratamiento"
+                            name="tipo_tratamiento"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+
+                        <option value="">
+                            Seleccionar tratamiento
+                        </option>
+
+
+                        <option value="valoracion"
+                            {% if tratamiento.tipo_tratamiento == "valoracion" %}
+                                selected
+                            {% endif %}>
+
+                            Valoración inicial
+
+                        </option>
+
+
+                        <option value="general"
+                            {% if tratamiento.tipo_tratamiento == "general" %}
+                                selected
+                            {% endif %}>
+
+                            Sesión general
+
+                        </option>
+
+
+                        <option value="especializada"
+                            {% if tratamiento.tipo_tratamiento == "especializada" %}
+                                selected
+                            {% endif %}>
+
+                            Terapia especializada
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Nivel de dolor -->
+
+                <div>
+
+                    <label for="nivel_dolor"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Nivel de dolor
+
+                    </label>
+
+                    <input type="number"
+                        id="nivel_dolor"
+                        name="nivel_dolor"
+                        min="0"
+                        max="10"
+                        value="{{ tratamiento.nivel_dolor }}"
+                        required
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Movilidad -->
+
+                <div class="md:col-span-2">
+
+                    <label for="movilidad"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Estado de movilidad
+
+                    </label>
+
+                    <select id="movilidad"
+                            name="movilidad"
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+
+                        <option value="">
+                            Seleccionar estado
+                        </option>
+
+
+                        <option value="normal"
+                            {% if tratamiento.movilidad == "normal" %}
+                                selected
+                            {% endif %}>
+
+                            Normal
+
+                        </option>
+
+
+                        <option value="leve"
+                            {% if tratamiento.movilidad == "leve" %}
+                                selected
+                            {% endif %}>
+
+                            Limitación leve
+
+                        </option>
+
+
+                        <option value="moderada"
+                            {% if tratamiento.movilidad == "moderada" %}
+                                selected
+                            {% endif %}>
+
+                            Limitación moderada
+
+                        </option>
+
+
+                        <option value="severa"
+                            {% if tratamiento.movilidad == "severa" %}
+                                selected
+                            {% endif %}>
+
+                            Limitación severa
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Ejercicios -->
+
+                <div class="md:col-span-2">
+
+                    <label for="ejercicios"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Ejercicios realizados
+
+                    </label>
+
+                    <textarea id="ejercicios"
+                            name="ejercicios"
+                            rows="3"
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">{{ tratamiento.ejercicios }}</textarea>
+
+                </div>
+
+
+                <!-- Avances -->
+
+                <div class="md:col-span-2">
+
+                    <label for="avances"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Avances del paciente
+
+                    </label>
+
+                    <textarea id="avances"
+                            name="avances"
+                            rows="3"
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">{{ tratamiento.avances }}</textarea>
+
+                </div>
+
+
+                <!-- Observaciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="observaciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Observaciones
+
+                    </label>
+
+                    <textarea id="observaciones"
+                            name="observaciones"
+                            rows="3"
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">{{ tratamiento.observaciones }}</textarea>
+
+                </div>
+
+
+                <!-- Indicaciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="indicaciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Indicaciones
+
+                    </label>
+
+                    <textarea id="indicaciones"
+                            name="indicaciones"
+                            rows="3"
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">{{ tratamiento.indicaciones }}</textarea>
+
+                </div>
+
+
+                <!-- Recomendaciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="recomendaciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Recomendaciones
+
+                    </label>
+
+                    <textarea id="recomendaciones"
+                            name="recomendaciones"
+                            rows="3"
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">{{ tratamiento.recomendaciones }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- Botones -->
+
+            <div class="mt-6 flex justify-end gap-3">
+
+                <a href="#"
+                class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                    Cancelar
+
+                </a>
+
+
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white">
+
+                    Guardar cambios
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+
+</html

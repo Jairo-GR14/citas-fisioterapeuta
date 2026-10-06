@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle del Tratamiento</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Tratamientos
+            </p>
+        </div>
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Editar tratamiento
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Tratamientos
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Detalle del tratamiento
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta la información registrada durante la sesión del paciente.
+        </p>
+
+    </div>
+
+
+    <!-- Informacion general -->
+
+    <div class="mb-6 grid gap-4 md:grid-cols-3">
+
+
+        <!-- Paciente -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-xs font-semibold uppercase text-slate-400">
+                Paciente
+            </p>
+
+            <p class="mt-2 text-lg font-semibold text-blue-950">
+                {{ tratamiento.paciente.nombre }}
+            </p>
+
+        </div>
+
+
+        <!-- Fecha -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-xs font-semibold uppercase text-slate-400">
+                Fecha de sesión
+            </p>
+
+            <p class="mt-2 text-lg font-semibold text-blue-950">
+                {{ tratamiento.fecha }}
+            </p>
+
+        </div>
+
+
+        <!-- Tipo de tratamiento -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-xs font-semibold uppercase text-slate-400">
+                Tipo de tratamiento
+            </p>
+
+            <span class="mt-2 inline-block rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+
+                {{ tratamiento.tipo_tratamiento }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Datos de la sesion -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+
+        <div class="mb-6">
+
+            <h3 class="text-xl font-semibold text-blue-950">
+                Información de la sesión
+            </h3>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Datos registrados por el fisioterapeuta.
+            </p>
+
+        </div>
+
+
+        <div class="grid gap-6 md:grid-cols-2">
+
+
+            <!-- Nivel de dolor -->
+
+            <div class="rounded-xl bg-slate-50 p-4">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Nivel de dolor
+                </p>
+
+                <p class="mt-2 text-lg font-semibold text-blue-900">
+                    {{ tratamiento.nivel_dolor }} / 10
+                </p>
+
+            </div>
+
+
+            <!-- Movilidad -->
+
+            <div class="rounded-xl bg-slate-50 p-4">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Estado de movilidad
+                </p>
+
+                <p class="mt-2 text-lg font-semibold text-blue-900">
+                    {{ tratamiento.movilidad }}
+                </p>
+
+            </div>
+
+
+            <!-- Ejercicios -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Ejercicios realizados
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ tratamiento.ejercicios }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Avances -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Avances del paciente
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ tratamiento.avances }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Observaciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Observaciones
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ tratamiento.observaciones }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Indicaciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Indicaciones para el paciente
+                </p>
+
+                <div class="mt-2 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-800">
+
+                    {{ tratamiento.indicaciones }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Recomendaciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Recomendaciones
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ tratamiento.recomendaciones }}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Botones -->
+
+        <div class="mt-6 flex justify-end gap-3">
+
+            <a href="#"
+            class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                Volver al historial
+
+            </a>
+
+            <a href="#"
+            class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Editar tratamiento
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+</body>
+
+</html

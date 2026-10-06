@@ -1,1 +1,232 @@
-yhhh
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Historial de Tratamientos</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Tratamientos
+            </p>
+        </div>
+
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            + Registrar tratamiento
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Titulo -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Tratamientos
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Historial de tratamientos
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta los tratamientos registrados de los pacientes.
+        </p>
+
+    </div>
+
+
+    <!-- Busqueda -->
+
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5">
+
+        <form method="GET" class="flex gap-3">
+
+            <input type="text"
+                name="buscar"
+                placeholder="Buscar paciente..."
+                value="{{ request.GET.buscar }}"
+                class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm">
+
+            <button type="submit"
+                    class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
+
+                Buscar
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Tabla -->
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Paciente
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Fecha
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Tratamiento
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Nivel de dolor
+                        </th>
+
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+
+                    {% for tratamiento in tratamientos %}
+
+                    <tr class="hover:bg-slate-50">
+
+
+                        <!-- Paciente -->
+
+                        <td class="px-6 py-4 font-medium text-blue-900">
+
+                            {{ tratamiento.paciente.nombre }}
+
+                        </td>
+
+
+                        <!-- Fecha -->
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+
+                            {{ tratamiento.fecha }}
+
+                        </td>
+
+
+                        <!-- Tipo de tratamiento -->
+
+                        <td class="px-6 py-4">
+
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+
+                                {{ tratamiento.tipo_tratamiento }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- Dolor -->
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+
+                            {{ tratamiento.nivel_dolor }} / 10
+
+                        </td>
+
+
+                        <!-- Acciones -->
+
+                        <td class="px-6 py-4 text-right">
+
+                            <div class="flex justify-end gap-2">
+
+                                <a href="#"
+                                class="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+
+                                    Ver
+
+                                </a>
+
+
+                                <a href="#"
+                                class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700">
+
+                                    Editar
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="px-6 py-10 text-center text-slate-500">
+
+                            No hay tratamientos registrados.
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

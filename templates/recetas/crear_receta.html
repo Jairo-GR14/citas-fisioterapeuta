@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crear Receta</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Recetas
+            </p>
+        </div>
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Mis recetas
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Recetas e indicaciones
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Crear receta
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Registra las indicaciones y ejercicios recomendados para el paciente.
+        </p>
+
+    </div>
+
+
+    <!-- Formulario -->
+
+    <div class="rounded-2xl border border-blue-100 bg-white p-6">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="grid gap-6 md:grid-cols-2">
+
+
+                <!-- Paciente -->
+
+                <div>
+
+                    <label for="paciente"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Paciente
+
+                    </label>
+
+                    <select id="paciente"
+                            name="paciente"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar paciente
+                        </option>
+
+                        {% for paciente in pacientes %}
+
+                        <option value="{{ paciente.id }}">
+                            {{ paciente.nombre }}
+                        </option>
+
+                        {% empty %}
+
+                        <option disabled>
+                            No hay pacientes registrados
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Fecha -->
+
+                <div>
+
+                    <label for="fecha"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Fecha
+
+                    </label>
+
+                    <input type="date"
+                        id="fecha"
+                        name="fecha"
+                        required
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Ejercicio -->
+
+                <div class="md:col-span-2">
+
+                    <label for="ejercicios"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Ejercicios recomendados
+
+                    </label>
+
+                    <textarea id="ejercicios"
+                            name="ejercicios"
+                            rows="3"
+                            placeholder="Describe los ejercicios que deberá realizar el paciente..."
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+
+                </div>
+
+
+                <!-- Repeticiones -->
+
+                <div>
+
+                    <label for="repeticiones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Repeticiones
+
+                    </label>
+
+                    <input type="number"
+                        id="repeticiones"
+                        name="repeticiones"
+                        min="1"
+                        placeholder="Ej. 10"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Frecuencia -->
+
+                <div>
+
+                    <label for="frecuencia"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Frecuencia
+
+                    </label>
+
+                    <input type="text"
+                        id="frecuencia"
+                        name="frecuencia"
+                        placeholder="Ej. 2 veces al día"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Duracion -->
+
+                <div class="md:col-span-2">
+
+                    <label for="duracion"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Duración
+
+                    </label>
+
+                    <input type="text"
+                        id="duracion"
+                        name="duracion"
+                        placeholder="Ej. 15 minutos durante 2 semanas"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700">
+
+                </div>
+
+
+                <!-- Indicaciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="indicaciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Indicaciones
+
+                    </label>
+
+                    <textarea id="indicaciones"
+                            name="indicaciones"
+                            rows="3"
+                            placeholder="Escribe las indicaciones para realizar correctamente los ejercicios..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+
+                </div>
+
+
+                <!-- Recomendaciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="recomendaciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Recomendaciones
+
+                    </label>
+
+                    <textarea id="recomendaciones"
+                            name="recomendaciones"
+                            rows="3"
+                            placeholder="Agrega recomendaciones para el paciente..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+
+                </div>
+
+
+                <!-- Restricciones -->
+
+                <div class="md:col-span-2">
+
+                    <label for="restricciones"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Restricciones
+
+                    </label>
+
+                    <textarea id="restricciones"
+                            name="restricciones"
+                            rows="3"
+                            placeholder="Indica actividades o movimientos que el paciente debe evitar..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- Botones -->
+
+            <div class="mt-6 flex justify-end gap-3">
+
+                <a href="#"
+                class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white">
+
+                    Guardar receta
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

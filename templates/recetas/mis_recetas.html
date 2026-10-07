@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis Recetas</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Recetas
+            </p>
+
+        </div>
+
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            + Crear receta
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Recetas e indicaciones
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Mis recetas
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta las recetas e indicaciones registradas para los pacientes.
+        </p>
+
+    </div>
+
+
+    <!-- Buscador -->
+
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5">
+
+        <form method="GET"
+            class="flex gap-3">
+
+            <input type="text"
+                name="buscar"
+                value="{{ request.GET.buscar }}"
+                placeholder="Buscar paciente..."
+                class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm">
+
+            <button type="submit"
+                    class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
+
+                Buscar
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Tabla -->
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Paciente
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Fecha
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Ejercicio
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Frecuencia
+                        </th>
+
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+
+                    {% for receta in recetas %}
+
+                    <tr class="hover:bg-slate-50">
+
+
+                        <!-- Paciente -->
+
+                        <td class="px-6 py-4 font-medium text-blue-900">
+
+                            {{ receta.paciente.nombre }}
+
+                        </td>
+
+
+                        <!-- Fecha -->
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+
+                            {{ receta.fecha }}
+
+                        </td>
+
+
+                        <!-- Ejercicio -->
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+
+                            {{ receta.ejercicios|truncatechars:40 }}
+
+                        </td>
+
+
+                        <!-- Frecuencia -->
+
+                        <td class="px-6 py-4">
+
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+
+                                {{ receta.frecuencia }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- Acciones -->
+
+                        <td class="px-6 py-4 text-right">
+
+                            <div class="flex justify-end gap-2">
+
+                                <a href="#"
+                                class="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+
+                                    Ver
+
+                                </a>
+
+
+                                <a href="#"
+                                class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700">
+
+                                    Editar
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="px-6 py-10 text-center text-slate-500">
+
+                            No hay recetas registradas.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

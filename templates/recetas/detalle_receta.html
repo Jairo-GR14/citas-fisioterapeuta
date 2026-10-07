@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle de Receta</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Recetas
+            </p>
+
+        </div>
+
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Editar receta
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Recetas e indicaciones
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Detalle de receta
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta las indicaciones asignadas al paciente.
+        </p>
+
+    </div>
+
+
+    <!-- Informacion general -->
+
+    <div class="mb-6 grid gap-4 md:grid-cols-2">
+
+
+        <!-- Paciente -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-xs font-semibold uppercase text-slate-400">
+                Paciente
+            </p>
+
+            <p class="mt-2 text-lg font-semibold text-blue-950">
+
+                {{ receta.paciente.nombre }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Fecha -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-xs font-semibold uppercase text-slate-400">
+                Fecha
+            </p>
+
+            <p class="mt-2 text-lg font-semibold text-blue-950">
+
+                {{ receta.fecha }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Informacion de receta -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+
+        <div class="mb-6">
+
+            <h3 class="text-xl font-semibold text-blue-950">
+                Indicaciones del paciente
+            </h3>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Información registrada por el fisioterapeuta.
+            </p>
+
+        </div>
+
+
+        <div class="grid gap-6 md:grid-cols-2">
+
+
+            <!-- Repeticiones -->
+
+            <div class="rounded-xl bg-slate-50 p-4">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Repeticiones
+                </p>
+
+                <p class="mt-2 text-lg font-semibold text-blue-900">
+
+                    {{ receta.repeticiones }}
+
+                </p>
+
+            </div>
+
+
+            <!-- Frecuencia -->
+
+            <div class="rounded-xl bg-slate-50 p-4">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Frecuencia
+                </p>
+
+                <p class="mt-2 text-lg font-semibold text-blue-900">
+
+                    {{ receta.frecuencia }}
+
+                </p>
+
+            </div>
+
+
+            <!-- Duracion -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Duración
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ receta.duracion }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Ejercicios -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Ejercicios recomendados
+                </p>
+
+                <div class="mt-2 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-800">
+
+                    {{ receta.ejercicios }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Indicaciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Indicaciones
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ receta.indicaciones }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Recomendaciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Recomendaciones
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ receta.recomendaciones }}
+
+                </div>
+
+            </div>
+
+
+            <!-- Restricciones -->
+
+            <div class="md:col-span-2">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Restricciones
+                </p>
+
+                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+
+                    {{ receta.restricciones }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Botones -->
+
+        <div class="mt-6 flex justify-end gap-3">
+
+            <a href="#"
+            class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                Volver a mis recetas
+
+            </a>
+
+
+            <a href="#"
+            class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Editar receta
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

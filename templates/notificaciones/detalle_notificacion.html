@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle de Notificación</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Notificaciones
+            </p>
+
+        </div>
+
+        <a href="#"
+           class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Volver a notificaciones
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Avisos y recordatorios
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Detalle de notificación
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta la información completa de la notificación.
+        </p>
+
+    </div>
+
+
+    <!-- Contenido -->
+
+    <div class="rounded-2xl border border-blue-100 bg-white p-6">
+
+
+        <!-- Estado y fecha -->
+
+        <div class="mb-6 flex flex-col justify-between gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center">
+
+            <div>
+
+                {% if notificacion.leida %}
+
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+                    Leída
+                </span>
+
+                {% else %}
+
+                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    Nueva
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <p class="text-sm text-slate-400">
+
+                {{ notificacion.fecha }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Titulo -->
+
+        <div class="mb-6">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Asunto
+            </p>
+
+            <h3 class="mt-2 text-2xl font-bold text-blue-950">
+
+                {{ notificacion.titulo }}
+
+            </h3>
+
+        </div>
+
+
+        <!-- Mensaje -->
+
+        <div class="mb-6">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Mensaje
+            </p>
+
+            <div class="mt-2 rounded-xl bg-slate-50 p-5 text-sm leading-6 text-slate-700">
+
+                {{ notificacion.mensaje }}
+
+            </div>
+
+        </div>
+
+
+        <!-- Informacion relacionada con cita -->
+
+        {% if notificacion.cita %}
+
+        <div class="mb-6">
+
+            <p class="mb-3 text-sm font-semibold text-slate-500">
+                Información de la cita
+            </p>
+
+            <div class="grid gap-4 md:grid-cols-3">
+
+
+                <!-- Fecha -->
+
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fecha
+                    </p>
+
+                    <p class="mt-2 font-semibold text-blue-900">
+
+                        {{ notificacion.cita.fecha }}
+
+                    </p>
+
+                </div>
+
+
+                <!-- Hora -->
+
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Hora
+                    </p>
+
+                    <p class="mt-2 font-semibold text-blue-900">
+
+                        {{ notificacion.cita.hora }}
+
+                    </p>
+
+                </div>
+
+
+                <!-- Fisioterapeuta -->
+
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fisioterapeuta
+                    </p>
+
+                    <p class="mt-2 font-semibold text-blue-900">
+
+                        {{ notificacion.cita.fisioterapeuta.nombre }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Boton -->
+
+        <div class="flex justify-end">
+
+            <a href="#"
+            class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                Volver a notificaciones
+
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+
+</html

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Administración
+            </p>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Administración
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Reportes
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Consulta información general sobre el funcionamiento de la clínica.
+        </p>
+
+    </div>
+
+
+    <!-- Resumen general -->
+
+    <div class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+
+        <!-- Citas -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Total de citas
+            </p>
+
+            <p class="mt-2 text-3xl font-bold text-blue-900">
+
+                {{ total_citas|default:"0" }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Pacientes -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Pacientes
+            </p>
+
+            <p class="mt-2 text-3xl font-bold text-blue-900">
+
+                {{ total_pacientes|default:"0" }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Fisioterapeutas -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Fisioterapeutas
+            </p>
+
+            <p class="mt-2 text-3xl font-bold text-blue-900">
+
+                {{ total_fisioterapeutas|default:"0" }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Ingresos -->
+
+        <div class="rounded-2xl border border-blue-100 bg-white p-5">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Ingresos
+            </p>
+
+            <p class="mt-2 text-3xl font-bold text-emerald-600">
+
+                ${{ total_ingresos|default:"0.00" }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Tipos de reportes -->
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+
+        <!-- Reporte de citas -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+            <div class="mb-4">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Citas
+                </p>
+
+                <h3 class="mt-1 text-xl font-bold text-blue-950">
+                    Reporte de citas
+                </h3>
+
+            </div>
+
+            <p class="mb-6 text-sm text-slate-500">
+                Consulta las citas registradas, sus fechas, pacientes,
+                fisioterapeutas y estado actual.
+            </p>
+
+            <a href="#"
+            class="inline-block rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Ver reporte
+
+            </a>
+
+        </div>
+
+
+        <!-- Reporte de pacientes -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+            <div class="mb-4">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Pacientes
+                </p>
+
+                <h3 class="mt-1 text-xl font-bold text-blue-950">
+                    Reporte de pacientes
+                </h3>
+
+            </div>
+
+            <p class="mb-6 text-sm text-slate-500">
+                Consulta los pacientes registrados y la información general
+                relacionada con su atención.
+            </p>
+
+            <a href="#"
+            class="inline-block rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Ver reporte
+
+            </a>
+
+        </div>
+
+
+        <!-- Reporte de fisioterapeutas -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+            <div class="mb-4">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Fisioterapeutas
+                </p>
+
+                <h3 class="mt-1 text-xl font-bold text-blue-950">
+                    Reporte de fisioterapeutas
+                </h3>
+
+            </div>
+
+            <p class="mb-6 text-sm text-slate-500">
+                Consulta los fisioterapeutas registrados y las citas
+                asignadas a cada uno.
+            </p>
+
+            <a href="#"
+            class="inline-block rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Ver reporte
+
+            </a>
+
+        </div>
+
+
+        <!-- Reporte de ingresos -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+
+            <div class="mb-4">
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Ingresos
+                </p>
+
+                <h3 class="mt-1 text-xl font-bold text-blue-950">
+                    Reporte de ingresos
+                </h3>
+
+            </div>
+
+            <p class="mb-6 text-sm text-slate-500">
+                Consulta los ingresos generados por los diferentes servicios
+                realizados en la clínica.
+            </p>
+
+            <a href="#"
+            class="inline-block rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+                Ver reporte
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

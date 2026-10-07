@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Agendar Cita</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
+<!-- HEADER -->
+<header class="border-b border-blue-100 bg-white">
 
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
         <div>
-            <h1 class="font-semibold text-blue-800">
+            <h1 class="font-semibold text-blue-900">
                 Clínica de Fisioterapia
             </h1>
 
             <p class="text-xs text-slate-400">
-                Nueva cita
+                Gestión de citas
             </p>
         </div>
 
         <a
             href="mis_citas.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
         >
             ← Mis citas
         </a>
@@ -35,15 +38,17 @@
 </header>
 
 
+<!-- CONTENIDO -->
 <main class="mx-auto max-w-4xl px-6 py-10">
 
+    <!-- ENCABEZADO -->
     <section class="mb-8">
 
-        <p class="text-sm font-medium text-blue-700">
+        <p class="text-sm font-semibold text-emerald-600">
             Reservación
         </p>
 
-        <h2 class="mt-2 text-3xl font-semibold">
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
             Agendar cita
         </h2>
 
@@ -54,118 +59,244 @@
     </section>
 
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+    <!-- FORMULARIO -->
+    <form
+        method="POST"
+        action="#"
+        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <div class="grid gap-5 sm:grid-cols-2">
+        {% csrf_token %}
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Servicio
-                </label>
+        <div class="p-6">
 
-                <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-                >
-                    <option>Selecciona un servicio</option>
-                    <option>Valoración inicial</option>
-                    <option>Fisioterapia general</option>
-                    <option>Terapia deportiva</option>
-                </select>
-            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
 
+                <!-- SERVICIO -->
+                <div>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Fisioterapeuta
-                </label>
+                    <label
+                        for="servicio"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Servicio
+                    </label>
 
-                <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-                >
-                    <option>Selecciona un fisioterapeuta</option>
-                    <option>Lic. María López</option>
-                    <option>Lic. Carlos Hernández</option>
-                    <option>Lic. Ana Martínez</option>
-                </select>
-            </div>
+                    <select
+                        id="servicio"
+                        name="servicio"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
 
+                        <option value="">
+                            Selecciona un servicio
+                        </option>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Fecha
-                </label>
+                        <option value="valoracion_inicial">
+                            Valoración inicial
+                        </option>
 
-                <input
-                    type="date"
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-                >
-            </div>
+                        <option value="fisioterapia_general">
+                            Fisioterapia general
+                        </option>
 
+                        <option value="terapia_deportiva">
+                            Terapia deportiva
+                        </option>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Motivo
-                </label>
+                        <option value="rehabilitacion">
+                            Rehabilitación
+                        </option>
 
-                <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-                >
-                    <option>Selecciona un motivo</option>
-                    <option>Dolor muscular</option>
-                    <option>Lesión deportiva</option>
-                    <option>Dolor lumbar</option>
-                    <option>Dolor cervical</option>
-                    <option>Valoración inicial</option>
-                </select>
-            </div>
+                    </select>
+
+                </div>
 
 
-            <div class="sm:col-span-2">
-                <label class="mb-2 block text-sm font-medium">
-                    Información adicional
-                </label>
+                <!-- FISIOTERAPEUTA -->
+                <div>
 
-                <textarea
-                    rows="4"
-                    placeholder="Describe brevemente tu motivo de consulta..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
-                ></textarea>
+                    <label
+                        for="fisioterapeuta"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fisioterapeuta
+                    </label>
+
+                    <select
+                        id="fisioterapeuta"
+                        name="fisioterapeuta"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                        <option value="">
+                            Selecciona un fisioterapeuta
+                        </option>
+
+                        {% for fisioterapeuta in fisioterapeutas %}
+
+                        <option value="{{ fisioterapeuta.id }}">
+                            {{ fisioterapeuta.nombre }}
+                            {{ fisioterapeuta.apellidos }}
+                        </option>
+
+                        {% empty %}
+
+                        <option disabled>
+                            No hay fisioterapeutas disponibles
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+
+                    <label
+                        for="fecha"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        name="fecha"
+                        required
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                </div>
+
+
+                <!-- MOTIVO -->
+                <div>
+
+                    <label
+                        for="motivo"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Motivo
+                    </label>
+
+                    <select
+                        id="motivo"
+                        name="motivo"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                    >
+
+                        <option value="">
+                            Selecciona un motivo
+                        </option>
+
+                        <option value="dolor_muscular">
+                            Dolor muscular
+                        </option>
+
+                        <option value="lesion_deportiva">
+                            Lesión deportiva
+                        </option>
+
+                        <option value="dolor_lumbar">
+                            Dolor lumbar
+                        </option>
+
+                        <option value="dolor_cervical">
+                            Dolor cervical
+                        </option>
+
+                        <option value="valoracion_inicial">
+                            Valoración inicial
+                        </option>
+
+                        <option value="rehabilitacion">
+                            Rehabilitación
+                        </option>
+
+                        <option value="otro">
+                            Otro
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- INFORMACIÓN ADICIONAL -->
+                <div class="sm:col-span-2">
+
+                    <label
+                        for="informacion_adicional"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Información adicional
+                    </label>
+
+                    <textarea
+                        id="informacion_adicional"
+                        name="informacion_adicional"
+                        rows="4"
+                        placeholder="Describe brevemente tu motivo de consulta..."
+                        class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    ></textarea>
+
+                </div>
+
             </div>
 
         </div>
 
 
-        <div class="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-between">
+        <!-- PARTE INFERIOR -->
+        <div class="border-t border-slate-100 bg-slate-50 px-6 py-5">
 
-            <a
-                href="cita_emergencia.html"
-                class="text-sm font-medium text-emerald-700 hover:text-emerald-800"
-            >
-                ¿Necesitas atención prioritaria?
-            </a>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-
-            <div class="flex gap-3">
-
+                <!-- ATENCIÓN PRIORITARIA -->
                 <a
-                    href="mis_citas.html"
-                    class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm hover:bg-slate-50"
+                    href="cita_emergencia.html"
+                    class="flex items-center gap-2 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800"
                 >
-                    Cancelar
+                    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100">
+                        !
+                    </span>
+
+                    ¿Necesitas atención prioritaria?
                 </a>
 
-                <a
-                    href="horarios_disponibles.html"
-                    class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
-                >
-                    Ver horarios
-                </a>
+
+                <!-- BOTONES -->
+                <div class="flex flex-col gap-3 sm:flex-row">
+
+                    <a
+                        href="mis_citas.html"
+                        class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Ver horarios disponibles
+                    </button>
+
+                </div>
 
             </div>
 
         </div>
 
-    </section>
+    </form>
 
 </main>
 

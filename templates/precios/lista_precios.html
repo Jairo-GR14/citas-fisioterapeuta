@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lista de Precios</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Precios
+            </p>
+
+        </div>
+
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            + Registrar precio
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Configuración
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Lista de precios
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Administra los precios de los servicios disponibles en la clínica.
+        </p>
+
+    </div>
+
+
+    <!-- Buscador -->
+
+    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5">
+
+        <form method="GET"
+            class="flex gap-3">
+
+            <input type="text"
+                name="buscar"
+                value="{{ request.GET.buscar }}"
+                placeholder="Buscar servicio..."
+                class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm">
+
+            <button type="submit"
+                    class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
+
+                Buscar
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Tabla -->
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Servicio
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Tipo
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Precio
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                            Estado
+                        </th>
+
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+
+                    {% for precio in precios %}
+
+                    <tr class="hover:bg-slate-50">
+
+
+                        <!-- Servicio -->
+
+                        <td class="px-6 py-4">
+
+                            <p class="font-medium text-blue-900">
+                                {{ precio.nombre_servicio }}
+                            </p>
+
+                            <p class="mt-1 text-xs text-slate-500">
+                                {{ precio.descripcion|truncatechars:45 }}
+                            </p>
+
+                        </td>
+
+
+                        <!-- Tipo de servicio -->
+
+                        <td class="px-6 py-4 text-sm text-slate-600">
+
+                            {{ precio.tipo_servicio }}
+
+                        </td>
+
+
+                        <!-- Precio -->
+
+                        <td class="px-6 py-4">
+
+                            <span class="font-semibold text-blue-950">
+
+                                ${{ precio.precio|floatformat:2 }} MXN
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- Estado -->
+
+                        <td class="px-6 py-4">
+
+                            {% if precio.estado == "activo" %}
+
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+
+                                Activo
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+
+                                Inactivo
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Acciones -->
+
+                        <td class="px-6 py-4 text-right">
+
+                            <a href="#"
+                            class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700">
+
+                                Editar
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="px-6 py-10 text-center text-slate-500">
+
+                            No hay precios registrados.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

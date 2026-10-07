@@ -9,71 +9,80 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
-
+<header class="border-b border-blue-100 bg-white">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
-        <h1 class="font-semibold text-blue-800">
-            Clínica de Fisioterapia
-        </h1>
+        <div>
+            <h1 class="font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Atención prioritaria
+            </p>
+        </div>
 
         <a
             href="agendar_cita.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
         >
             ← Regresar
         </a>
 
     </div>
-
 </header>
 
 
 <main class="mx-auto max-w-4xl px-6 py-12">
 
-    <section class="grid overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-2">
+    <section class="grid overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm md:grid-cols-2">
 
+        <!-- INFORMACIÓN -->
         <div class="p-8">
 
-            <p class="text-sm font-medium text-emerald-700">
+            <p class="text-sm font-semibold text-emerald-600">
                 Atención prioritaria
             </p>
 
-            <h2 class="mt-3 text-3xl font-semibold">
+            <h2 class="mt-3 text-3xl font-bold text-blue-950">
                 ¿Necesitas atención lo antes posible?
             </h2>
 
             <p class="mt-4 text-sm leading-6 text-slate-500">
-                Comunícate con la clínica para consultar disponibilidad
-                inmediata con un fisioterapeuta.
+                Comunícate con la clínica para consultar disponibilidad inmediata
+                con un fisioterapeuta.
             </p>
 
 
             <div class="mt-8 space-y-5">
 
-                <div>
-                    <p class="text-xs uppercase tracking-wide text-slate-400">
+                <div class="rounded-xl bg-blue-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase tracking-wide text-blue-500">
                         Teléfono
                     </p>
 
-                    <p class="mt-1 font-medium">
-                        415 000 0000
+                    <p class="mt-1 font-semibold text-blue-900">
+                        {{ clinica.telefono|default:"415 000 0000" }}
                     </p>
+
                 </div>
 
 
-                <div>
-                    <p class="text-xs uppercase tracking-wide text-slate-400">
+                <div class="rounded-xl bg-emerald-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">
                         Horario
                     </p>
 
-                    <p class="mt-1 font-medium">
+                    <p class="mt-1 font-medium text-slate-800">
                         Lunes a viernes
                     </p>
 
                     <p class="text-sm text-slate-500">
                         8:00 AM - 8:00 PM
                     </p>
+
                 </div>
 
             </div>
@@ -81,15 +90,16 @@
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
 
-                <button
-                    class="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+                <a
+                    href="tel:4150000000"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
                 >
                     Contactar clínica
-                </button>
+                </a>
 
                 <a
                     href="agendar_cita.html"
-                    class="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm hover:bg-slate-50"
+                    class="rounded-xl border border-blue-200 bg-white px-5 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-50"
                 >
                     Agendar normalmente
                 </a>
@@ -99,7 +109,8 @@
         </div>
 
 
-        <div class="bg-blue-700 p-8 text-white">
+        <!-- AVISO -->
+        <div class="bg-gradient-to-br from-blue-700 to-emerald-700 p-8 text-white">
 
             <p class="text-xs uppercase tracking-widest text-blue-100">
                 Información importante
@@ -109,19 +120,18 @@
                 Atención clínica prioritaria
             </h3>
 
-            <p class="mt-4 text-sm leading-6 text-blue-100">
-                Este servicio depende de la disponibilidad del personal
-                de fisioterapia.
+            <p class="mt-4 text-sm leading-6 text-blue-50">
+                Este servicio depende de la disponibilidad del personal de fisioterapia.
             </p>
 
 
-            <div class="mt-8 rounded-xl bg-white/10 p-4">
+            <div class="mt-8 rounded-xl bg-white/10 p-5">
 
-                <p class="text-sm font-medium">
+                <p class="font-semibold">
                     Situaciones médicas graves
                 </p>
 
-                <p class="mt-2 text-sm leading-6 text-blue-100">
+                <p class="mt-2 text-sm leading-6 text-blue-50">
                     Si existe riesgo para la vida o una emergencia médica,
                     solicita atención de los servicios de emergencia correspondientes.
                 </p>
@@ -131,7 +141,7 @@
 
             <a
                 href="mis_citas.html"
-                class="mt-8 block rounded-xl bg-white px-5 py-3 text-center text-sm font-medium text-blue-800 hover:bg-blue-50"
+                class="mt-8 block rounded-xl bg-white px-5 py-3 text-center text-sm font-semibold text-blue-800 transition hover:bg-blue-50"
             >
                 Volver a mis citas
             </a>

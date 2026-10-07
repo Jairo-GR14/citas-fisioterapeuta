@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Registrar Progreso</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -10,39 +11,45 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
+<header class="border-b border-blue-100 bg-white">
+
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
         <div>
-            <h1 class="font-semibold text-blue-800">
+
+            <h1 class="font-semibold text-blue-900">
                 Clínica de Fisioterapia
             </h1>
 
             <p class="text-xs text-slate-400">
                 Seguimiento del paciente
             </p>
+
         </div>
+
 
         <a
             href="../consultas/detalle_consulta.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar a consulta
         </a>
 
     </div>
+
 </header>
 
 
 <main class="mx-auto max-w-4xl px-6 py-10">
 
+    <!-- ENCABEZADO -->
     <section class="mb-8">
 
-        <p class="text-sm font-medium text-blue-700">
+        <p class="text-sm font-semibold text-emerald-600">
             Evolución clínica
         </p>
 
-        <h2 class="mt-2 text-3xl font-semibold">
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
             Registrar progreso
         </h2>
 
@@ -53,27 +60,31 @@
     </section>
 
 
-    <!-- Paciente -->
-    <section class="mb-6 rounded-2xl border border-blue-100 bg-blue-50 p-5">
+    <!-- PACIENTE -->
+    <section class="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-5">
 
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
-                <p class="text-xs uppercase tracking-wide text-blue-500">
+
+                <p class="text-xs font-semibold uppercase tracking-wide text-blue-500">
                     Paciente
                 </p>
 
-                <h3 class="mt-1 text-lg font-semibold text-blue-900">
-                    Juan Pérez
+                <h3 class="mt-1 text-lg font-semibold text-blue-950">
+                    {{ paciente.nombre }}
+                    {{ paciente.apellidos }}
                 </h3>
 
-                <p class="mt-1 text-sm text-blue-700">
-                    Fisioterapia general
+                <p class="mt-1 text-sm text-emerald-700">
+                    {{ paciente.servicio }}
                 </p>
+
             </div>
 
-            <div class="text-sm text-blue-700">
-                Sesión 3
+
+            <div class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+                Sesión {{ numero_sesion }}
             </div>
 
         </div>
@@ -81,137 +92,246 @@
     </section>
 
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+    <!-- FORMULARIO -->
+    <form
+        method="POST"
+        action="#"
+        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <div class="grid gap-5 sm:grid-cols-2">
+        {% csrf_token %}
 
-            <!-- Fecha -->
+
+        <div class="grid gap-5 p-6 sm:grid-cols-2">
+
+            <!-- FECHA -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="fecha"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
                     Fecha de sesión
                 </label>
 
                 <input
                     type="date"
-                    value="2026-10-12"
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="fecha"
+                    name="fecha"
+                    required
+                    class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
+
             </div>
 
 
-            <!-- Dolor -->
+            <!-- DOLOR -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="nivel_dolor"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
                     Nivel de dolor
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="nivel_dolor"
+                    name="nivel_dolor"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 >
-                    <option>Selecciona un nivel</option>
-                    <option>0 - Sin dolor</option>
-                    <option>1 - 3 Leve</option>
-                    <option>4 - 6 Moderado</option>
-                    <option>7 - 10 Intenso</option>
+
+                    <option value="">
+                        Selecciona un nivel
+                    </option>
+
+                    <option value="0">
+                        0 - Sin dolor
+                    </option>
+
+                    <option value="1-3">
+                        1 - 3 Leve
+                    </option>
+
+                    <option value="4-6">
+                        4 - 6 Moderado
+                    </option>
+
+                    <option value="7-10">
+                        7 - 10 Intenso
+                    </option>
+
                 </select>
+
             </div>
 
 
-            <!-- Movilidad -->
+            <!-- MOVILIDAD -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="movilidad"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
                     Movilidad
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="movilidad"
+                    name="movilidad"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
-                    <option>Selecciona una opción</option>
-                    <option>Limitada</option>
-                    <option>Moderada</option>
-                    <option>Buena</option>
-                    <option>Completa</option>
+
+                    <option value="">
+                        Selecciona una opción
+                    </option>
+
+                    <option value="limitada">
+                        Limitada
+                    </option>
+
+                    <option value="moderada">
+                        Moderada
+                    </option>
+
+                    <option value="buena">
+                        Buena
+                    </option>
+
+                    <option value="completa">
+                        Completa
+                    </option>
+
                 </select>
+
             </div>
 
 
-            <!-- Estado -->
+            <!-- ESTADO -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="estado"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
                     Estado general
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="estado"
+                    name="estado"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 >
-                    <option>Selecciona una opción</option>
-                    <option>Sin cambios</option>
-                    <option>Mejorando</option>
-                    <option>Mejoría significativa</option>
-                    <option>Requiere valoración</option>
+
+                    <option value="">
+                        Selecciona una opción
+                    </option>
+
+                    <option value="sin_cambios">
+                        Sin cambios
+                    </option>
+
+                    <option value="mejorando">
+                        Mejorando
+                    </option>
+
+                    <option value="mejoria_significativa">
+                        Mejoría significativa
+                    </option>
+
+                    <option value="requiere_valoracion">
+                        Requiere valoración
+                    </option>
+
                 </select>
+
             </div>
 
 
-            <!-- Ejercicios -->
+            <!-- EJERCICIOS -->
             <div class="sm:col-span-2">
 
-                <label class="mb-2 block text-sm font-medium">
+                <label
+                    for="ejercicios"
+                    class="mb-2 block text-sm font-medium text-blue-900"
+                >
                     Ejercicios realizados
                 </label>
 
                 <textarea
+                    id="ejercicios"
+                    name="ejercicios"
                     rows="4"
+                    required
                     placeholder="Describe los ejercicios realizados durante la sesión..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 ></textarea>
 
             </div>
 
 
-            <!-- Avances -->
+            <!-- AVANCES -->
             <div class="sm:col-span-2">
 
-                <label class="mb-2 block text-sm font-medium">
+                <label
+                    for="avances"
+                    class="mb-2 block text-sm font-medium text-emerald-700"
+                >
                     Avances observados
                 </label>
 
                 <textarea
+                    id="avances"
+                    name="avances"
                     rows="4"
+                    required
                     placeholder="Describe los avances observados..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 ></textarea>
 
             </div>
 
 
-            <!-- Limitaciones -->
+            <!-- LIMITACIONES -->
             <div class="sm:col-span-2">
 
-                <label class="mb-2 block text-sm font-medium">
+                <label
+                    for="limitaciones"
+                    class="mb-2 block text-sm font-medium text-blue-900"
+                >
                     Limitaciones
                 </label>
 
                 <textarea
+                    id="limitaciones"
+                    name="limitaciones"
                     rows="3"
                     placeholder="Registra cualquier limitación detectada..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 ></textarea>
 
             </div>
 
 
-            <!-- Observaciones -->
+            <!-- OBSERVACIONES -->
             <div class="sm:col-span-2">
 
-                <label class="mb-2 block text-sm font-medium">
+                <label
+                    for="observaciones"
+                    class="mb-2 block text-sm font-medium text-emerald-700"
+                >
                     Observaciones
                 </label>
 
                 <textarea
+                    id="observaciones"
+                    name="observaciones"
                     rows="4"
                     placeholder="Agrega observaciones adicionales..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 ></textarea>
 
             </div>
@@ -219,25 +339,26 @@
         </div>
 
 
-        <div class="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-end">
+        <!-- BOTONES -->
+        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
                 href="../consultas/detalle_consulta.html"
-                class="rounded-xl border border-slate-200 px-5 py-2.5 text-center text-sm hover:bg-slate-50"
+                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
                 Cancelar
             </a>
 
-            <a
-                href="progreso_paciente.html"
-                class="rounded-xl bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700"
+            <button
+                type="submit"
+                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
             >
                 Guardar progreso
-            </a>
+            </button>
 
         </div>
 
-    </section>
+    </form>
 
 </main>
 

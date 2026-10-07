@@ -9,21 +9,31 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
+<header class="border-b border-blue-100 bg-white">
+
     <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
 
-        <h1 class="font-semibold text-blue-800">
-            Clínica de Fisioterapia
-        </h1>
+        <div>
+
+            <h1 class="font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Valoración inicial
+            </p>
+
+        </div>
 
         <a
             href="iniciar_consulta.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar
         </a>
 
     </div>
+
 </header>
 
 
@@ -31,11 +41,11 @@
 
     <section class="mb-8">
 
-        <p class="text-sm font-medium text-blue-700">
+        <p class="text-sm font-semibold text-emerald-600">
             Valoración inicial
         </p>
 
-        <h2 class="mt-2 text-3xl font-semibold">
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
             Motivo de consulta
         </h2>
 
@@ -46,100 +56,206 @@
     </section>
 
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+    <form
+        method="POST"
+        action="#"
+        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <div class="space-y-5">
+        {% csrf_token %}
 
+        <div class="space-y-6 p-6">
+
+            <!-- MOTIVO -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="motivo"
+                    class="mb-2 block text-sm font-semibold text-blue-900"
+                >
                     Motivo principal
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="motivo"
+                    name="motivo"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
-                    <option>Selecciona un motivo</option>
-                    <option>Dolor muscular</option>
-                    <option>Lesión deportiva</option>
-                    <option>Dolor lumbar</option>
-                    <option>Dolor cervical</option>
-                    <option>Rehabilitación postquirúrgica</option>
-                    <option>Problemas de movilidad</option>
-                    <option>Valoración inicial</option>
-                    <option>Otro</option>
+
+                    <option value="">
+                        Selecciona un motivo
+                    </option>
+
+                    <option value="dolor_muscular">
+                        Dolor muscular
+                    </option>
+
+                    <option value="lesion_deportiva">
+                        Lesión deportiva
+                    </option>
+
+                    <option value="dolor_lumbar">
+                        Dolor lumbar
+                    </option>
+
+                    <option value="dolor_cervical">
+                        Dolor cervical
+                    </option>
+
+                    <option value="rehabilitacion_postquirurgica">
+                        Rehabilitación postquirúrgica
+                    </option>
+
+                    <option value="problemas_movilidad">
+                        Problemas de movilidad
+                    </option>
+
+                    <option value="valoracion_inicial">
+                        Valoración inicial
+                    </option>
+
+                    <option value="otro">
+                        Otro
+                    </option>
+
                 </select>
+
             </div>
 
 
+            <!-- DOLOR -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="nivel_dolor"
+                    class="mb-2 block text-sm font-semibold text-emerald-700"
+                >
                     Nivel de dolor
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="nivel_dolor"
+                    name="nivel_dolor"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 >
-                    <option>Selecciona un nivel</option>
-                    <option>0 - Sin dolor</option>
-                    <option>1 - 3 Leve</option>
-                    <option>4 - 6 Moderado</option>
-                    <option>7 - 10 Intenso</option>
+
+                    <option value="">
+                        Selecciona un nivel
+                    </option>
+
+                    <option value="0">
+                        0 - Sin dolor
+                    </option>
+
+                    <option value="1-3">
+                        1 - 3 Leve
+                    </option>
+
+                    <option value="4-6">
+                        4 - 6 Moderado
+                    </option>
+
+                    <option value="7-10">
+                        7 - 10 Intenso
+                    </option>
+
                 </select>
+
             </div>
 
 
+            <!-- EVOLUCIÓN -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="tiempo_evolucion"
+                    class="mb-2 block text-sm font-semibold text-blue-900"
+                >
                     Tiempo de evolución
                 </label>
 
                 <select
-                    class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                    id="tiempo_evolucion"
+                    name="tiempo_evolucion"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
-                    <option>Selecciona una opción</option>
-                    <option>Menos de 24 horas</option>
-                    <option>1 a 7 días</option>
-                    <option>1 a 4 semanas</option>
-                    <option>Más de un mes</option>
-                    <option>Problema recurrente</option>
+
+                    <option value="">
+                        Selecciona una opción
+                    </option>
+
+                    <option value="menos_24h">
+                        Menos de 24 horas
+                    </option>
+
+                    <option value="1_7_dias">
+                        1 a 7 días
+                    </option>
+
+                    <option value="1_4_semanas">
+                        1 a 4 semanas
+                    </option>
+
+                    <option value="mas_1_mes">
+                        Más de un mes
+                    </option>
+
+                    <option value="recurrente">
+                        Problema recurrente
+                    </option>
+
                 </select>
+
             </div>
 
 
+            <!-- DESCRIPCIÓN -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="descripcion"
+                    class="mb-2 block text-sm font-semibold text-emerald-700"
+                >
                     Descripción
                 </label>
 
                 <textarea
+                    id="descripcion"
+                    name="descripcion"
                     rows="5"
+                    required
                     placeholder="Describe síntomas, molestias y antecedentes relevantes..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 ></textarea>
+
             </div>
 
         </div>
 
 
-        <div class="mt-7 flex justify-end gap-3">
+        <!-- BOTONES -->
+        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
                 href="iniciar_consulta.html"
-                class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm hover:bg-slate-50"
+                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
                 Cancelar
             </a>
 
-            <a
-                href="detalle_consulta.html"
-                class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
+            <button
+                type="submit"
+                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
             >
                 Guardar y continuar
-            </a>
+            </button>
 
         </div>
 
-    </section>
+    </form>
 
 </main>
 

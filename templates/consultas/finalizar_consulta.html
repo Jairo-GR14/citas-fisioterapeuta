@@ -9,17 +9,23 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
+<header class="border-b border-blue-100 bg-white">
 
     <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
 
-        <h1 class="font-semibold text-blue-800">
-            Clínica de Fisioterapia
-        </h1>
+        <div>
+            <h1 class="font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Cierre de consulta
+            </p>
+        </div>
 
         <a
             href="detalle_consulta.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar
         </a>
@@ -33,11 +39,11 @@
 
     <section class="mb-8">
 
-        <p class="text-sm font-medium text-blue-700">
-            Consulta #0024
+        <p class="text-sm font-semibold text-emerald-600">
+            Consulta #{{ consulta.id }}
         </p>
 
-        <h2 class="mt-2 text-3xl font-semibold">
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
             Finalizar consulta
         </h2>
 
@@ -48,65 +54,100 @@
     </section>
 
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6">
+    <form
+        method="POST"
+        action="#"
+        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+    >
 
-        <div class="space-y-5">
+        {% csrf_token %}
 
+        <div class="space-y-6 p-6">
+
+            <!-- TRATAMIENTO -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="tratamiento"
+                    class="mb-2 block text-sm font-semibold text-blue-900"
+                >
                     Tratamiento realizado
                 </label>
 
                 <textarea
+                    id="tratamiento"
+                    name="tratamiento"
                     rows="4"
+                    required
                     placeholder="Describe el tratamiento aplicado..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
-                ></textarea>
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >{{ consulta.tratamiento }}</textarea>
+
             </div>
 
 
+            <!-- RESPUESTA -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="respuesta_paciente"
+                    class="mb-2 block text-sm font-semibold text-emerald-700"
+                >
                     Respuesta del paciente
                 </label>
 
                 <textarea
+                    id="respuesta_paciente"
+                    name="respuesta_paciente"
                     rows="3"
+                    required
                     placeholder="Describe la respuesta del paciente..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 ></textarea>
+
             </div>
 
 
+            <!-- SEGUIMIENTO -->
             <div>
-                <label class="mb-2 block text-sm font-medium">
+
+                <label
+                    for="seguimiento"
+                    class="mb-2 block text-sm font-semibold text-blue-900"
+                >
                     Indicaciones de seguimiento
                 </label>
 
                 <textarea
+                    id="seguimiento"
+                    name="seguimiento"
                     rows="4"
                     placeholder="Agrega recomendaciones para la siguiente sesión..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
+                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 ></textarea>
+
             </div>
 
 
+            <!-- ESTADO -->
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
                         ✓
                     </div>
 
                     <div>
-                        <p class="text-sm font-medium text-emerald-800">
+
+                        <p class="text-sm font-semibold text-emerald-800">
                             Consulta lista para finalizar
                         </p>
 
                         <p class="mt-1 text-xs text-emerald-600">
-                            Verifica que la información esté completa.
+                            Verifica que la información esté completa antes de continuar.
                         </p>
+
                     </div>
 
                 </div>
@@ -116,25 +157,26 @@
         </div>
 
 
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <!-- BOTONES -->
+        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
                 href="detalle_consulta.html"
-                class="rounded-xl border border-slate-200 px-5 py-2.5 text-center text-sm hover:bg-slate-50"
+                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
                 Regresar
             </a>
 
-            <a
-                href="../progreso/registrar_progreso.html"
-                class="rounded-xl bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700"
+            <button
+                type="submit"
+                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
             >
-                Finalizar y registrar progreso
-            </a>
+                Finalizar consulta
+            </button>
 
         </div>
 
-    </section>
+    </form>
 
 </main>
 

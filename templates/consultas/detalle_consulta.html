@@ -3,90 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Detalle de Consulta</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-slate-200 bg-white">
+<!-- HEADER -->
+<header class="border-b border-blue-100 bg-white">
+
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
         <div>
-            <h1 class="font-semibold text-blue-800">
+
+            <h1 class="font-semibold text-blue-900">
                 Clínica de Fisioterapia
             </h1>
+
             <p class="text-xs text-slate-400">
                 Consulta en proceso
             </p>
+
         </div>
+
 
         <a
             href="../citas/agenda.html"
-            class="text-sm text-slate-500 hover:text-blue-700"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
         >
-            Agenda
+            ← Agenda
         </a>
 
     </div>
+
 </header>
 
 
+<!-- CONTENIDO -->
 <main class="mx-auto max-w-5xl px-6 py-10">
 
+    <!-- ENCABEZADO -->
     <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
         <div>
-            <p class="text-sm font-medium text-blue-700">
-                Consulta #0024
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Consulta #{{ consulta.id }}
             </p>
 
-            <h2 class="mt-2 text-3xl font-semibold">
+            <h2 class="mt-2 text-3xl font-bold text-blue-950">
                 Detalle de consulta
             </h2>
 
             <p class="mt-2 text-sm text-slate-500">
-                12 de octubre de 2026 · 10:30 AM
+                {{ consulta.fecha }}
+                ·
+                {{ consulta.hora }}
             </p>
+
         </div>
 
-        <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-xs font-medium text-blue-700">
+
+        {% if consulta.estado == "En proceso" %}
+
+        <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-700">
             En proceso
         </span>
+
+        {% elif consulta.estado == "Finalizada" %}
+
+        <span class="w-fit rounded-full bg-emerald-100 px-4 py-2 text-xs font-semibold text-emerald-700">
+            Finalizada
+        </span>
+
+        {% else %}
+
+        <span class="w-fit rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-600">
+            {{ consulta.estado }}
+        </span>
+
+        {% endif %}
 
     </section>
 
 
     <div class="grid gap-6 lg:grid-cols-[1fr_280px]">
 
+        <!-- INFORMACIÓN PRINCIPAL -->
         <section class="space-y-6">
 
-            <article class="rounded-2xl border border-slate-200 bg-white p-6">
+            <!-- INFORMACIÓN CLÍNICA -->
+            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-                <h3 class="mb-6 font-semibold">
-                    Información clínica
-                </h3>
+                <div class="mb-6">
+
+                    <h3 class="font-semibold text-blue-900">
+                        Información clínica
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Datos principales de la consulta.
+                    </p>
+
+                </div>
+
 
                 <div class="grid gap-5 sm:grid-cols-2">
 
+                    <!-- PACIENTE -->
                     <div>
-                        <p class="text-xs text-slate-400">Paciente</p>
-                        <p class="mt-1 font-medium">Juan Pérez</p>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Paciente
+                        </p>
+
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ consulta.paciente.nombre }}
+                            {{ consulta.paciente.apellidos }}
+                        </p>
+
                     </div>
 
+
+                    <!-- FISIOTERAPEUTA -->
                     <div>
-                        <p class="text-xs text-slate-400">Fisioterapeuta</p>
-                        <p class="mt-1 font-medium">Lic. María López</p>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Fisioterapeuta
+                        </p>
+
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ consulta.fisioterapeuta.nombre }}
+                            {{ consulta.fisioterapeuta.apellidos }}
+                        </p>
+
                     </div>
 
+
+                    <!-- MOTIVO -->
                     <div>
-                        <p class="text-xs text-slate-400">Motivo</p>
-                        <p class="mt-1 font-medium">Dolor lumbar</p>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Motivo
+                        </p>
+
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ consulta.motivo }}
+                        </p>
+
                     </div>
 
+
+                    <!-- DOLOR -->
                     <div>
-                        <p class="text-xs text-slate-400">Dolor actual</p>
-                        <p class="mt-1 font-medium">5 / 10</p>
+
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Dolor actual
+                        </p>
+
+                        <div class="mt-2 flex items-center gap-3">
+
+                            <span class="text-xl font-bold text-emerald-700">
+                                {{ consulta.dolor_actual }}
+                            </span>
+
+                            <span class="text-sm text-slate-400">
+                                / 10
+                            </span>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -94,59 +182,136 @@
             </article>
 
 
-            <article class="rounded-2xl border border-slate-200 bg-white p-6">
+            <!-- EVALUACIÓN -->
+            <article class="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
 
-                <h3 class="mb-5 font-semibold">
+                <h3 class="font-semibold text-emerald-700">
                     Evaluación
                 </h3>
 
-                <p class="text-sm leading-6 text-slate-600">
-                    Se observa limitación ligera de movilidad y molestia durante
-                    movimientos de flexión lumbar.
-                </p>
+                <div class="mt-4 rounded-xl bg-emerald-50/50 p-4">
+
+                    <p class="text-sm leading-6 text-slate-600">
+
+                        {% if consulta.evaluacion %}
+
+                            {{ consulta.evaluacion }}
+
+                        {% else %}
+
+                            No hay una evaluación registrada para esta consulta.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
 
             </article>
 
 
-            <article class="rounded-2xl border border-slate-200 bg-white p-6">
+            <!-- TRATAMIENTO -->
+            <form
+                method="POST"
+                action="#"
+                class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
+            >
 
-                <label class="mb-3 block font-semibold">
+                {% csrf_token %}
+
+                <label
+                    for="tratamiento"
+                    class="block font-semibold text-blue-900"
+                >
                     Tratamiento realizado
                 </label>
 
+                <p class="mt-1 text-sm text-slate-500">
+                    Registra las técnicas y procedimientos aplicados durante la sesión.
+                </p>
+
+
                 <textarea
+                    id="tratamiento"
+                    name="tratamiento"
                     rows="5"
                     placeholder="Describe las técnicas y procedimientos aplicados..."
-                    class="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500"
-                ></textarea>
+                    class="mt-5 w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >{{ consulta.tratamiento }}</textarea>
 
-            </article>
+
+                <div class="mt-4 flex justify-end">
+
+                    <button
+                        type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Guardar tratamiento
+                    </button>
+
+                </div>
+
+            </form>
 
         </section>
 
 
+        <!-- ACCIONES -->
         <aside class="space-y-3">
 
-            <a
-                href="../progreso/registrar_progreso.html"
-                class="block w-full rounded-xl bg-emerald-600 px-5 py-3 text-center text-sm font-medium text-white hover:bg-emerald-700"
-            >
-                Registrar progreso
-            </a>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
-            <a
-                href="motivo_consulta.html"
-                class="block w-full rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm text-blue-700 hover:bg-blue-100"
-            >
-                Editar valoración
-            </a>
+                <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Acciones
+                </p>
 
-            <a
-                href="finalizar_consulta.html"
-                class="block w-full rounded-xl bg-blue-700 px-5 py-3 text-center text-sm font-medium text-white hover:bg-blue-800"
-            >
-                Finalizar consulta
-            </a>
+
+                <div class="space-y-3">
+
+                    <a
+                        href="../progreso/registrar_progreso.html"
+                        class="block w-full rounded-xl bg-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-700"
+                    >
+                        Registrar progreso
+                    </a>
+
+
+                    <a
+                        href="motivo_consulta.html"
+                        class="block w-full rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                    >
+                        Editar valoración
+                    </a>
+
+
+                    <a
+                        href="finalizar_consulta.html"
+                        class="block w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Finalizar consulta
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESUMEN -->
+            <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                    Estado
+                </p>
+
+                <p class="mt-2 font-semibold text-emerald-800">
+                    Consulta activa
+                </p>
+
+                <p class="mt-2 text-sm leading-5 text-emerald-700">
+                    Puedes registrar el progreso y tratamiento antes de finalizar la consulta.
+                </p>
+
+            </div>
 
         </aside>
 

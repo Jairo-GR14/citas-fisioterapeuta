@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calificar Cita</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50">
+
+<header class="border-b border-blue-100 bg-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        <div>
+
+            <h1 class="text-xl font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <p class="text-sm text-slate-500">
+                Calificaciones
+            </p>
+
+        </div>
+
+        <a href="#"
+        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+
+            Mis calificaciones
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="mx-auto max-w-7xl px-6 py-8">
+
+
+    <!-- Encabezado -->
+
+    <div class="mb-6">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Evaluación del servicio
+        </p>
+
+        <h2 class="text-3xl font-bold text-blue-950">
+            Calificar cita
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Evalúa la atención recibida durante tu cita.
+        </p>
+
+    </div>
+
+
+    <!-- Formulario -->
+
+    <div class="rounded-2xl border border-blue-100 bg-white p-6">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="grid gap-6">
+
+
+                <!-- Cita -->
+
+                <div>
+
+                    <label for="cita"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Cita
+
+                    </label>
+
+                    <select id="cita"
+                            name="cita"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar cita
+                        </option>
+
+
+                        {% for cita in citas %}
+
+                        <option value="{{ cita.id }}">
+
+                            {{ cita.fecha }} - {{ cita.fisioterapeuta.nombre }}
+
+                        </option>
+
+
+                        {% empty %}
+
+                        <option disabled>
+                            No hay citas disponibles para calificar
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Calificacion -->
+
+                <div>
+
+                    <label for="calificacion"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Calificación
+
+                    </label>
+
+                    <select id="calificacion"
+                            name="calificacion"
+                            required
+                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+
+                        <option value="">
+                            Seleccionar calificación
+                        </option>
+
+                        <option value="5">
+                            5 - Excelente
+                        </option>
+
+                        <option value="4">
+                            4 - Muy buena
+                        </option>
+
+                        <option value="3">
+                            3 - Buena
+                        </option>
+
+                        <option value="2">
+                            2 - Regular
+                        </option>
+
+                        <option value="1">
+                            1 - Mala
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Comentario -->
+
+                <div>
+
+                    <label for="comentario"
+                        class="block text-sm font-semibold text-slate-600">
+
+                        Comentario
+                    </label>
+
+                    <textarea id="comentario"
+                            name="comentario"
+                            rows="5"
+                            placeholder="Escribe un comentario sobre la atención recibida..."
+                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
+
+                    <p class="mt-2 text-xs text-slate-400">
+                        El comentario es opcional.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Botones -->
+
+            <div class="mt-6 flex justify-end gap-3">
+
+                <a href="#"
+                class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
+
+                    Cancelar
+
+                </a>
+
+
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white">
+
+                    Enviar calificación
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html

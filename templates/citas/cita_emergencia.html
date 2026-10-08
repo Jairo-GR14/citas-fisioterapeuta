@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atención Prioritaria</title>
+
+    <title>Cita de Emergencia</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
 <header class="border-b border-blue-100 bg-white">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
 
         <div>
             <h1 class="font-semibold text-blue-900">
@@ -24,131 +27,155 @@
 
         <a
             href="agendar_cita.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar
         </a>
 
     </div>
+
 </header>
 
 
-<main class="mx-auto max-w-4xl px-6 py-12">
+<main class="mx-auto max-w-4xl px-6 py-10">
 
-    <section class="grid overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm md:grid-cols-2">
+    <section class="mb-8">
 
-        <!-- INFORMACIÓN -->
-        <div class="p-8">
+        <p class="text-sm font-semibold text-emerald-600">
+            Atención prioritaria
+        </p>
 
-            <p class="text-sm font-semibold text-emerald-600">
-                Atención prioritaria
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
+            Cita de emergencia
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Si necesitas atención prioritaria, puedes comunicarte directamente con la clínica.
+        </p>
+
+    </section>
+
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h3 class="text-lg font-semibold text-blue-900">
+                Información de contacto
+            </h3>
+
+            <p class="mt-2 text-sm leading-6 text-slate-500">
+                Consulta los datos de contacto disponibles de la clínica.
             </p>
 
-            <h2 class="mt-3 text-3xl font-bold text-blue-950">
-                ¿Necesitas atención lo antes posible?
-            </h2>
 
-            <p class="mt-4 text-sm leading-6 text-slate-500">
-                Comunícate con la clínica para consultar disponibilidad inmediata
-                con un fisioterapeuta.
-            </p>
+            <div class="mt-6 space-y-4">
 
-
-            <div class="mt-8 space-y-5">
-
+                <!-- TELÉFONO -->
                 <div class="rounded-xl bg-blue-50 p-4">
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-blue-500">
                         Teléfono
                     </p>
 
+                    {% if clinica.telefono %}
+
                     <p class="mt-1 font-semibold text-blue-900">
-                        {{ clinica.telefono|default:"415 000 0000" }}
+                        {{ clinica.telefono }}
                     </p>
+
+                    {% else %}
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        No hay teléfono registrado.
+                    </p>
+
+                    {% endif %}
 
                 </div>
 
 
+                <!-- HORARIO -->
                 <div class="rounded-xl bg-emerald-50 p-4">
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                        Horario
+                        Horario de atención
                     </p>
+
+                    {% if clinica.dias_atencion %}
 
                     <p class="mt-1 font-medium text-slate-800">
-                        Lunes a viernes
+                        {{ clinica.dias_atencion }}
                     </p>
 
-                    <p class="text-sm text-slate-500">
-                        8:00 AM - 8:00 PM
+                    {% endif %}
+
+
+                    {% if clinica.horario_atencion %}
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        {{ clinica.horario_atencion }}
                     </p>
+
+                    {% else %}
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        No hay horario registrado.
+                    </p>
+
+                    {% endif %}
 
                 </div>
 
             </div>
 
 
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-
-                <a
-                    href="tel:4150000000"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
-                >
-                    Contactar clínica
-                </a>
-
-                <a
-                    href="agendar_cita.html"
-                    class="rounded-xl border border-blue-200 bg-white px-5 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-50"
-                >
-                    Agendar normalmente
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <!-- AVISO -->
-        <div class="bg-gradient-to-br from-blue-700 to-emerald-700 p-8 text-white">
-
-            <p class="text-xs uppercase tracking-widest text-blue-100">
-                Información importante
-            </p>
-
-            <h3 class="mt-4 text-xl font-semibold">
-                Atención clínica prioritaria
-            </h3>
-
-            <p class="mt-4 text-sm leading-6 text-blue-50">
-                Este servicio depende de la disponibilidad del personal de fisioterapia.
-            </p>
-
-
-            <div class="mt-8 rounded-xl bg-white/10 p-5">
-
-                <p class="font-semibold">
-                    Situaciones médicas graves
-                </p>
-
-                <p class="mt-2 text-sm leading-6 text-blue-50">
-                    Si existe riesgo para la vida o una emergencia médica,
-                    solicita atención de los servicios de emergencia correspondientes.
-                </p>
-
-            </div>
-
+            {% if clinica.telefono %}
 
             <a
-                href="mis_citas.html"
-                class="mt-8 block rounded-xl bg-white px-5 py-3 text-center text-sm font-semibold text-blue-800 transition hover:bg-blue-50"
+                href="tel:{{ clinica.telefono }}"
+                class="mt-6 block rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
             >
-                Volver a mis citas
+                Contactar clínica
             </a>
 
-        </div>
+            {% endif %}
 
-    </section>
+        </section>
+
+
+        <!-- INFORMACIÓN IMPORTANTE -->
+        <section class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-blue-50 to-emerald-50 p-6">
+
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-xl shadow-sm">
+                +
+            </div>
+
+            <h3 class="mt-5 text-lg font-semibold text-blue-950">
+                Atención prioritaria
+            </h3>
+
+            <p class="mt-3 text-sm leading-6 text-slate-600">
+                Comunícate con la clínica para conocer la disponibilidad de atención.
+            </p>
+
+
+            <div class="mt-6 rounded-xl border border-emerald-200 bg-white/70 p-4">
+
+                <p class="text-sm font-semibold text-emerald-800">
+                    Importante
+                </p>
+
+                <p class="mt-2 text-xs leading-5 text-emerald-700">
+                    La disponibilidad dependerá de los horarios y fisioterapeutas registrados en el sistema.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
 
 </main>
 

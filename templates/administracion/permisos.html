@@ -3,175 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Permisos</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-900">
 
-<main class="mx-auto max-w-6xl px-6 py-8">
+<header class="border-b border-blue-100 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
-    <div class="mb-6">
+        <div>
+            <h1 class="font-semibold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
 
-        <p class="text-sm font-semibold text-emerald-600">
-            Administración
-        </p>
+            <p class="text-xs text-slate-400">
+                Administración de permisos
+            </p>
+        </div>
 
-        <h1 class="text-3xl font-bold text-blue-950">
-            Permisos del sistema
-        </h1>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Configura las acciones disponibles para cada rol.
-        </p>
+        <a
+            href="roles.html"
+            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+        >
+            ← Regresar
+        </a>
 
     </div>
+</header>
+
+
+<main class="mx-auto max-w-6xl px-6 py-10">
+
+    <section class="mb-8">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Seguridad y acceso
+        </p>
+
+        <h2 class="mt-2 text-3xl font-bold text-blue-950">
+            Permisos por rol
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Configura los permisos disponibles para cada tipo de usuario.
+        </p>
+
+    </section>
 
 
     <form method="POST">
 
         {% csrf_token %}
 
-        <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+        <section class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
-            <table class="min-w-full">
+            <div class="overflow-x-auto">
 
-                <thead class="bg-slate-50">
+                <table class="w-full min-w-[750px] text-left">
 
-                    <tr>
+                    <thead class="border-b border-slate-200 bg-slate-50">
 
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                            Permiso
-                        </th>
+                        <tr>
 
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-blue-700">
-                            Administrador
-                        </th>
+                            <th class="px-6 py-4 text-sm font-semibold text-slate-600">
+                                Permiso
+                            </th>
 
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-emerald-700">
-                            Fisioterapeuta
-                        </th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-blue-700">
+                                Administrador
+                            </th>
 
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-blue-700">
-                            Recepción
-                        </th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-emerald-700">
+                                Fisioterapeuta
+                            </th>
 
-                    </tr>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-600">
+                                Recepción
+                            </th>
 
-                </thead>
+                        </tr>
 
-
-                <tbody class="divide-y divide-slate-100">
-
-                    <tr>
-                        <td class="px-6 py-4 font-medium">
-                            Ver pacientes
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-                    </tr>
+                    </thead>
 
 
-                    <tr>
-                        <td class="px-6 py-4 font-medium">
-                            Editar pacientes
-                        </td>
+                    <tbody class="divide-y divide-slate-100">
 
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
+                        <!-- VER PACIENTES -->
+                        <tr>
 
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
+                            <td class="px-6 py-4 font-medium">
+                                Ver pacientes
+                            </td>
 
-                        <td class="text-center">
-                            <input type="checkbox">
-                        </td>
-                    </tr>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_ver_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_ver_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_ver_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_ver_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
-                    <tr>
-                        <td class="px-6 py-4 font-medium">
-                            Gestionar citas
-                        </td>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_ver_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_ver_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="px-6 py-4 font-medium">
-                            Gestionar tratamientos
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
-
-                        <td class="text-center">
-                            <input type="checkbox">
-                        </td>
-                    </tr>
+                        </tr>
 
 
-                    <tr>
-                        <td class="px-6 py-4 font-medium">
-                            Administrar usuarios
-                        </td>
+                        <!-- EDITAR PACIENTES -->
+                        <tr>
 
-                        <td class="text-center">
-                            <input type="checkbox" checked>
-                        </td>
+                            <td class="px-6 py-4 font-medium">
+                                Editar pacientes
+                            </td>
 
-                        <td class="text-center">
-                            <input type="checkbox">
-                        </td>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_editar_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_editar_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
-                        <td class="text-center">
-                            <input type="checkbox">
-                        </td>
-                    </tr>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_editar_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_editar_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
-                </tbody>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_editar_pacientes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_editar_pacientes %}checked{% endif %}
+                                >
+                            </td>
 
-            </table>
-
-        </div>
+                        </tr>
 
 
-        <div class="mt-6 flex justify-end">
+                        <!-- GESTIONAR CITAS -->
+                        <tr>
 
-            <button type="submit"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 font-semibold text-white">
-                Guardar permisos
-            </button>
+                            <td class="px-6 py-4 font-medium">
+                                Gestionar citas
+                            </td>
 
-        </div>
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_gestionar_citas"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_gestionar_citas %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_gestionar_citas"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_gestionar_citas %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_gestionar_citas"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_gestionar_citas %}checked{% endif %}
+                                >
+                            </td>
+
+                        </tr>
+
+
+                        <!-- GESTIONAR CONSULTAS -->
+                        <tr>
+
+                            <td class="px-6 py-4 font-medium">
+                                Gestionar consultas
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_gestionar_consultas"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_gestionar_consultas %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_gestionar_consultas"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_gestionar_consultas %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_gestionar_consultas"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_gestionar_consultas %}checked{% endif %}
+                                >
+                            </td>
+
+                        </tr>
+
+
+                        <!-- GESTIONAR TRATAMIENTOS -->
+                        <tr>
+
+                            <td class="px-6 py-4 font-medium">
+                                Gestionar tratamientos
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_gestionar_tratamientos"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_gestionar_tratamientos %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_gestionar_tratamientos"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_gestionar_tratamientos %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_gestionar_tratamientos"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_gestionar_tratamientos %}checked{% endif %}
+                                >
+                            </td>
+
+                        </tr>
+
+
+                        <!-- ADMINISTRAR USUARIOS -->
+                        <tr>
+
+                            <td class="px-6 py-4 font-medium">
+                                Administrar usuarios
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_administrar_usuarios"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_administrar_usuarios %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_administrar_usuarios"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_administrar_usuarios %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_administrar_usuarios"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_administrar_usuarios %}checked{% endif %}
+                                >
+                            </td>
+
+                        </tr>
+
+
+                        <!-- VER REPORTES -->
+                        <tr>
+
+                            <td class="px-6 py-4 font-medium">
+                                Ver reportes
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="admin_ver_reportes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.admin_ver_reportes %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="fisioterapeuta_ver_reportes"
+                                    class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    {% if permisos.fisioterapeuta_ver_reportes %}checked{% endif %}
+                                >
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    name="recepcion_ver_reportes"
+                                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    {% if permisos.recepcion_ver_reportes %}checked{% endif %}
+                                >
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="flex justify-end border-t border-slate-100 bg-slate-50 p-6">
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Guardar permisos
+                </button>
+
+            </div>
+
+        </section>
 
     </form>
 

@@ -1,3 +1,30 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import PerfilUsuario
+
+
+@admin.register(PerfilUsuario)
+class PerfilUsuarioAdmin(admin.ModelAdmin):
+    list_display = (
+        "usuario",
+        "rol",
+        "telefono",
+        "activo",
+        "fecha_creacion",
+    )
+
+    list_filter = (
+        "rol",
+        "activo",
+    )
+
+    search_fields = (
+        "usuario__username",
+        "usuario__first_name",
+        "usuario__last_name",
+        "usuario__email",
+    )
+
+    ordering = (
+        "-fecha_creacion",
+    )

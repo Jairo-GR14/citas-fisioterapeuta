@@ -1,0 +1,11 @@
+Hola,
+
+Recibimos una solicitud para restablecer la contraseña de tu cuenta en la Clínica de Fisioterapia.
+
+Para crear una nueva contraseña, abre el siguiente enlace:
+
+{{ protocol }}://{{ domain }}{% url 'usuarios:restablecer_contrasena' uidb64=uid token=token %}
+
+Si tú no solicitaste este cambio, puedes ignorar este mensaje.
+
+Clínica de Fisioterapia

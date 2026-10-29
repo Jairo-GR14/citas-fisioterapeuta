@@ -31,8 +31,9 @@
 
             </div>
 
+
             <a
-                href="#"
+                href="{% url 'usuarios:login' %}"
                 class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
             >
                 Volver a iniciar sesión
@@ -74,32 +75,65 @@
 
                 {% csrf_token %}
 
+
                 <section class="space-y-5 p-6">
 
+
+                    <!-- Errores -->
+                    {% if form.errors %}
+
+                        <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+
+                            <p class="text-sm font-medium text-red-700">
+                                Revisa la información ingresada.
+                            </p>
+
+                            {% for field in form %}
+
+                                {% for error in field.errors %}
+
+                                    <p class="mt-1 text-sm text-red-600">
+                                        {{ error }}
+                                    </p>
+
+                                {% endfor %}
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Correo -->
                     <div>
 
                         <label
-                            for="correo"
+                            for="id_email"
                             class="mb-2 block text-sm font-medium text-slate-700"
                         >
                             Correo electrónico
                         </label>
 
                         <input
-                            id="correo"
-                            name="correo"
+                            id="id_email"
+                            name="email"
                             type="email"
                             required
+                            autocomplete="email"
                             placeholder="ejemplo@correo.com"
+                            value="{{ form.email.value|default:'' }}"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
 
                     </div>
 
+
                     <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
 
                         <p class="text-sm text-blue-700">
-                            Si el correo está registrado en el sistema, recibirás instrucciones para cambiar tu contraseña.
+                            Si el correo está registrado en el sistema,
+                            recibirás instrucciones para cambiar tu contraseña.
                         </p>
 
                     </div>
@@ -117,12 +151,13 @@
                         Enviar instrucciones
                     </button>
 
+
                     <p class="mt-4 text-center text-sm text-slate-500">
 
                         ¿Recordaste tu contraseña?
 
                         <a
-                            href="#"
+                            href="{% url 'usuarios:login' %}"
                             class="font-semibold text-emerald-600 hover:text-emerald-700"
                         >
                             Iniciar sesión

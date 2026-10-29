@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle de usuario</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+
+            <div>
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Detalle del usuario
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Información de la cuenta
+                </p>
+            </div>
+
+            <a
+                href="{% url 'administracion:lista_usuarios' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="mx-auto max-w-3xl px-6 py-10">
+
+        {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                    <div class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+            <div class="border-b border-slate-200 p-6">
+
+                <h2 class="text-2xl font-bold text-blue-950">
+                    {{ usuario_seleccionado.username }}
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Información general del usuario
+                </p>
+
+            </div>
+
+
+            <div class="grid gap-6 p-6 md:grid-cols-2">
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Nombre
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ usuario_seleccionado.first_name|default:"No registrado" }}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Apellidos
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ usuario_seleccionado.last_name|default:"No registrados" }}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Correo
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ usuario_seleccionado.email|default:"No registrado" }}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Rol
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+
+                        {% if usuario_seleccionado.is_superuser %}
+                            Superusuario
+                        {% elif usuario_seleccionado.perfil %}
+                            {{ usuario_seleccionado.perfil.get_rol_display }}
+                        {% else %}
+                            Sin perfil asignado
+                        {% endif %}
+
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Estado
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+
+                        {% if usuario_seleccionado.is_active %}
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Último acceso
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ usuario_seleccionado.last_login|default:"Sin accesos registrados" }}
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="flex flex-wrap gap-3 border-t border-slate-200 bg-slate-50 p-6">
+
+                <a
+                    href="{% url 'administracion:editar_usuario' usuario_seleccionado.id %}"
+                    class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
+                >
+                    Editar usuario
+                </a>
+
+
+                {% if usuario_seleccionado != request.user %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'administracion:cambiar_estado_usuario' usuario_seleccionado.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        {% if usuario_seleccionado.is_active %}
+
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-red-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-800"
+                            >
+                                Desactivar cuenta
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                            >
+                                Activar cuenta
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

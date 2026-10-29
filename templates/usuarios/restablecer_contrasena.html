@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restablecer contraseña</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Restablecer acceso
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'usuarios:login' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver al inicio de sesión
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-5xl px-6 py-12">
+
+        <div class="mx-auto max-w-md">
+
+            {% if validlink %}
+
+                <!-- Encabezado -->
+                <div class="mb-6 text-center">
+
+                    <p class="text-sm font-semibold text-emerald-600">
+                        Nueva contraseña
+                    </p>
+
+                    <h1 class="mt-1 text-3xl font-bold text-blue-950">
+                        Restablecer contraseña
+                    </h1>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Ingresa una nueva contraseña para tu cuenta.
+                    </p>
+
+                </div>
+
+
+                <!-- Formulario -->
+                <form
+                    method="POST"
+                    class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+                >
+
+                    {% csrf_token %}
+
+                    <section class="space-y-5 p-6">
+
+
+                        <!-- Errores -->
+                        {% if form.errors %}
+
+                            <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+
+                                <p class="text-sm font-medium text-red-700">
+                                    Revisa la información ingresada.
+                                </p>
+
+                                {% for field in form %}
+
+                                    {% for error in field.errors %}
+
+                                        <p class="mt-1 text-sm text-red-600">
+                                            {{ error }}
+                                        </p>
+
+                                    {% endfor %}
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Nueva contraseña -->
+                        <div>
+
+                            <label
+                                for="id_new_password1"
+                                class="mb-2 block text-sm font-medium text-slate-700"
+                            >
+                                Nueva contraseña
+                            </label>
+
+                            <input
+                                id="id_new_password1"
+                                name="new_password1"
+                                type="password"
+                                required
+                                autocomplete="new-password"
+                                class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            >
+
+                        </div>
+
+
+                        <!-- Confirmar contraseña -->
+                        <div>
+
+                            <label
+                                for="id_new_password2"
+                                class="mb-2 block text-sm font-medium text-slate-700"
+                            >
+                                Confirmar nueva contraseña
+                            </label>
+
+                            <input
+                                id="id_new_password2"
+                                name="new_password2"
+                                type="password"
+                                required
+                                autocomplete="new-password"
+                                class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            >
+
+                        </div>
+
+
+                        <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                            <p class="text-sm text-blue-700">
+                                Utiliza una contraseña segura y diferente a las que uses en otros servicios.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- Botón -->
+                    <div class="border-t border-slate-100 bg-slate-50 p-6">
+
+                        <button
+                            type="submit"
+                            class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                        >
+                            Guardar nueva contraseña
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            {% else %}
+
+                <!-- Enlace inválido -->
+                <div class="rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
+
+                    <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
+
+                        <span class="text-2xl text-red-700">
+                            !
+                        </span>
+
+                    </div>
+
+                    <p class="text-sm font-semibold text-red-600">
+                        Enlace no válido
+                    </p>
+
+                    <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                        El enlace ha expirado
+                    </h1>
+
+                    <p class="mt-4 text-sm leading-6 text-slate-500">
+                        El enlace de recuperación ya fue utilizado, expiró o no es válido.
+                    </p>
+
+                    <a
+                        href="{% url 'usuarios:recuperar_contrasena' %}"
+                        class="mt-6 inline-block w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Solicitar otro enlace
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

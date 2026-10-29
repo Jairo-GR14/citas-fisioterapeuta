@@ -32,7 +32,7 @@
             </div>
 
             <a
-                href="#"
+                href="{% url 'usuarios:redireccion_por_rol' %}"
                 class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
             >
                 Volver al inicio
@@ -45,6 +45,21 @@
 
     <!-- Contenido principal -->
     <main class="mx-auto max-w-5xl px-6 py-8">
+
+        {% if messages %}
+            <div class="mb-6 space-y-3">
+
+                {% for message in messages %}
+
+                    <div class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
 
         <!-- Encabezado -->
         <div class="mb-6">
@@ -89,7 +104,13 @@
                         </p>
 
                         <p class="mt-1 font-medium text-slate-800">
-                            {{ user.first_name }}
+
+                            {% if request.user.first_name %}
+                                {{ request.user.first_name }}
+                            {% else %}
+                                No registrado
+                            {% endif %}
+
                         </p>
 
                     </div>
@@ -103,7 +124,13 @@
                         </p>
 
                         <p class="mt-1 font-medium text-slate-800">
-                            {{ user.last_name }}
+
+                            {% if request.user.last_name %}
+                                {{ request.user.last_name }}
+                            {% else %}
+                                No registrados
+                            {% endif %}
+
                         </p>
 
                     </div>
@@ -117,7 +144,7 @@
                         </p>
 
                         <p class="mt-1 font-medium text-slate-800">
-                            {{ user.username }}
+                            {{ request.user.username }}
                         </p>
 
                     </div>
@@ -131,7 +158,13 @@
                         </p>
 
                         <p class="mt-1 font-medium text-slate-800">
-                            {{ user.email }}
+
+                            {% if request.user.email %}
+                                {{ request.user.email }}
+                            {% else %}
+                                No registrado
+                            {% endif %}
+
                         </p>
 
                     </div>
@@ -145,7 +178,13 @@
                         </p>
 
                         <p class="mt-1 font-medium text-slate-800">
-                            {{ user.telefono }}
+
+                            {% if perfil_usuario and perfil_usuario.telefono %}
+                                {{ perfil_usuario.telefono }}
+                            {% else %}
+                                No registrado
+                            {% endif %}
+
                         </p>
 
                     </div>
@@ -159,7 +198,21 @@
                         </p>
 
                         <p class="mt-1 font-medium text-emerald-700">
-                            {{ user.rol }}
+
+                            {% if request.user.is_superuser %}
+
+                                Administrador
+
+                            {% elif perfil_usuario %}
+
+                                {{ perfil_usuario.get_rol_display }}
+
+                            {% else %}
+
+                                Sin rol asignado
+
+                            {% endif %}
+
                         </p>
 
                     </div>
@@ -173,14 +226,14 @@
             <div class="flex flex-wrap justify-end gap-3 bg-slate-50 p-6">
 
                 <a
-                    href="#"
+                    href="{% url 'usuarios:cambiar_contrasena' %}"
                     class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                     Cambiar contraseña
                 </a>
 
                 <a
-                    href="#"
+                    href="{% url 'usuarios:editar_perfil' %}"
                     class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
                 >
                     Editar perfil

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Correo enviado</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Barra superior -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Recuperación de acceso
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'usuarios:login' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+                Volver al inicio de sesión
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- Contenido principal -->
+    <main class="mx-auto max-w-5xl px-6 py-16">
+
+        <div class="mx-auto max-w-md">
+
+            <div class="rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-sm">
+
+                <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
+
+                    <span class="text-2xl text-emerald-700">
+                        ✓
+                    </span>
+
+                </div>
+
+
+                <p class="text-sm font-semibold text-emerald-600">
+                    Solicitud procesada
+                </p>
+
+
+                <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                    Revisa tu correo
+                </h1>
+
+
+                <p class="mt-4 text-sm leading-6 text-slate-500">
+                    Si existe una cuenta asociada al correo que ingresaste,
+                    se enviaron instrucciones para restablecer la contraseña.
+                </p>
+
+
+                <div class="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-left">
+
+                    <p class="text-sm text-blue-700">
+                        Por seguridad, el sistema muestra este mismo mensaje aunque el correo no esté registrado.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{% url 'usuarios:login' %}"
+                    class="mt-6 inline-block w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Volver a iniciar sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Pie de página -->
+    <footer class="border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

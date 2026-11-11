@@ -1,184 +1,472 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalizar Consulta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Finalizar consulta - Clínica de Fisioterapia</title>
+
+    <script src="https://cdn.tailwindcss.com">
+    </script>
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- BARRA SUPERIOR -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-        <div>
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+            <div>
+                <h1 class="font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
 
-            <p class="text-xs text-slate-400">
-                Cierre de consulta
-            </p>
+                <p class="text-xs text-slate-500">
+                    Gestión de consultas
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+
+                <a
+                    href="{% url 'usuarios:perfil' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                >
+                    Mi perfil
+                </a>
+
+                <a
+                    href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                    class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Volver a consulta
+                </a>
+
+            </div>
+
         </div>
 
-        <a
-            href="detalle_consulta.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Regresar
-        </a>
-
-    </div>
-
-</header>
+    </header>
 
 
-<main class="mx-auto max-w-3xl px-6 py-10">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="mx-auto max-w-4xl px-6 py-10">
 
-    <section class="mb-8">
+        <!-- MENSAJES -->
+        {% if messages %}
 
-        <p class="text-sm font-semibold text-emerald-600">
-            Consulta #{{ consulta.id }}
-        </p>
+            <div class="mb-6 space-y-3">
 
-        <h2 class="mt-2 text-3xl font-bold text-blue-950">
-            Finalizar consulta
-        </h2>
+                {% for message in messages %}
 
-        <p class="mt-2 text-sm text-slate-500">
-            Registra el cierre de la sesión antes de marcarla como finalizada.
-        </p>
-
-    </section>
-
-
-    <form
-        method="POST"
-        action="#"
-        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
-    >
-
-        {% csrf_token %}
-
-        <div class="space-y-6 p-6">
-
-            <!-- TRATAMIENTO -->
-            <div>
-
-                <label
-                    for="tratamiento"
-                    class="mb-2 block text-sm font-semibold text-blue-900"
-                >
-                    Tratamiento realizado
-                </label>
-
-                <textarea
-                    id="tratamiento"
-                    name="tratamiento"
-                    rows="4"
-                    required
-                    placeholder="Describe el tratamiento aplicado..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                >{{ consulta.tratamiento }}</textarea>
-
-            </div>
-
-
-            <!-- RESPUESTA -->
-            <div>
-
-                <label
-                    for="respuesta_paciente"
-                    class="mb-2 block text-sm font-semibold text-emerald-700"
-                >
-                    Respuesta del paciente
-                </label>
-
-                <textarea
-                    id="respuesta_paciente"
-                    name="respuesta_paciente"
-                    rows="3"
-                    required
-                    placeholder="Describe la respuesta del paciente..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                ></textarea>
-
-            </div>
-
-
-            <!-- SEGUIMIENTO -->
-            <div>
-
-                <label
-                    for="seguimiento"
-                    class="mb-2 block text-sm font-semibold text-blue-900"
-                >
-                    Indicaciones de seguimiento
-                </label>
-
-                <textarea
-                    id="seguimiento"
-                    name="seguimiento"
-                    rows="4"
-                    placeholder="Agrega recomendaciones para la siguiente sesión..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                ></textarea>
-
-            </div>
-
-
-            <!-- ESTADO -->
-            <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-
-                <div class="flex items-center gap-3">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
-                        ✓
+                    <div class="rounded-xl border px-4 py-3 text-sm
+                        {% if 'error' in message.tags %}
+                            border-red-200 bg-red-50 text-red-700
+                        {% else %}
+                            border-emerald-200 bg-emerald-50 text-emerald-700
+                        {% endif %}
+                    ">
+                        {{ message }}
                     </div>
 
-                    <div>
+                {% endfor %}
 
-                        <p class="text-sm font-semibold text-emerald-800">
-                            Consulta lista para finalizar
-                        </p>
+            </div>
 
-                        <p class="mt-1 text-xs text-emerald-600">
-                            Verifica que la información esté completa antes de continuar.
-                        </p>
+        {% endif %}
 
-                    </div>
+
+        <!-- ENCABEZADO -->
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Atención clínica
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Finalizar consulta
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Revisa la información registrada antes de
+                finalizar la atención del paciente.
+            </p>
+
+        </section>
+
+
+        <!-- DATOS DE LA CONSULTA -->
+        <section class="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-6 text-lg font-semibold text-blue-900">
+                Información general
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <!-- PACIENTE -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Paciente
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fisioterapeuta
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fecha de la cita
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+
+                </div>
+
+
+                <!-- HORA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Hora
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.hora|time:"H:i" }}
+                    </p>
+
+                </div>
+
+
+                <!-- SERVICIO -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Servicio
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.servicio.nombre }}
+                    </p>
+
+                </div>
+
+
+                <!-- ESTADO -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Estado actual
+                    </p>
+
+                    <span class="mt-1 inline-block rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                        {{ cita.get_estado_display }}
+                    </span>
 
                 </div>
 
             </div>
 
+        </section>
+
+
+        <!-- RESUMEN CLÍNICO -->
+        <section class="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Resumen clínico
+            </h2>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Confirma que la valoración y el diagnóstico
+                estén registrados correctamente.
+            </p>
+
+
+            <!-- VALORACIÓN -->
+            <div class="mt-6">
+
+                <h3 class="mb-2 text-sm font-semibold text-emerald-700">
+                    Valoración inicial
+                </h3>
+
+                <div class="rounded-xl bg-emerald-50 p-4">
+
+                    {% if consulta.valoracion_inicial %}
+
+                        <p class="text-sm leading-7 text-slate-700">
+                            {{ consulta.valoracion_inicial|linebreaksbr }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-sm text-red-600">
+                            No se ha registrado la valoración inicial.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- DIAGNÓSTICO -->
+            <div class="mt-6">
+
+                <h3 class="mb-2 text-sm font-semibold text-blue-900">
+                    Diagnóstico
+                </h3>
+
+                <div class="rounded-xl bg-blue-50 p-4">
+
+                    {% if consulta.diagnostico %}
+
+                        <p class="text-sm leading-7 text-slate-700">
+                            {{ consulta.diagnostico|linebreaksbr }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-sm text-red-600">
+                            No se ha registrado el diagnóstico.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ATENCIÓN REALIZADA -->
+            <div class="mt-6">
+
+                <h3 class="mb-2 text-sm font-semibold text-blue-900">
+                    Atención realizada
+                </h3>
+
+                <div class="rounded-xl bg-slate-50 p-4">
+
+                    {% if consulta.informacion_atencion %}
+
+                        <p class="text-sm leading-7 text-slate-700">
+                            {{ consulta.informacion_atencion|linebreaksbr }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-sm text-slate-500">
+                            Sin información registrada.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- OBSERVACIONES -->
+            <div class="mt-6">
+
+                <h3 class="mb-2 text-sm font-semibold text-blue-900">
+                    Observaciones
+                </h3>
+
+                <div class="rounded-xl bg-slate-50 p-4">
+
+                    {% if consulta.observaciones %}
+
+                        <p class="text-sm leading-7 text-slate-700">
+                            {{ consulta.observaciones|linebreaksbr }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-sm text-slate-500">
+                            Sin observaciones adicionales.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONFIRMAR FINALIZACIÓN -->
+        <section class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <div class="p-6">
+
+                <h2 class="text-lg font-semibold text-blue-900">
+                    Confirmar finalización
+                </h2>
+
+                {% if cita.estado == "EN_PROCESO" %}
+
+                    {% if consulta.valoracion_inicial and consulta.diagnostico %}
+
+                        <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+
+                            <p class="text-sm leading-6 text-amber-800">
+                                Al finalizar la consulta, la cita
+                                cambiará a estado "Finalizada"
+                                y se registrará la fecha y hora
+                                de cierre.
+                            </p>
+
+                            <p class="mt-2 text-sm text-amber-800">
+                                Después de finalizarla, no podrás
+                                modificar la valoración mediante
+                                el formulario actual.
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+
+                            <p class="text-sm font-semibold text-red-700">
+                                Faltan datos obligatorios.
+                            </p>
+
+                            <p class="mt-2 text-sm text-red-600">
+                                Para finalizar esta consulta primero
+                                debes registrar la valoración inicial
+                                y el diagnóstico.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                {% elif cita.estado == "FINALIZADA" %}
+
+                    <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+
+                        <p class="text-sm font-semibold text-emerald-700">
+                            Esta consulta ya está finalizada.
+                        </p>
+
+                        <p class="mt-2 text-sm text-emerald-600">
+                            No es necesario volver a finalizarla.
+                        </p>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+
+                        <p class="text-sm text-red-700">
+                            Esta consulta no se encuentra en proceso
+                            y no puede finalizarse.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="border-t border-slate-100 bg-slate-50 p-6">
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+
+                    <a
+                        href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                        class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                    >
+                        Volver al detalle
+                    </a>
+
+
+                    {% if cita.estado == "EN_PROCESO" %}
+
+                        {% if consulta.valoracion_inicial and consulta.diagnostico %}
+
+                            <form
+                                method="POST"
+                                action="{% url 'consultas:finalizar_consulta' consulta.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                                >
+                                    Confirmar finalización
+                                </button>
+
+                            </form>
+
+                        {% else %}
+
+                            <a
+                                href="{% url 'consultas:registrar_valoracion' consulta.id %}"
+                                class="rounded-xl bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white hover:bg-blue-700"
+                            >
+                                Completar valoración
+                            </a>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="mt-8 border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
         </div>
 
-
-        <!-- BOTONES -->
-        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
-
-            <a
-                href="detalle_consulta.html"
-                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
-            >
-                Regresar
-            </a>
-
-            <button
-                type="submit"
-                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-            >
-                Finalizar consulta
-            </button>
-
-        </div>
-
-    </form>
-
-</main>
+    </footer>
 
 </body>
+
 </html>

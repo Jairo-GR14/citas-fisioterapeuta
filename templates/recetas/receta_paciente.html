@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis indicaciones - Clínica de Fisioterapia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Mis indicaciones
+                </p>
+            </div>
+
+            <a href="{% url 'usuarios:redireccion_por_rol' %}"
+               class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                Volver a mi panel
+            </a>
+
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-4xl px-6 py-10">
+
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Mi recuperación
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Mis indicaciones
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Consulta los ejercicios y cuidados recomendados
+                por tu fisioterapeuta.
+            </p>
+
+        </section>
+
+        <!-- DATOS DE LA CONSULTA -->
+        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de mi consulta
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fecha de consulta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fisioterapeuta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Servicio
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.servicio.nombre }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Estado de la consulta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.get_estado_display }}
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- INDICACIONES -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Indicaciones generales
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-blue-50 p-4 text-sm leading-7">
+                {% if receta.indicaciones %}
+                    {{ receta.indicaciones|linebreaksbr }}
+                {% else %}
+                    Sin indicaciones registradas.
+                {% endif %}
+            </div>
+
+        </section>
+
+        <!-- EJERCICIOS -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Ejercicios que debo realizar
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+                {% if receta.ejercicios %}
+                    {{ receta.ejercicios|linebreaksbr }}
+                {% else %}
+                    Sin ejercicios registrados.
+                {% endif %}
+            </div>
+
+        </section>
+
+        <!-- PLAN DE EJERCICIOS -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Mi plan de ejercicios
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-3">
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="font-semibold text-blue-900">
+                        Repeticiones
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.repeticiones|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="font-semibold text-blue-900">
+                        Frecuencia
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.frecuencia|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="font-semibold text-blue-900">
+                        Duración
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.duracion|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RECOMENDACIONES -->
+        <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-emerald-700">
+                Recomendaciones de mi fisioterapeuta
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+                {% if receta.recomendaciones %}
+                    {{ receta.recomendaciones|linebreaksbr }}
+                {% else %}
+                    Sin recomendaciones adicionales.
+                {% endif %}
+            </div>
+
+        </section>
+
+        <!-- RESTRICCIONES -->
+        <section class="mt-6 rounded-2xl border border-red-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-red-700">
+                Actividades que debo evitar
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-red-50 p-4 text-sm leading-7">
+                {% if receta.restricciones %}
+                    {{ receta.restricciones|linebreaksbr }}
+                {% else %}
+                    Sin restricciones registradas.
+                {% endif %}
+            </div>
+
+        </section>
+
+        <!-- AVISO -->
+        <section class="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-5">
+
+            <p class="text-sm leading-6 text-blue-800">
+                Estas indicaciones fueron registradas por tu
+                fisioterapeuta. Si tienes dudas sobre los ejercicios,
+                su frecuencia o duración, consulta con el personal clínico
+                antes de modificar tu rutina.
+            </p>
+
+        </section>
+
+        <div class="mt-8 flex justify-end">
+            <a href="{% url 'usuarios:redireccion_por_rol' %}"
+               class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white">
+                Regresar a mi panel
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
+
+</body>
+</html>

@@ -1,277 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Detalle de Receta</title>
-
+    <title>Editar receta - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Edición de recetas
+                </p>
+            </div>
 
-        <div>
+            <a href="{% url 'recetas:detalle_receta' receta.id %}"
+               class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                Volver al detalle
+            </a>
+        </div>
+    </header>
 
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
+    <main class="mx-auto max-w-4xl px-6 py-10">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="mb-8">
+            <p class="text-sm font-semibold text-emerald-600">
+                Consulta #{{ consulta.id }}
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Editar receta #{{ receta.id }}
             </h1>
 
-            <p class="text-sm text-slate-500">
-                Recetas
+            <p class="mt-2 text-sm text-slate-500">
+                Modifica las indicaciones que recibirá el paciente.
             </p>
+        </section>
 
-        </div>
+        <!-- INFORMACIÓN -->
+        <section class="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
+            <div class="grid gap-5 sm:grid-cols-2">
 
-        <a href="#"
-        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
+                <div>
+                    <p class="text-sm text-slate-500">Paciente</p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
+                </div>
 
-            Editar receta
-
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-7xl px-6 py-8">
-
-
-    <!-- Encabezado -->
-
-    <div class="mb-6">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Recetas e indicaciones
-        </p>
-
-        <h2 class="text-3xl font-bold text-blue-950">
-            Detalle de receta
-        </h2>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Consulta las indicaciones asignadas al paciente.
-        </p>
-
-    </div>
-
-
-    <!-- Informacion general -->
-
-    <div class="mb-6 grid gap-4 md:grid-cols-2">
-
-
-        <!-- Paciente -->
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-xs font-semibold uppercase text-slate-400">
-                Paciente
-            </p>
-
-            <p class="mt-2 text-lg font-semibold text-blue-950">
-
-                {{ receta.paciente.nombre }}
-
-            </p>
-
-        </div>
-
-
-        <!-- Fecha -->
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-xs font-semibold uppercase text-slate-400">
-                Fecha
-            </p>
-
-            <p class="mt-2 text-lg font-semibold text-blue-950">
-
-                {{ receta.fecha }}
-
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- Informacion de receta -->
-
-    <div class="rounded-2xl border border-slate-200 bg-white p-6">
-
-
-        <div class="mb-6">
-
-            <h3 class="text-xl font-semibold text-blue-950">
-                Indicaciones del paciente
-            </h3>
-
-            <p class="mt-1 text-sm text-slate-500">
-                Información registrada por el fisioterapeuta.
-            </p>
-
-        </div>
-
-
-        <div class="grid gap-6 md:grid-cols-2">
-
-
-            <!-- Repeticiones -->
-
-            <div class="rounded-xl bg-slate-50 p-4">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Repeticiones
-                </p>
-
-                <p class="mt-2 text-lg font-semibold text-blue-900">
-
-                    {{ receta.repeticiones }}
-
-                </p>
+                <div>
+                    <p class="text-sm text-slate-500">Fecha de consulta</p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
 
             </div>
+        </section>
 
+        <!-- FORMULARIO -->
+        <form method="post"
+              action="{% url 'recetas:editar_receta' receta.id %}"
+              class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
-            <!-- Frecuencia -->
+            {% csrf_token %}
 
-            <div class="rounded-xl bg-slate-50 p-4">
+            <div class="space-y-6 p-6">
 
-                <p class="text-sm font-semibold text-slate-500">
-                    Frecuencia
-                </p>
+                <h2 class="text-lg font-semibold text-blue-900">
+                    Modificar indicaciones
+                </h2>
 
-                <p class="mt-2 text-lg font-semibold text-blue-900">
+                {% if formulario.non_field_errors %}
+                    <div class="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
 
-                    {{ receta.frecuencia }}
+                <!-- SE MUESTRAN TODOS LOS CAMPOS DE RECETAFORM -->
+                {% for campo in formulario %}
+                    <div>
 
-                </p>
+                        <label for="{{ campo.id_for_label }}"
+                               class="mb-2 block text-sm font-semibold text-blue-900">
+                            {{ campo.label }}
+                        </label>
 
-            </div>
+                        {{ campo }}
 
+                        {% if campo.help_text %}
+                            <p class="mt-2 text-xs text-slate-500">
+                                {{ campo.help_text }}
+                            </p>
+                        {% endif %}
 
-            <!-- Duracion -->
+                        {% for error in campo.errors %}
+                            <p class="mt-2 text-sm text-red-600">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
 
-            <div class="md:col-span-2">
+                    </div>
+                {% endfor %}
 
-                <p class="text-sm font-semibold text-slate-500">
-                    Duración
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ receta.duracion }}
-
+                <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <p class="text-sm text-amber-800">
+                        Solo se permite modificar esta receta mientras
+                        la consulta esté en proceso.
+                    </p>
                 </div>
 
             </div>
 
+            <!-- BOTONES -->
+            <div class="flex flex-wrap justify-end gap-3 border-t bg-slate-50 p-6">
 
-            <!-- Ejercicios -->
+                <a href="{% url 'recetas:detalle_receta' receta.id %}"
+                   class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold">
+                    Cancelar
+                </a>
 
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Ejercicios recomendados
-                </p>
-
-                <div class="mt-2 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-800">
-
-                    {{ receta.ejercicios }}
-
-                </div>
+                <button type="submit"
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white">
+                    Guardar cambios
+                </button>
 
             </div>
 
+        </form>
+    </main>
 
-            <!-- Indicaciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Indicaciones
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ receta.indicaciones }}
-
-                </div>
-
-            </div>
-
-
-            <!-- Recomendaciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Recomendaciones
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ receta.recomendaciones }}
-
-                </div>
-
-            </div>
-
-
-            <!-- Restricciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Restricciones
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ receta.restricciones }}
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Botones -->
-
-        <div class="mt-6 flex justify-end gap-3">
-
-            <a href="#"
-            class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
-
-                Volver a mis recetas
-
-            </a>
-
-
-            <a href="#"
-            class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
-
-                Editar receta
-
-            </a>
-
-        </div>
-
-    </div>
-
-
-</main>
+    <footer class="border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
-
-</html
+</html>

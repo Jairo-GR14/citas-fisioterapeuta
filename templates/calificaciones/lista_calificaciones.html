@@ -4,114 +4,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Lista de Calificaciones</title>
-
+    <title>Lista de calificaciones - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- ENCABEZADO -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-        <div>
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
 
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+                <p class="text-sm text-slate-500">
+                    Administración de calificaciones
+                </p>
+            </div>
 
-            <p class="text-sm text-slate-500">
-                Calificaciones
-            </p>
+            <a
+                href="{% url 'usuarios:redireccion_por_rol' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+            >
+                Volver al panel
+            </a>
 
         </div>
 
-    </div>
-
-</header>
+    </header>
 
 
-<main class="mx-auto max-w-7xl px-6 py-8">
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-6xl px-6 py-10">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
 
-    <!-- Encabezado -->
+        <!-- TÍTULO -->
+        <section class="mb-8">
 
-    <div class="mb-6">
+            <p class="text-sm font-semibold text-emerald-600">
+                Calidad del servicio
+            </p>
 
-        <p class="text-sm font-semibold text-emerald-600">
-            Administración
-        </p>
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Calificaciones de los pacientes
+            </h1>
 
-        <h2 class="text-3xl font-bold text-blue-950">
-            Lista de calificaciones
-        </h2>
+            <p class="mt-2 text-sm text-slate-500">
+                Consulta las evaluaciones registradas
+                sobre la atención recibida.
+            </p>
 
-        <p class="mt-2 text-sm text-slate-500">
-            Consulta las evaluaciones realizadas por los pacientes.
-        </p>
-
-    </div>
-
-
-    <!-- Buscador -->
-
-    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5">
-
-        <form method="GET"
-            class="flex gap-3">
-
-            <input type="text"
-                name="buscar"
-                value="{{ request.GET.buscar }}"
-                placeholder="Buscar paciente o fisioterapeuta..."
-                class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm">
-
-            <button type="submit"
-                    class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
-
-                Buscar
-
-            </button>
-
-        </form>
-
-    </div>
+        </section>
 
 
-    <!-- Tabla -->
+        <!-- ESTADÍSTICAS -->
+        <section class="mb-8 grid gap-5 sm:grid-cols-2">
 
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            <!-- TOTAL -->
+            <div class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-        <div class="overflow-x-auto">
+                <p class="text-sm font-semibold text-slate-500">
+                    Total de calificaciones
+                </p>
 
-            <table class="min-w-full">
+                <p class="mt-3 text-4xl font-bold text-blue-900">
+                    {{ total_calificaciones }}
+                </p>
 
-                <thead class="bg-slate-50">
+                <p class="mt-2 text-sm text-slate-500">
+                    Evaluaciones registradas
+                </p>
+
+            </div>
+
+
+            <!-- PROMEDIO -->
+            <div class="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+                <p class="text-sm font-semibold text-slate-500">
+                    Promedio general
+                </p>
+
+                <p class="mt-3 text-4xl font-bold text-emerald-700">
+
+                    {% if promedio_calificaciones %}
+
+                        ★ {{ promedio_calificaciones|floatformat:1 }}/5
+
+                    {% else %}
+
+                        Sin datos
+
+                    {% endif %}
+
+                </p>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Promedio de las evaluaciones recibidas
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- TABLA -->
+        <section class="overflow-x-auto rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <table class="w-full min-w-[800px] text-left text-sm">
+
+                <thead class="border-b bg-blue-50 text-blue-900">
 
                     <tr>
+                        <th class="px-5 py-4">
+                            Cita
+                        </th>
 
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                        <th class="px-5 py-4">
                             Paciente
                         </th>
 
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Fecha
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
+                        <th class="px-5 py-4">
                             Fisioterapeuta
                         </th>
 
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Calificación
+                        <th class="px-5 py-4">
+                            Fecha de cita
                         </th>
 
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Comentario
+                        <th class="px-5 py-4">
+                            Puntuación
                         </th>
 
+                        <th class="px-5 py-4">
+                            Acciones
+                        </th>
                     </tr>
 
                 </thead>
@@ -119,118 +157,103 @@
 
                 <tbody class="divide-y divide-slate-100">
 
-
                     {% for calificacion in calificaciones %}
 
-                    <tr class="hover:bg-slate-50">
+                        <tr class="hover:bg-slate-50">
+
+                            <!-- CITA -->
+                            <td class="px-5 py-4 font-semibold text-blue-900">
+                                #{{ calificacion.cita.id }}
+                            </td>
 
 
-                        <!-- Paciente -->
-
-                        <td class="px-6 py-4 font-medium text-blue-900">
-
-                            {{ calificacion.cita.paciente.nombre }}
-
-                        </td>
+                            <!-- PACIENTE -->
+                            <td class="px-5 py-4">
+                                {{ calificacion.cita.paciente.usuario.usuario.get_full_name|default:calificacion.cita.paciente.usuario.usuario.username }}
+                            </td>
 
 
-                        <!-- Fecha -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ calificacion.cita.fecha }}
-
-                        </td>
+                            <!-- FISIOTERAPEUTA -->
+                            <td class="px-5 py-4">
+                                {{ calificacion.cita.fisioterapeuta.usuario.usuario.get_full_name|default:calificacion.cita.fisioterapeuta.usuario.usuario.username }}
+                            </td>
 
 
-                        <!-- Fisioterapeuta -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ calificacion.cita.fisioterapeuta.nombre }}
-
-                        </td>
+                            <!-- FECHA -->
+                            <td class="px-5 py-4 text-slate-600">
+                                {{ calificacion.cita.fecha|date:"d/m/Y" }}
+                            </td>
 
 
-                        <!-- Calificacion -->
+                            <!-- PUNTUACIÓN -->
+                            <td class="px-5 py-4">
 
-                        <td class="px-6 py-4">
+                                <span class="rounded-full bg-amber-50 px-3 py-2 font-semibold text-amber-700">
+                                    ★ {{ calificacion.puntuacion }}/5
+                                </span>
 
-                            {% if calificacion.calificacion >= 4 %}
-
-                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-
-                                {{ calificacion.calificacion }} / 5
-
-                            </span>
-
-                            {% elif calificacion.calificacion == 3 %}
-
-                            <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-
-                                {{ calificacion.calificacion }} / 5
-
-                            </span>
-
-                            {% else %}
-
-                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-
-                                {{ calificacion.calificacion }} / 5
-
-                            </span>
-
-                            {% endif %}
-
-                        </td>
+                            </td>
 
 
-                        <!-- Comentario -->
+                            <!-- ACCIONES -->
+                            <td class="px-5 py-4">
 
-                        <td class="px-6 py-4 text-sm text-slate-600">
+                                <a
+                                    href="{% url 'calificaciones:detalle_calificacion' calificacion.id %}"
+                                    class="font-semibold text-blue-700 hover:underline"
+                                >
+                                    Ver detalle
+                                </a>
 
-                            {% if calificacion.comentario %}
+                            </td>
 
-                                {{ calificacion.comentario|truncatechars:60 }}
-
-                            {% else %}
-
-                                Sin comentario
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
+                        </tr>
 
                     {% empty %}
 
-                    <tr>
+                        <tr>
 
-                        <td colspan="5"
-                            class="px-6 py-10 text-center text-slate-500">
+                            <td colspan="6" class="px-6 py-12 text-center">
 
-                            No hay calificaciones registradas.
+                                <p class="font-semibold text-slate-700">
+                                    No hay calificaciones registradas.
+                                </p>
 
-                        </td>
+                                <p class="mt-2 text-sm text-slate-500">
+                                    Las evaluaciones aparecerán aquí
+                                    cuando los pacientes califiquen sus citas.
+                                </p>
 
-                    </tr>
+                            </td>
+
+                        </tr>
 
                     {% endfor %}
-
 
                 </tbody>
 
             </table>
 
+        </section>
+
+
+        <div class="mt-7 flex justify-end">
+
+            <a
+                href="{% url 'usuarios:redireccion_por_rol' %}"
+                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+            >
+                Regresar al panel
+            </a>
+
         </div>
 
-    </div>
+    </main>
 
 
-</main>
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
-
-</html
+</html>

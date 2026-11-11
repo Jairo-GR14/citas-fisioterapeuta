@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de calificación - Clínica de Fisioterapia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- ENCABEZADO -->
+    <header class="border-b border-blue-100 bg-white">
+
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Detalle de calificación
+                </p>
+            </div>
+
+
+            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" %}
+
+                <a
+                    href="{% url 'calificaciones:lista_calificaciones' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+                >
+                    Todas las calificaciones
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'calificaciones:mis_calificaciones' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+                >
+                    Mis calificaciones
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-4xl px-6 py-10">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- ENCABEZADO DEL DETALLE -->
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Evaluación de servicio
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Calificación #{{ calificacion.id }}
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Información de la evaluación registrada
+                para la cita #{{ cita.id }}.
+            </p>
+
+        </section>
+
+
+        <!-- PUNTUACIÓN -->
+        <section class="rounded-2xl border border-amber-100 bg-white p-8 text-center shadow-sm">
+
+            <p class="text-sm font-semibold text-slate-500">
+                Puntuación otorgada
+            </p>
+
+            <p class="mt-4 text-5xl font-bold text-amber-600">
+                ★ {{ calificacion.puntuacion }}/5
+            </p>
+
+
+            <!-- ESTRELLAS -->
+            <div class="mt-4 text-3xl text-amber-500">
+
+                {% if calificacion.puntuacion >= 1 %}★{% else %}☆{% endif %}
+                {% if calificacion.puntuacion >= 2 %}★{% else %}☆{% endif %}
+                {% if calificacion.puntuacion >= 3 %}★{% else %}☆{% endif %}
+                {% if calificacion.puntuacion >= 4 %}★{% else %}☆{% endif %}
+                {% if calificacion.puntuacion >= 5 %}★{% else %}☆{% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- INFORMACIÓN DE LA CITA -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de la cita
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <!-- PACIENTE -->
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Paciente
+                    </p>
+
+                    <p class="mt-1 font-semibold">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Fisioterapeuta
+                    </p>
+
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Fecha de atención
+                    </p>
+
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+
+                </div>
+
+
+                <!-- SERVICIO -->
+                <div>
+
+                    <p class="text-sm text-slate-500">
+                        Servicio recibido
+                    </p>
+
+                    <p class="mt-1 font-semibold">
+                        {{ cita.servicio.nombre }}
+                    </p>
+
+                </div>
+
+
+                <!-- ESTADO -->
+                <div class="sm:col-span-2">
+
+                    <p class="text-sm text-slate-500">
+                        Estado de la cita
+                    </p>
+
+                    <p class="mt-1 font-semibold">
+                        {{ cita.get_estado_display }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- COMENTARIO -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Comentario sobre la atención
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-blue-50 p-5 text-sm leading-7 text-slate-700">
+
+                {% if calificacion.comentario %}
+
+                    {{ calificacion.comentario|linebreaksbr }}
+
+                {% else %}
+
+                    No se agregó ningún comentario a esta calificación.
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- REGRESAR -->
+        <div class="mt-8 flex flex-wrap justify-end gap-3">
+
+            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" %}
+
+                <a
+                    href="{% url 'calificaciones:lista_calificaciones' %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
+                >
+                    Volver a calificaciones
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'calificaciones:mis_calificaciones' %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
+                >
+                    Volver a mis calificaciones
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
+
+</body>
+</html>

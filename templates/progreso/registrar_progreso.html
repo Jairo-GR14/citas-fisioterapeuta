@@ -1,366 +1,313 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Registrar Progreso</title>
-
+    <title>Registrar progreso - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- BARRA SUPERIOR -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-
-        <div>
-
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
-
-            <p class="text-xs text-slate-400">
-                Seguimiento del paciente
-            </p>
-
-        </div>
-
-
-        <a
-            href="../consultas/detalle_consulta.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Regresar a consulta
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-4xl px-6 py-10">
-
-    <!-- ENCABEZADO -->
-    <section class="mb-8">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Evolución clínica
-        </p>
-
-        <h2 class="mt-2 text-3xl font-bold text-blue-950">
-            Registrar progreso
-        </h2>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Registra los cambios observados durante la sesión del paciente.
-        </p>
-
-    </section>
-
-
-    <!-- PACIENTE -->
-    <section class="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-5">
-
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
             <div>
-
-                <p class="text-xs font-semibold uppercase tracking-wide text-blue-500">
-                    Paciente
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Seguimiento clínico
                 </p>
-
-                <h3 class="mt-1 text-lg font-semibold text-blue-950">
-                    {{ paciente.nombre }}
-                    {{ paciente.apellidos }}
-                </h3>
-
-                <p class="mt-1 text-sm text-emerald-700">
-                    {{ paciente.servicio }}
-                </p>
-
             </div>
-
-
-            <div class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
-                Sesión {{ numero_sesion }}
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- FORMULARIO -->
-    <form
-        method="POST"
-        action="#"
-        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
-    >
-
-        {% csrf_token %}
-
-
-        <div class="grid gap-5 p-6 sm:grid-cols-2">
-
-            <!-- FECHA -->
-            <div>
-
-                <label
-                    for="fecha"
-                    class="mb-2 block text-sm font-medium text-slate-700"
-                >
-                    Fecha de sesión
-                </label>
-
-                <input
-                    type="date"
-                    id="fecha"
-                    name="fecha"
-                    required
-                    class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                >
-
-            </div>
-
-
-            <!-- DOLOR -->
-            <div>
-
-                <label
-                    for="nivel_dolor"
-                    class="mb-2 block text-sm font-medium text-slate-700"
-                >
-                    Nivel de dolor
-                </label>
-
-                <select
-                    id="nivel_dolor"
-                    name="nivel_dolor"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                >
-
-                    <option value="">
-                        Selecciona un nivel
-                    </option>
-
-                    <option value="0">
-                        0 - Sin dolor
-                    </option>
-
-                    <option value="1-3">
-                        1 - 3 Leve
-                    </option>
-
-                    <option value="4-6">
-                        4 - 6 Moderado
-                    </option>
-
-                    <option value="7-10">
-                        7 - 10 Intenso
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- MOVILIDAD -->
-            <div>
-
-                <label
-                    for="movilidad"
-                    class="mb-2 block text-sm font-medium text-slate-700"
-                >
-                    Movilidad
-                </label>
-
-                <select
-                    id="movilidad"
-                    name="movilidad"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                >
-
-                    <option value="">
-                        Selecciona una opción
-                    </option>
-
-                    <option value="limitada">
-                        Limitada
-                    </option>
-
-                    <option value="moderada">
-                        Moderada
-                    </option>
-
-                    <option value="buena">
-                        Buena
-                    </option>
-
-                    <option value="completa">
-                        Completa
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- ESTADO -->
-            <div>
-
-                <label
-                    for="estado"
-                    class="mb-2 block text-sm font-medium text-slate-700"
-                >
-                    Estado general
-                </label>
-
-                <select
-                    id="estado"
-                    name="estado"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                >
-
-                    <option value="">
-                        Selecciona una opción
-                    </option>
-
-                    <option value="sin_cambios">
-                        Sin cambios
-                    </option>
-
-                    <option value="mejorando">
-                        Mejorando
-                    </option>
-
-                    <option value="mejoria_significativa">
-                        Mejoría significativa
-                    </option>
-
-                    <option value="requiere_valoracion">
-                        Requiere valoración
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- EJERCICIOS -->
-            <div class="sm:col-span-2">
-
-                <label
-                    for="ejercicios"
-                    class="mb-2 block text-sm font-medium text-blue-900"
-                >
-                    Ejercicios realizados
-                </label>
-
-                <textarea
-                    id="ejercicios"
-                    name="ejercicios"
-                    rows="4"
-                    required
-                    placeholder="Describe los ejercicios realizados durante la sesión..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                ></textarea>
-
-            </div>
-
-
-            <!-- AVANCES -->
-            <div class="sm:col-span-2">
-
-                <label
-                    for="avances"
-                    class="mb-2 block text-sm font-medium text-emerald-700"
-                >
-                    Avances observados
-                </label>
-
-                <textarea
-                    id="avances"
-                    name="avances"
-                    rows="4"
-                    required
-                    placeholder="Describe los avances observados..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                ></textarea>
-
-            </div>
-
-
-            <!-- LIMITACIONES -->
-            <div class="sm:col-span-2">
-
-                <label
-                    for="limitaciones"
-                    class="mb-2 block text-sm font-medium text-blue-900"
-                >
-                    Limitaciones
-                </label>
-
-                <textarea
-                    id="limitaciones"
-                    name="limitaciones"
-                    rows="3"
-                    placeholder="Registra cualquier limitación detectada..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                ></textarea>
-
-            </div>
-
-
-            <!-- OBSERVACIONES -->
-            <div class="sm:col-span-2">
-
-                <label
-                    for="observaciones"
-                    class="mb-2 block text-sm font-medium text-emerald-700"
-                >
-                    Observaciones
-                </label>
-
-                <textarea
-                    id="observaciones"
-                    name="observaciones"
-                    rows="4"
-                    placeholder="Agrega observaciones adicionales..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                ></textarea>
-
-            </div>
-
-        </div>
-
-
-        <!-- BOTONES -->
-        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
-                href="../consultas/detalle_consulta.html"
-                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
+                href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-100"
             >
-                Cancelar
+                Volver a consulta
             </a>
 
-            <button
-                type="submit"
-                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-            >
-                Guardar progreso
-            </button>
-
         </div>
+    </header>
 
-    </form>
 
-</main>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="mx-auto max-w-4xl px-6 py-10">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- ENCABEZADO -->
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Evolución del paciente
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                {% if es_edicion %}
+                    Editar progreso
+                {% else %}
+                    Registrar progreso
+                {% endif %}
+            </h1>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Registra la movilidad, dolor, ejercicios y avances
+                observados durante la atención.
+            </p>
+
+        </section>
+
+
+        <!-- DATOS DEL PACIENTE -->
+        <section class="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de la consulta
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Paciente
+                    </p>
+                    <p class="mt-1 font-medium">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fisioterapeuta
+                    </p>
+                    <p class="mt-1 font-medium">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fecha
+                    </p>
+                    <p class="mt-1 font-medium">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Estado
+                    </p>
+                    <p class="mt-1 font-medium">
+                        {{ cita.get_estado_display }}
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FORMULARIO -->
+        <form
+            method="POST"
+            action="{% if es_edicion %}{% url 'progreso:editar_progreso' consulta.id %}{% else %}{% url 'progreso:registrar_progreso' consulta.id %}{% endif %}"
+            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+        >
+
+            {% csrf_token %}
+
+            <div class="space-y-6 p-6">
+
+                <h2 class="text-lg font-semibold text-blue-900">
+                    Información del progreso
+                </h2>
+
+
+                <!-- ERRORES GENERALES -->
+                {% if formulario.non_field_errors %}
+                    <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
+
+
+                <!-- MOVILIDAD -->
+                <div>
+                    <label
+                        for="{{ formulario.movilidad.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Movilidad del paciente
+                    </label>
+
+                    {{ formulario.movilidad }}
+
+                    {% for error in formulario.movilidad.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- NIVEL DE DOLOR -->
+                <div>
+                    <label
+                        for="{{ formulario.nivel_dolor.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Nivel de dolor (0 a 10)
+                    </label>
+
+                    {{ formulario.nivel_dolor }}
+
+                    <p class="mt-2 text-xs text-slate-500">
+                        0 significa ausencia de dolor y 10 representa
+                        el dolor más intenso.
+                    </p>
+
+                    {% for error in formulario.nivel_dolor.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- EJERCICIOS REALIZADOS -->
+                <div>
+                    <label
+                        for="{{ formulario.ejercicios_realizados.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Ejercicios realizados
+                    </label>
+
+                    {{ formulario.ejercicios_realizados }}
+
+                    {% for error in formulario.ejercicios_realizados.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- AVANCES -->
+                <div>
+                    <label
+                        for="{{ formulario.avances.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-emerald-700"
+                    >
+                        Avances observados
+                    </label>
+
+                    {{ formulario.avances }}
+
+                    {% for error in formulario.avances.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+                <div>
+                    <label
+                        for="{{ formulario.observaciones.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Observaciones
+                    </label>
+
+                    {{ formulario.observaciones }}
+
+                    {% for error in formulario.observaciones.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- RECOMENDACIONES -->
+                <div>
+                    <label
+                        for="{{ formulario.recomendaciones.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-emerald-700"
+                    >
+                        Recomendaciones
+                    </label>
+
+                    {{ formulario.recomendaciones }}
+
+                    {% for error in formulario.recomendaciones.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+
+                <!-- AVISO -->
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                    <p class="text-sm text-blue-700">
+                        Este registro quedará asociado a la
+                        consulta #{{ consulta.id }}.
+                        Solo podrá modificarse mientras la consulta
+                        permanezca en proceso.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="flex flex-wrap justify-end gap-3 border-t border-slate-100 bg-slate-50 p-6">
+
+                <a
+                    href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                    class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    {% if es_edicion %}
+                        Guardar cambios
+                    {% else %}
+                        Guardar progreso
+                    {% endif %}
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
 </html>

@@ -4,181 +4,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Calificar Cita</title>
-
+    <title>Calificar cita - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- ENCABEZADO -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-        <div>
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Calificaciones
+                </p>
+            </div>
 
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
-
-            <p class="text-sm text-slate-500">
-                Calificaciones
-            </p>
+            <a
+                href="{% url 'calificaciones:mis_calificaciones' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+            >
+                Mis calificaciones
+            </a>
 
         </div>
 
-        <a href="#"
-        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
-
-            Mis calificaciones
-
-        </a>
-
-    </div>
-
-</header>
+    </header>
 
 
-<main class="mx-auto max-w-7xl px-6 py-8">
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-4xl px-6 py-10">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+
+                <div class="mb-4 rounded-xl border p-4 text-sm
+                    {% if 'error' in message.tags %}
+                        border-red-200 bg-red-50 text-red-700
+                    {% else %}
+                        border-blue-100 bg-blue-50 text-blue-800
+                    {% endif %}
+                ">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+        {% endif %}
 
 
-    <!-- Encabezado -->
+        <!-- TÍTULO -->
+        <section class="mb-8">
 
-    <div class="mb-6">
+            <p class="text-sm font-semibold text-emerald-600">
+                Evaluación del servicio
+            </p>
 
-        <p class="text-sm font-semibold text-emerald-600">
-            Evaluación del servicio
-        </p>
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Calificar cita
+            </h1>
 
-        <h2 class="text-3xl font-bold text-blue-950">
-            Calificar cita
-        </h2>
+            <p class="mt-2 text-sm text-slate-500">
+                Evalúa la atención que recibiste durante tu cita.
+                Tu opinión nos ayuda a mejorar el servicio.
+            </p>
 
-        <p class="mt-2 text-sm text-slate-500">
-            Evalúa la atención recibida durante tu cita.
-        </p>
-
-    </div>
+        </section>
 
 
-    <!-- Formulario -->
+        <!-- INFORMACIÓN DE LA CITA -->
+        <section class="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-    <div class="rounded-2xl border border-blue-100 bg-white p-6">
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de la cita
+            </h2>
 
-        <form method="POST">
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Número de cita
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        #{{ cita.id }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fecha de atención
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fisioterapeuta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Servicio
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.servicio.nombre }}
+                    </p>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <p class="text-sm text-slate-500">
+                        Estado
+                    </p>
+
+                    <span class="mt-2 inline-block rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+                        {{ cita.get_estado_display }}
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FORMULARIO -->
+        <form
+            method="POST"
+            action="{% url 'calificaciones:registrar_calificacion' cita.id %}"
+            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+        >
 
             {% csrf_token %}
 
-            <div class="grid gap-6">
+            <div class="space-y-6 p-6">
+
+                <h2 class="text-lg font-semibold text-blue-900">
+                    Tu evaluación
+                </h2>
 
 
-                <!-- Cita -->
+                <!-- ERRORES GENERALES -->
+                {% if formulario.non_field_errors %}
+                    <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
 
+
+                <!-- PUNTUACIÓN -->
                 <div>
 
-                    <label for="cita"
-                        class="block text-sm font-semibold text-slate-600">
+                    <p class="mb-3 text-sm font-semibold text-blue-900">
+                        ¿Cómo calificarías la atención recibida?
+                    </p>
 
-                        Cita
+                    <p class="mb-4 text-sm text-slate-500">
+                        Selecciona una puntuación de 1 a 5 estrellas.
+                    </p>
 
-                    </label>
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-5">
 
-                    <select id="cita"
-                            name="cita"
-                            required
-                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+                        <div class="space-y-3 text-sm font-medium text-blue-950">
+                            {{ formulario.puntuacion }}
+                        </div>
 
-                        <option value="">
-                            Seleccionar cita
-                        </option>
+                    </div>
 
-
-                        {% for cita in citas %}
-
-                        <option value="{{ cita.id }}">
-
-                            {{ cita.fecha }} - {{ cita.fisioterapeuta.nombre }}
-
-                        </option>
-
-
-                        {% empty %}
-
-                        <option disabled>
-                            No hay citas disponibles para calificar
-                        </option>
-
-                        {% endfor %}
-
-                    </select>
+                    {% for error in formulario.puntuacion.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
 
                 </div>
 
 
-                <!-- Calificacion -->
-
+                <!-- COMENTARIO -->
                 <div>
 
-                    <label for="calificacion"
-                        class="block text-sm font-semibold text-slate-600">
-
-                        Calificación
-
+                    <label
+                        for="{{ formulario.comentario.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Comentario sobre la atención
                     </label>
 
-                    <select id="calificacion"
-                            name="calificacion"
-                            required
-                            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
+                    <p class="mb-3 text-sm text-slate-500">
+                        Cuéntanos cómo fue tu experiencia.
+                    </p>
 
-                        <option value="">
-                            Seleccionar calificación
-                        </option>
+                    {{ formulario.comentario }}
 
-                        <option value="5">
-                            5 - Excelente
-                        </option>
-
-                        <option value="4">
-                            4 - Muy buena
-                        </option>
-
-                        <option value="3">
-                            3 - Buena
-                        </option>
-
-                        <option value="2">
-                            2 - Regular
-                        </option>
-
-                        <option value="1">
-                            1 - Mala
-                        </option>
-
-                    </select>
+                    {% for error in formulario.comentario.errors %}
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
 
                 </div>
 
 
-                <!-- Comentario -->
+                <!-- AVISO -->
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
-                <div>
-
-                    <label for="comentario"
-                        class="block text-sm font-semibold text-slate-600">
-
-                        Comentario
-                    </label>
-
-                    <textarea id="comentario"
-                            name="comentario"
-                            rows="5"
-                            placeholder="Escribe un comentario sobre la atención recibida..."
-                            class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700"></textarea>
-
-                    <p class="mt-2 text-xs text-slate-400">
-                        El comentario es opcional.
+                    <p class="text-sm leading-6 text-emerald-800">
+                        Esta evaluación quedará asociada a la cita
+                        #{{ cita.id }}. Solo se permite una
+                        calificación por cita.
                     </p>
 
                 </div>
@@ -186,34 +227,33 @@
             </div>
 
 
-            <!-- Botones -->
+            <!-- BOTONES -->
+            <div class="flex flex-wrap justify-end gap-3 border-t border-slate-100 bg-slate-50 p-6">
 
-            <div class="mt-6 flex justify-end gap-3">
-
-                <a href="#"
-                class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
-
+                <a
+                    href="{% url 'calificaciones:mis_calificaciones' %}"
+                    class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
                     Cancelar
-
                 </a>
 
-
-                <button type="submit"
-                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white">
-
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
                     Enviar calificación
-
                 </button>
 
             </div>
 
         </form>
 
-    </div>
+    </main>
 
 
-</main>
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
-
-</html
+</html>

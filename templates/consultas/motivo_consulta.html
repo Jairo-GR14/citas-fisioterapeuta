@@ -1,263 +1,407 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivo de Consulta</title>
+
+    <title>Valoración inicial - Clínica de Fisioterapia</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- BARRA SUPERIOR -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-        <div>
+            <div>
+                <h1 class="font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
 
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
+                <p class="text-xs text-slate-500">
+                    Valoración inicial del paciente
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+
+                <a
+                    href="{% url 'usuarios:perfil' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                >
+                    Mi perfil
+                </a>
+
+                <a
+                    href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                    class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Volver a consulta
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="mx-auto max-w-5xl px-6 py-10">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+
+            <div class="mb-6 space-y-3">
+
+                {% for message in messages %}
+
+                    <div class="rounded-xl border px-4 py-3 text-sm
+                        {% if 'error' in message.tags %}
+                            border-red-200 bg-red-50 text-red-700
+                        {% else %}
+                            border-emerald-200 bg-emerald-50 text-emerald-700
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ENCABEZADO -->
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Atención clínica
+            </p>
+
+            <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                Registrar valoración inicial
             </h1>
 
-            <p class="text-xs text-slate-400">
-                Valoración inicial
+            <p class="mt-2 text-sm text-slate-500">
+                Registra la información clínica del paciente
+                durante la consulta.
+            </p>
+
+        </section>
+
+
+        <!-- INFORMACIÓN DE LA CITA -->
+        <section class="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de la cita
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <!-- PACIENTE -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Paciente
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fisioterapeuta
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Fecha
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+
+                </div>
+
+
+                <!-- HORA -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Hora
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.hora|time:"H:i" }}
+                    </p>
+
+                </div>
+
+
+                <!-- MOTIVO -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Motivo de consulta
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-800">
+                        {{ cita.motivo.nombre }}
+                    </p>
+
+                </div>
+
+
+                <!-- ESTADO -->
+                <div>
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Estado
+                    </p>
+
+                    <span class="mt-1 inline-block rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                        {{ cita.get_estado_display }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FORMULARIO -->
+        <form
+            method="POST"
+            action="{% url 'consultas:registrar_valoracion' consulta.id %}"
+            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
+        >
+
+            {% csrf_token %}
+
+            <div class="space-y-6 p-6">
+
+                <div>
+
+                    <h2 class="text-lg font-semibold text-blue-900">
+                        Datos de la valoración
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Completa los siguientes campos con la
+                        información obtenida durante la atención.
+                    </p>
+
+                </div>
+
+
+                <!-- ERRORES GENERALES -->
+                {% if formulario.non_field_errors %}
+
+                    <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+
+                        {% for error in formulario.non_field_errors %}
+
+                            <p class="text-sm text-red-700">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- VALORACIÓN INICIAL -->
+                <div>
+
+                    <label
+                        for="{{ formulario.valoracion_inicial.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Valoración inicial
+                    </label>
+
+                    <p class="mb-3 text-sm text-slate-500">
+                        Describe los síntomas, las molestias,
+                        los antecedentes y los hallazgos de
+                        la evaluación inicial.
+                    </p>
+
+                    {{ formulario.valoracion_inicial }}
+
+                    {% for error in formulario.valoracion_inicial.errors %}
+
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DIAGNÓSTICO -->
+                <div>
+
+                    <label
+                        for="{{ formulario.diagnostico.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Diagnóstico
+                    </label>
+
+                    <p class="mb-3 text-sm text-slate-500">
+                        Registra el diagnóstico o la valoración
+                        fisioterapéutica correspondiente.
+                    </p>
+
+                    {{ formulario.diagnostico }}
+
+                    {% for error in formulario.diagnostico.errors %}
+
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- INFORMACIÓN DE ATENCIÓN -->
+                <div>
+
+                    <label
+                        for="{{ formulario.informacion_atencion.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-emerald-700"
+                    >
+                        Información de la atención
+                    </label>
+
+                    <p class="mb-3 text-sm text-slate-500">
+                        Describe las actividades y procedimientos
+                        realizados durante la consulta.
+                    </p>
+
+                    {{ formulario.informacion_atencion }}
+
+                    {% for error in formulario.informacion_atencion.errors %}
+
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+                <div>
+
+                    <label
+                        for="{{ formulario.observaciones.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-900"
+                    >
+                        Observaciones
+                    </label>
+
+                    <p class="mb-3 text-sm text-slate-500">
+                        Agrega comentarios clínicos,
+                        recomendaciones u observaciones
+                        adicionales.
+                    </p>
+
+                    {{ formulario.observaciones }}
+
+                    {% for error in formulario.observaciones.errors %}
+
+                        <p class="mt-2 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- INFORMACIÓN -->
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                    <p class="text-sm text-blue-700">
+                        La información se guardará en el
+                        expediente de esta consulta.
+                        Podrás modificarla mientras
+                        la cita permanezca en proceso.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
+
+                <a
+                    href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                    class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Guardar valoración
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="mt-8 border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
             </p>
 
         </div>
 
-        <a
-            href="iniciar_consulta.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Regresar
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-3xl px-6 py-10">
-
-    <section class="mb-8">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Valoración inicial
-        </p>
-
-        <h2 class="mt-2 text-3xl font-bold text-blue-950">
-            Motivo de consulta
-        </h2>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Registra la información principal relacionada con el problema del paciente.
-        </p>
-
-    </section>
-
-
-    <form
-        method="POST"
-        action="#"
-        class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
-    >
-
-        {% csrf_token %}
-
-        <div class="space-y-6 p-6">
-
-            <!-- MOTIVO -->
-            <div>
-
-                <label
-                    for="motivo"
-                    class="mb-2 block text-sm font-semibold text-blue-900"
-                >
-                    Motivo principal
-                </label>
-
-                <select
-                    id="motivo"
-                    name="motivo"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                >
-
-                    <option value="">
-                        Selecciona un motivo
-                    </option>
-
-                    <option value="dolor_muscular">
-                        Dolor muscular
-                    </option>
-
-                    <option value="lesion_deportiva">
-                        Lesión deportiva
-                    </option>
-
-                    <option value="dolor_lumbar">
-                        Dolor lumbar
-                    </option>
-
-                    <option value="dolor_cervical">
-                        Dolor cervical
-                    </option>
-
-                    <option value="rehabilitacion_postquirurgica">
-                        Rehabilitación postquirúrgica
-                    </option>
-
-                    <option value="problemas_movilidad">
-                        Problemas de movilidad
-                    </option>
-
-                    <option value="valoracion_inicial">
-                        Valoración inicial
-                    </option>
-
-                    <option value="otro">
-                        Otro
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- DOLOR -->
-            <div>
-
-                <label
-                    for="nivel_dolor"
-                    class="mb-2 block text-sm font-semibold text-emerald-700"
-                >
-                    Nivel de dolor
-                </label>
-
-                <select
-                    id="nivel_dolor"
-                    name="nivel_dolor"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                >
-
-                    <option value="">
-                        Selecciona un nivel
-                    </option>
-
-                    <option value="0">
-                        0 - Sin dolor
-                    </option>
-
-                    <option value="1-3">
-                        1 - 3 Leve
-                    </option>
-
-                    <option value="4-6">
-                        4 - 6 Moderado
-                    </option>
-
-                    <option value="7-10">
-                        7 - 10 Intenso
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- EVOLUCIÓN -->
-            <div>
-
-                <label
-                    for="tiempo_evolucion"
-                    class="mb-2 block text-sm font-semibold text-blue-900"
-                >
-                    Tiempo de evolución
-                </label>
-
-                <select
-                    id="tiempo_evolucion"
-                    name="tiempo_evolucion"
-                    required
-                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                >
-
-                    <option value="">
-                        Selecciona una opción
-                    </option>
-
-                    <option value="menos_24h">
-                        Menos de 24 horas
-                    </option>
-
-                    <option value="1_7_dias">
-                        1 a 7 días
-                    </option>
-
-                    <option value="1_4_semanas">
-                        1 a 4 semanas
-                    </option>
-
-                    <option value="mas_1_mes">
-                        Más de un mes
-                    </option>
-
-                    <option value="recurrente">
-                        Problema recurrente
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- DESCRIPCIÓN -->
-            <div>
-
-                <label
-                    for="descripcion"
-                    class="mb-2 block text-sm font-semibold text-emerald-700"
-                >
-                    Descripción
-                </label>
-
-                <textarea
-                    id="descripcion"
-                    name="descripcion"
-                    rows="5"
-                    required
-                    placeholder="Describe síntomas, molestias y antecedentes relevantes..."
-                    class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                ></textarea>
-
-            </div>
-
-        </div>
-
-
-        <!-- BOTONES -->
-        <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
-
-            <a
-                href="iniciar_consulta.html"
-                class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
-            >
-                Cancelar
-            </a>
-
-            <button
-                type="submit"
-                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-            >
-                Guardar y continuar
-            </button>
-
-        </div>
-
-    </form>
-
-</main>
+    </footer>
 
 </body>
+
 </html>

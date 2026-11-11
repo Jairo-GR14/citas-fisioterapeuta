@@ -1,245 +1,235 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Detalle de Progreso</title>
-
+    <title>Detalle del progreso - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+            <div>
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Seguimiento clínico
+                </p>
+            </div>
 
-        <div>
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
-
-            <p class="text-xs text-slate-400">
-                Seguimiento clínico
-            </p>
-        </div>
-
-        <a
-            href="progreso_paciente.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Volver al progreso
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-5xl px-6 py-10">
-
-    <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-
-        <div>
-
-            <p class="text-sm font-semibold text-emerald-600">
-                Sesión {{ progreso.numero_sesion }}
-            </p>
-
-            <h2 class="mt-2 text-3xl font-bold text-blue-950">
-                Detalle de progreso
-            </h2>
-
-            <p class="mt-2 text-sm text-slate-500">
-                {{ progreso.fecha }}
-            </p>
+            <a
+                href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+            >
+                Volver a consulta
+            </a>
 
         </div>
+    </header>
 
 
-        {% if progreso.estado == "Mejorando" %}
+    <main class="mx-auto max-w-5xl px-6 py-10">
 
-        <span class="w-fit rounded-full bg-emerald-100 px-4 py-2 text-xs font-semibold text-emerald-700">
-            Mejorando
-        </span>
-
-        {% elif progreso.estado == "Mejoría significativa" %}
-
-        <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-700">
-            Mejoría significativa
-        </span>
-
-        {% else %}
-
-        <span class="w-fit rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-600">
-            {{ progreso.estado }}
-        </span>
-
+        {% if messages %}
+            {% for message in messages %}
+                <p class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+                    {{ message }}
+                </p>
+            {% endfor %}
         {% endif %}
 
-    </section>
+
+        <!-- ENCABEZADO -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+
+            <div>
+                <p class="text-sm font-semibold text-emerald-600">
+                    Consulta #{{ consulta.id }}
+                </p>
+
+                <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                    Detalle del progreso
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Paciente:
+                    {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                </p>
+            </div>
+
+            {% if cita.estado == "EN_PROCESO" %}
+
+                <a
+                    href="{% url 'progreso:editar_progreso' consulta.id %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-sm font-semibold text-white"
+                >
+                    Editar progreso
+                </a>
+
+            {% else %}
+
+                <span class="rounded-xl bg-slate-200 px-5 py-3 text-sm font-semibold text-slate-500">
+                    Edición no disponible
+                </span>
+
+            {% endif %}
+
+        </div>
 
 
-    <div class="grid gap-6 lg:grid-cols-[1fr_280px]">
+        <!-- INFORMACIÓN GENERAL -->
+        <section class="mt-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-        <section class="space-y-6">
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información general
+            </h2>
 
-            <!-- INFORMACIÓN -->
-            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+            <div class="grid gap-5 sm:grid-cols-2">
 
-                <h3 class="mb-6 font-semibold text-blue-900">
-                    Información de la sesión
-                </h3>
-
-
-                <div class="grid gap-5 sm:grid-cols-2">
-
-                    <div>
-
-                        <p class="text-xs font-semibold uppercase text-slate-400">
-                            Paciente
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            {{ progreso.paciente.nombre }}
-                            {{ progreso.paciente.apellidos }}
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <p class="text-xs font-semibold uppercase text-slate-400">
-                            Fisioterapeuta
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            {{ progreso.fisioterapeuta.nombre }}
-                            {{ progreso.fisioterapeuta.apellidos }}
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <p class="text-xs font-semibold uppercase text-slate-400">
-                            Nivel de dolor
-                        </p>
-
-                        <p class="mt-1 text-lg font-semibold text-emerald-700">
-                            {{ progreso.nivel_dolor }} / 10
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <p class="text-xs font-semibold uppercase text-slate-400">
-                            Movilidad
-                        </p>
-
-                        <p class="mt-1 font-medium">
-                            {{ progreso.movilidad }}
-                        </p>
-
-                    </div>
-
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fisioterapeuta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
                 </div>
 
-            </article>
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Fecha de consulta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
 
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Estado de consulta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.get_estado_display }}
+                    </p>
+                </div>
 
-            <!-- EJERCICIOS -->
-            <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Nivel de dolor
+                    </p>
+                    <p class="mt-1 text-2xl font-bold text-blue-900">
+                        {{ progreso.nivel_dolor|default_if_none:"Sin registrar" }}
+                        {% if progreso.nivel_dolor != None %}
+                            / 10
+                        {% endif %}
+                    </p>
+                </div>
 
-                <h3 class="font-semibold text-blue-900">
-                    Ejercicios realizados
-                </h3>
-
-                <p class="mt-3 text-sm leading-6 text-slate-600">
-                    {{ progreso.ejercicios }}
-                </p>
-
-            </article>
-
-
-            <!-- AVANCES -->
-            <article class="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-
-                <h3 class="font-semibold text-emerald-800">
-                    Avances
-                </h3>
-
-                <p class="mt-3 text-sm leading-6 text-emerald-700">
-                    {{ progreso.avances }}
-                </p>
-
-            </article>
-
-
-            <!-- LIMITACIONES -->
-            <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
-                <h3 class="font-semibold text-blue-900">
-                    Limitaciones
-                </h3>
-
-                <p class="mt-3 text-sm leading-6 text-slate-600">
-                    {{ progreso.limitaciones }}
-                </p>
-
-            </article>
-
-
-            <!-- OBSERVACIONES -->
-            <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
-                <h3 class="font-semibold text-emerald-700">
-                    Observaciones
-                </h3>
-
-                <p class="mt-3 text-sm leading-6 text-slate-600">
-                    {{ progreso.observaciones }}
-                </p>
-
-            </article>
+            </div>
 
         </section>
 
 
-        <!-- ACCIONES -->
-        <aside class="space-y-3">
+        <!-- MOVILIDAD -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-            <a
-                href="registrar_progreso.html"
-                class="block rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-            >
-                Registrar nueva sesión
-            </a>
+            <h2 class="text-lg font-semibold text-blue-900">
+                Movilidad
+            </h2>
 
-            <a
-                href="progreso_paciente.html"
-                class="block rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm font-medium text-blue-700 hover:bg-blue-100"
-            >
-                Ver historial
-            </a>
+            <div class="mt-4 rounded-xl bg-blue-50 p-4 text-sm leading-7">
+                {% if progreso.movilidad %}
+                    {{ progreso.movilidad|linebreaksbr }}
+                {% else %}
+                    Sin información registrada.
+                {% endif %}
+            </div>
 
-            <a
-                href="../citas/mis_citas.html"
-                class="block rounded-xl border border-slate-200 bg-white px-5 py-3 text-center text-sm text-slate-700 hover:bg-slate-50"
-            >
-                Volver a citas
-            </a>
+        </section>
 
-        </aside>
 
-    </div>
+        <!-- EJERCICIOS -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-</main>
+            <h2 class="text-lg font-semibold text-blue-900">
+                Ejercicios realizados
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+                {% if progreso.ejercicios_realizados %}
+                    {{ progreso.ejercicios_realizados|linebreaksbr }}
+                {% else %}
+                    Sin ejercicios registrados.
+                {% endif %}
+            </div>
+
+        </section>
+
+
+        <!-- AVANCES -->
+        <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-emerald-700">
+                Avances observados
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+                {% if progreso.avances %}
+                    {{ progreso.avances|linebreaksbr }}
+                {% else %}
+                    Todavía no se registran avances.
+                {% endif %}
+            </div>
+
+        </section>
+
+
+        <!-- OBSERVACIONES -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Observaciones
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+                {% if progreso.observaciones %}
+                    {{ progreso.observaciones|linebreaksbr }}
+                {% else %}
+                    Sin observaciones.
+                {% endif %}
+            </div>
+
+        </section>
+
+
+        <!-- RECOMENDACIONES -->
+        <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-emerald-700">
+                Recomendaciones
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+                {% if progreso.recomendaciones %}
+                    {{ progreso.recomendaciones|linebreaksbr }}
+                {% else %}
+                    Sin recomendaciones registradas.
+                {% endif %}
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
 </html>

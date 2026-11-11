@@ -1,228 +1,349 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Iniciar Consulta</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- BARRA SUPERIOR -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-        <div>
+            <div>
+                <h1 class="font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
 
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
-
-            <p class="text-xs text-slate-400">
-                Atención clínica
-            </p>
-
-        </div>
-
-        <a
-            href="../citas/agenda.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Regresar a agenda
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-5xl px-6 py-10">
-
-    <section class="mb-8">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Consulta
-        </p>
-
-        <h2 class="mt-2 text-3xl font-bold text-blue-950">
-            Iniciar consulta
-        </h2>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Revisa la información de la cita antes de comenzar la atención.
-        </p>
-
-    </section>
-
-
-    <div class="grid gap-6 lg:grid-cols-[1fr_300px]">
-
-        <!-- INFORMACIÓN -->
-        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-            <h3 class="mb-6 text-lg font-semibold text-blue-900">
-                Información del paciente
-            </h3>
-
-
-            <div class="grid gap-5 sm:grid-cols-2">
-
-                <!-- PACIENTE -->
-                <div>
-
-                    <p class="text-xs font-semibold uppercase text-slate-400">
-                        Paciente
-                    </p>
-
-                    <p class="mt-1 font-medium">
-                        {{ cita.paciente.nombre }}
-                        {{ cita.paciente.apellidos }}
-                    </p>
-
-                </div>
-
-
-                <!-- FISIOTERAPEUTA -->
-                <div>
-
-                    <p class="text-xs font-semibold uppercase text-slate-400">
-                        Fisioterapeuta
-                    </p>
-
-                    <p class="mt-1 font-medium">
-                        {{ cita.fisioterapeuta.nombre }}
-                        {{ cita.fisioterapeuta.apellidos }}
-                    </p>
-
-                </div>
-
-
-                <!-- FECHA -->
-                <div>
-
-                    <p class="text-xs font-semibold uppercase text-slate-400">
-                        Fecha
-                    </p>
-
-                    <p class="mt-1 font-medium">
-                        {{ cita.fecha }}
-                    </p>
-
-                </div>
-
-
-                <!-- HORA -->
-                <div>
-
-                    <p class="text-xs font-semibold uppercase text-slate-400">
-                        Hora
-                    </p>
-
-                    <p class="mt-1 font-medium">
-                        {{ cita.hora }}
-                    </p>
-
-                </div>
-
+                <p class="text-xs text-slate-400">
+                    Atención clínica
+                </p>
             </div>
 
-
-            <!-- MOTIVO -->
-            <div class="mt-8 border-t border-slate-100 pt-6">
-
-                <p class="text-xs font-semibold uppercase text-slate-400">
-                    Motivo registrado
-                </p>
-
-                <p class="mt-2 text-sm leading-6 text-slate-600">
-                    {{ cita.motivo }}
-                </p>
-
-            </div>
-
-
-            {% if cita.informacion_adicional %}
-
-            <div class="mt-6 rounded-xl bg-slate-50 p-4">
-
-                <p class="text-xs font-semibold uppercase text-slate-400">
-                    Información adicional
-                </p>
-
-                <p class="mt-2 text-sm text-slate-600">
-                    {{ cita.informacion_adicional }}
-                </p>
-
-            </div>
-
-            {% endif %}
-
-
-            <div class="mt-8 flex justify-end">
+            <div class="flex flex-wrap gap-3">
 
                 <a
-                    href="motivo_consulta.html"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                    href="{% url 'usuarios:perfil' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
                 >
-                    Continuar consulta
+                    Mi perfil
+                </a>
+
+                <a
+                    href="{% url 'usuarios:redireccion_por_rol' %}"
+                    class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Volver al panel
                 </a>
 
             </div>
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-5xl px-6 py-10">
+
+        <!-- MENSAJES -->
+        {% if messages %}
+
+            <div class="mb-6 space-y-3">
+
+                {% for message in messages %}
+
+                    <div class="rounded-xl border px-4 py-3 text-sm
+                        {% if 'error' in message.tags %}
+                            border-red-200 bg-red-50 text-red-700
+                        {% else %}
+                            border-emerald-200 bg-emerald-50 text-emerald-700
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ENCABEZADO -->
+        <section class="mb-8">
+
+            <p class="text-sm font-semibold text-emerald-600">
+                Consulta
+            </p>
+
+            <h2 class="mt-2 text-3xl font-bold text-blue-950">
+                Iniciar consulta
+            </h2>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Revisa la información de la cita antes de comenzar
+                la atención del paciente.
+            </p>
 
         </section>
 
 
-        <!-- ESTADO -->
-        <aside class="space-y-4">
+        <div class="grid gap-6 lg:grid-cols-[1fr_300px]">
 
-            <section class="rounded-2xl bg-gradient-to-br from-blue-700 to-emerald-700 p-5 text-white">
+            <!-- INFORMACIÓN DE LA CITA -->
+            <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-                <p class="text-xs uppercase tracking-widest text-blue-100">
-                    Estado
-                </p>
-
-                <h3 class="mt-4 text-lg font-semibold">
-                    Lista para iniciar
+                <h3 class="mb-6 text-lg font-semibold text-blue-900">
+                    Información del paciente
                 </h3>
 
-                <p class="mt-2 text-sm text-blue-50">
-                    La cita se encuentra confirmada.
-                </p>
+                <div class="grid gap-5 sm:grid-cols-2">
+
+                    <!-- PACIENTE -->
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase text-slate-400">
+                            Paciente
+                        </p>
+
+                        <p class="mt-1 font-medium">
+                            {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- FISIOTERAPEUTA -->
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase text-slate-400">
+                            Fisioterapeuta
+                        </p>
+
+                        <p class="mt-1 font-medium">
+                            {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- FECHA -->
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase text-slate-400">
+                            Fecha
+                        </p>
+
+                        <p class="mt-1 font-medium">
+                            {{ cita.fecha|date:"d/m/Y" }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- HORA -->
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase text-slate-400">
+                            Hora
+                        </p>
+
+                        <p class="mt-1 font-medium">
+                            {{ cita.hora|time:"H:i" }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOTIVO DE CONSULTA -->
+                <div class="mt-8 border-t border-slate-100 pt-6">
+
+                    <p class="text-xs font-semibold uppercase text-slate-400">
+                        Motivo de consulta
+                    </p>
+
+                    <p class="mt-2 text-sm leading-6 text-slate-600">
+                        {{ cita.motivo.nombre }}
+                    </p>
+
+                    {% if cita.motivo.descripcion %}
+
+                        <p class="mt-2 text-sm text-slate-500">
+                            {{ cita.motivo.descripcion }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+                {% if cita.observaciones %}
+
+                    <div class="mt-6 rounded-xl bg-slate-50 p-4">
+
+                        <p class="text-xs font-semibold uppercase text-slate-400">
+                            Observaciones de la cita
+                        </p>
+
+                        <p class="mt-2 text-sm leading-6 text-slate-600">
+                            {{ cita.observaciones|linebreaksbr }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- FORMULARIO PARA INICIAR -->
+                <form
+                    method="POST"
+                    action="{% url 'consultas:iniciar_consulta' cita.id %}"
+                    class="mt-8 border-t border-slate-100 pt-6"
+                >
+
+                    {% csrf_token %}
+
+                    <p class="mb-5 text-sm text-slate-500">
+                        Al iniciar la consulta se creará el expediente
+                        de atención correspondiente y la cita
+                        cambiará al estado "En proceso".
+                    </p>
+
+                    <div class="flex flex-wrap justify-end gap-3">
+
+                        <a
+                            href="{% url 'usuarios:redireccion_por_rol' %}"
+                            class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                        >
+                            Cancelar
+                        </a>
+
+                        {% if cita.estado == "PROGRAMADA" or cita.estado == "CONFIRMADA" %}
+
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                            >
+                                Iniciar consulta
+                            </button>
+
+                        {% else %}
+
+                            <span class="rounded-xl bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-500">
+                                No disponible
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </form>
 
             </section>
 
 
-            <section class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <!-- INFORMACIÓN LATERAL -->
+            <aside class="space-y-4">
 
-                <p class="text-sm font-semibold text-emerald-700">
-                    Paciente presente
-                </p>
+                <!-- ESTADO -->
+                <section class="rounded-2xl bg-gradient-to-br from-blue-700 to-emerald-700 p-5 text-white">
 
-                <p class="mt-2 text-xs leading-5 text-emerald-600">
-                    Puede comenzar la valoración inicial.
-                </p>
+                    <p class="text-xs uppercase tracking-widest text-blue-100">
+                        Estado de la cita
+                    </p>
 
-            </section>
+                    <h3 class="mt-4 text-lg font-semibold">
+                        {{ cita.get_estado_display }}
+                    </h3>
+
+                    <p class="mt-2 text-sm text-blue-50">
+
+                        {% if cita.estado == "CONFIRMADA" %}
+                            La cita está confirmada y puede comenzar.
+
+                        {% elif cita.estado == "PROGRAMADA" %}
+                            La cita está programada y puede comenzar.
+
+                        {% elif cita.estado == "EN_PROCESO" %}
+                            La consulta ya está en proceso.
+
+                        {% elif cita.estado == "FINALIZADA" %}
+                            Esta cita ya fue finalizada.
+
+                        {% elif cita.estado == "CANCELADA" %}
+                            Esta cita fue cancelada.
+
+                        {% endif %}
+
+                    </p>
+
+                </section>
 
 
-            <section class="rounded-2xl border border-blue-100 bg-white p-5">
+                <!-- SERVICIO -->
+                <section class="rounded-2xl border border-blue-100 bg-white p-5">
 
-                <p class="text-xs uppercase text-slate-400">
-                    Servicio
-                </p>
+                    <p class="text-xs uppercase text-slate-400">
+                        Servicio
+                    </p>
 
-                <p class="mt-2 text-sm font-semibold text-blue-900">
-                    {{ cita.servicio }}
-                </p>
+                    <p class="mt-2 text-sm font-semibold text-blue-900">
+                        {{ cita.servicio.nombre }}
+                    </p>
 
-            </section>
+                    {% if cita.servicio.descripcion %}
 
-        </aside>
+                        <p class="mt-2 text-sm text-slate-500">
+                            {{ cita.servicio.descripcion }}
+                        </p>
 
-    </div>
+                    {% endif %}
 
-</main>
+                </section>
+
+
+                <!-- COSTO ESTIMADO -->
+                <section class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+
+                    <p class="text-xs uppercase text-emerald-600">
+                        Costo estimado
+                    </p>
+
+                    <p class="mt-2 text-2xl font-bold text-emerald-700">
+                        ${{ cita.costo_estimado }}
+                    </p>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="mt-8 border-t border-blue-100 bg-white">
+
+        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Clínica de Fisioterapia
+            </p>
+
+        </div>
+
+    </footer>
 
 </body>
 </html>

@@ -1,283 +1,202 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Detalle del Tratamiento</title>
-
+    <title>Detalle del tratamiento - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <div>
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Detalle del tratamiento
+                </p>
+            </div>
 
-        <div>
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+            <div class="flex flex-wrap gap-3">
+                <a
+                    href="{% url 'tratamientos:historial_tratamientos' consulta.id %}"
+                    class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
+                >
+                    Historial
+                </a>
 
-            <p class="text-sm text-slate-500">
-                Tratamientos
-            </p>
+                <a
+                    href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700"
+                >
+                    Volver a consulta
+                </a>
+            </div>
+
         </div>
-
-        <a href="#"
-        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
-
-            Editar tratamiento
-
-        </a>
-
-    </div>
-
-</header>
+    </header>
 
 
-<main class="mx-auto max-w-7xl px-6 py-8">
+    <main class="mx-auto max-w-4xl px-6 py-10">
 
+        {% if messages %}
+            {% for message in messages %}
+                <p class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
 
-    <!-- Encabezado -->
-
-    <div class="mb-6">
 
         <p class="text-sm font-semibold text-emerald-600">
-            Tratamientos
+            Consulta #{{ consulta.id }}
         </p>
 
-        <h2 class="text-3xl font-bold text-blue-950">
-            Detalle del tratamiento
-        </h2>
+        <div class="mt-1 flex flex-wrap items-center justify-between gap-3">
 
-        <p class="mt-2 text-sm text-slate-500">
-            Consulta la información registrada durante la sesión del paciente.
-        </p>
+            <h2 class="text-3xl font-bold text-blue-950">
+                {{ tratamiento.nombre }}
+            </h2>
 
-    </div>
-
-
-    <!-- Informacion general -->
-
-    <div class="mb-6 grid gap-4 md:grid-cols-3">
-
-
-        <!-- Paciente -->
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-xs font-semibold uppercase text-slate-400">
-                Paciente
-            </p>
-
-            <p class="mt-2 text-lg font-semibold text-blue-950">
-                {{ tratamiento.paciente.nombre }}
-            </p>
+            {% if tratamiento.activo %}
+                <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+                    Activo
+                </span>
+            {% else %}
+                <span class="rounded-full bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-600">
+                    Inactivo
+                </span>
+            {% endif %}
 
         </div>
 
 
-        <!-- Fecha -->
+        <!-- DATOS GENERALES -->
+        <section class="mt-7 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-xs font-semibold uppercase text-slate-400">
-                Fecha de sesión
-            </p>
-
-            <p class="mt-2 text-lg font-semibold text-blue-950">
-                {{ tratamiento.fecha }}
-            </p>
-
-        </div>
-
-
-        <!-- Tipo de tratamiento -->
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-xs font-semibold uppercase text-slate-400">
-                Tipo de tratamiento
-            </p>
-
-            <span class="mt-2 inline-block rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
-
-                {{ tratamiento.tipo_tratamiento }}
-
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <!-- Datos de la sesion -->
-
-    <div class="rounded-2xl border border-slate-200 bg-white p-6">
-
-
-        <div class="mb-6">
-
-            <h3 class="text-xl font-semibold text-blue-950">
-                Información de la sesión
+            <h3 class="mb-5 text-lg font-semibold text-blue-900">
+                Datos generales
             </h3>
 
-            <p class="mt-1 text-sm text-slate-500">
-                Datos registrados por el fisioterapeuta.
-            </p>
+            <dl class="grid gap-5 sm:grid-cols-2">
 
-        </div>
-
-
-        <div class="grid gap-6 md:grid-cols-2">
-
-
-            <!-- Nivel de dolor -->
-
-            <div class="rounded-xl bg-slate-50 p-4">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Nivel de dolor
-                </p>
-
-                <p class="mt-2 text-lg font-semibold text-blue-900">
-                    {{ tratamiento.nivel_dolor }} / 10
-                </p>
-
-            </div>
-
-
-            <!-- Movilidad -->
-
-            <div class="rounded-xl bg-slate-50 p-4">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Estado de movilidad
-                </p>
-
-                <p class="mt-2 text-lg font-semibold text-blue-900">
-                    {{ tratamiento.movilidad }}
-                </p>
-
-            </div>
-
-
-            <!-- Ejercicios -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Ejercicios realizados
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ tratamiento.ejercicios }}
-
+                <div>
+                    <dt class="text-sm text-slate-500">Paciente</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </dd>
                 </div>
 
-            </div>
-
-
-            <!-- Avances -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Avances del paciente
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ tratamiento.avances }}
-
+                <div>
+                    <dt class="text-sm text-slate-500">Fisioterapeuta</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </dd>
                 </div>
 
-            </div>
-
-
-            <!-- Observaciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Observaciones
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ tratamiento.observaciones }}
-
+                <div>
+                    <dt class="text-sm text-slate-500">Fecha de inicio</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ tratamiento.fecha_inicio|date:"d/m/Y"|default:"Sin registrar" }}
+                    </dd>
                 </div>
 
-            </div>
-
-
-            <!-- Indicaciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Indicaciones para el paciente
-                </p>
-
-                <div class="mt-2 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-800">
-
-                    {{ tratamiento.indicaciones }}
-
+                <div>
+                    <dt class="text-sm text-slate-500">Fecha de finalización</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ tratamiento.fecha_fin|date:"d/m/Y"|default:"Sin registrar" }}
+                    </dd>
                 </div>
 
-            </div>
-
-
-            <!-- Recomendaciones -->
-
-            <div class="md:col-span-2">
-
-                <p class="text-sm font-semibold text-slate-500">
-                    Recomendaciones
-                </p>
-
-                <div class="mt-2 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-
-                    {{ tratamiento.recomendaciones }}
-
+                <div>
+                    <dt class="text-sm text-slate-500">Creado</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ tratamiento.fecha_creacion|date:"d/m/Y H:i" }}
+                    </dd>
                 </div>
 
+                <div>
+                    <dt class="text-sm text-slate-500">Estado de la consulta</dt>
+                    <dd class="mt-1 font-semibold">
+                        {{ cita.get_estado_display }}
+                    </dd>
+                </div>
+
+            </dl>
+
+        </section>
+
+
+        <!-- DESCRIPCIÓN Y OBJETIVO -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h3 class="text-lg font-semibold text-blue-900">
+                Descripción
+            </h3>
+
+            <div class="mt-3 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+                {% if tratamiento.descripcion %}
+                    {{ tratamiento.descripcion|linebreaksbr }}
+                {% else %}
+                    Sin descripción registrada.
+                {% endif %}
             </div>
 
 
-        </div>
+            <h3 class="mt-6 text-lg font-semibold text-emerald-700">
+                Objetivo
+            </h3>
+
+            <div class="mt-3 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+                {% if tratamiento.objetivo %}
+                    {{ tratamiento.objetivo|linebreaksbr }}
+                {% else %}
+                    Sin objetivo registrado.
+                {% endif %}
+            </div>
+
+        </section>
 
 
-        <!-- Botones -->
+        <!-- ACCIONES -->
+        <div class="mt-7 flex flex-wrap justify-end gap-3">
 
-        <div class="mt-6 flex justify-end gap-3">
-
-            <a href="#"
-            class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600">
-
-                Volver al historial
-
+            <a
+                href="{% url 'tratamientos:historial_tratamientos' consulta.id %}"
+                class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold"
+            >
+                Ver historial
             </a>
 
-            <a href="#"
-            class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white">
+            {% if cita.estado == 'EN_PROCESO' %}
 
-                Editar tratamiento
+                <a
+                    href="{% url 'tratamientos:editar_tratamiento' tratamiento.id %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
+                >
+                    Editar tratamiento
+                </a>
 
-            </a>
+            {% else %}
+
+                <span class="rounded-xl bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-500">
+                    Edición no disponible
+                </span>
+
+            {% endif %}
 
         </div>
 
+    </main>
 
-    </div>
 
-</main>
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
 
 </body>
-
-</html
+</html>

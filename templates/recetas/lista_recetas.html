@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de recetas - Clínica de Fisioterapia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Historial de recetas
+                </p>
+            </div>
+
+            <a href="{% url 'consultas:detalle_consulta' consulta.id %}"
+               class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                Volver a consulta
+            </a>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-6 py-10">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold text-emerald-600">
+                    Consulta #{{ consulta.id }}
+                </p>
+
+                <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                    Recetas registradas
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Paciente:
+                    {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                </p>
+            </div>
+
+            {% if cita.estado == "EN_PROCESO" %}
+                <a href="{% url 'recetas:registrar_receta' consulta.id %}"
+                   class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-sm font-semibold text-white">
+                    + Nueva receta
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- TABLA -->
+        <section class="overflow-x-auto rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <table class="w-full min-w-[650px] text-left text-sm">
+
+                <thead class="border-b bg-blue-50 text-blue-900">
+                    <tr>
+                        <th class="px-5 py-4">Número</th>
+                        <th class="px-5 py-4">Indicaciones</th>
+                        <th class="px-5 py-4">Ejercicios</th>
+                        <th class="px-5 py-4">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for receta in recetas %}
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-5 py-4 font-semibold">
+                                #{{ receta.id }}
+                            </td>
+
+                            <td class="px-5 py-4 text-slate-600">
+                                {{ receta.indicaciones|truncatechars:80|default:"Sin indicaciones" }}
+                            </td>
+
+                            <td class="px-5 py-4 text-slate-600">
+                                {{ receta.ejercicios|truncatechars:80|default:"Sin ejercicios" }}
+                            </td>
+
+                            <td class="px-5 py-4">
+                                <div class="flex flex-wrap gap-3">
+
+                                    <a href="{% url 'recetas:detalle_receta' receta.id %}"
+                                       class="font-semibold text-blue-700 hover:underline">
+                                        Ver detalle
+                                    </a>
+
+                                    {% if cita.estado == "EN_PROCESO" %}
+                                        <a href="{% url 'recetas:editar_receta' receta.id %}"
+                                           class="font-semibold text-emerald-700 hover:underline">
+                                            Editar
+                                        </a>
+                                    {% endif %}
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="4"
+                                class="px-6 py-12 text-center text-slate-500">
+                                Todavía no hay recetas registradas para esta consulta.
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <div class="mt-6 flex justify-end">
+            <a href="{% url 'consultas:detalle_consulta' consulta.id %}"
+               class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold">
+                Regresar a consulta
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
+    </footer>
+
+</body>
+</html>

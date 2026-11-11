@@ -1,6 +1,6 @@
 
 from django.urls import path
-from . import views
+from ..templates.citas import views
 
 app_name = "citas"
 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,7 +28,7 @@
         </div>
 
         <a
-            href="mis_citas.html"
+            href="{% url 'citas:mis_citas' %}"
             class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
         >
             ← Mis citas
@@ -62,7 +63,7 @@
     <!-- FORMULARIO -->
     <form
         method="POST"
-        action="#"
+        action="{% url 'citas:agendar_cita' %}"
         class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
     >
 
@@ -70,7 +71,63 @@
 
         <div class="p-6">
 
+            <!-- ERRORES GENERALES -->
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
             <div class="grid gap-5 sm:grid-cols-2">
+
+                <!-- PACIENTE -->
+                {% if form.paciente.is_hidden %}
+
+                    {{ form.paciente }}
+
+                    {% if form.paciente.errors %}
+                        <div class="sm:col-span-2 text-sm text-red-600">
+                            {{ form.paciente.errors }}
+                        </div>
+                    {% endif %}
+
+                {% else %}
+
+                    <div>
+                        <label
+                            for="paciente"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Paciente
+                        </label>
+
+                        <select
+                            id="paciente"
+                            name="paciente"
+                            required
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="">Selecciona un paciente</option>
+
+                            {% for paciente in form.paciente.field.queryset %}
+                                <option
+                                    value="{{ paciente.pk }}"
+                                    {% if form.paciente.value|stringformat:"s" == paciente.pk|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ paciente.usuario.usuario.get_full_name|default:paciente.usuario.usuario.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        {% if form.paciente.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.paciente.errors }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                {% endif %}
+
 
                 <!-- SERVICIO -->
                 <div>
@@ -93,23 +150,30 @@
                             Selecciona un servicio
                         </option>
 
-                        <option value="valoracion_inicial">
-                            Valoración inicial
-                        </option>
+                        {% for servicio in form.servicio.field.queryset %}
 
-                        <option value="fisioterapia_general">
-                            Fisioterapia general
-                        </option>
+                            <option
+                                value="{{ servicio.pk }}"
+                                {% if form.servicio.value|stringformat:"s" == servicio.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ servicio.nombre }} - ${{ servicio.precio_base }}
+                            </option>
 
-                        <option value="terapia_deportiva">
-                            Terapia deportiva
-                        </option>
+                        {% empty %}
 
-                        <option value="rehabilitacion">
-                            Rehabilitación
-                        </option>
+                            <option value="" disabled>
+                                No hay servicios registrados
+                            </option>
+
+                        {% endfor %}
 
                     </select>
+
+                    {% if form.servicio.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.servicio.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -135,22 +199,30 @@
                             Selecciona un fisioterapeuta
                         </option>
 
-                        {% for fisioterapeuta in fisioterapeutas %}
+                        {% for fisioterapeuta in form.fisioterapeuta.field.queryset %}
 
-                        <option value="{{ fisioterapeuta.id }}">
-                            {{ fisioterapeuta.nombre }}
-                            {{ fisioterapeuta.apellidos }}
-                        </option>
+                            <option
+                                value="{{ fisioterapeuta.pk }}"
+                                {% if form.fisioterapeuta.value|stringformat:"s" == fisioterapeuta.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
+                            </option>
 
                         {% empty %}
 
-                        <option disabled>
-                            No hay fisioterapeutas disponibles
-                        </option>
+                            <option value="" disabled>
+                                No hay fisioterapeutas registrados
+                            </option>
 
                         {% endfor %}
 
                     </select>
+
+                    {% if form.fisioterapeuta.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.fisioterapeuta.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -169,9 +241,44 @@
                         type="date"
                         id="fecha"
                         name="fecha"
+                        value="{{ form.fecha.value|default_if_none:'' }}"
                         required
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     >
+
+                    {% if form.fecha.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.fecha.errors }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- HORA -->
+                <div>
+
+                    <label
+                        for="hora"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Hora
+                    </label>
+
+                    <input
+                        type="time"
+                        id="hora"
+                        name="hora"
+                        value="{{ form.hora.value|default_if_none:'' }}"
+                        required
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                    {% if form.hora.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.hora.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -197,35 +304,30 @@
                             Selecciona un motivo
                         </option>
 
-                        <option value="dolor_muscular">
-                            Dolor muscular
-                        </option>
+                        {% for motivo in form.motivo.field.queryset %}
 
-                        <option value="lesion_deportiva">
-                            Lesión deportiva
-                        </option>
+                            <option
+                                value="{{ motivo.pk }}"
+                                {% if form.motivo.value|stringformat:"s" == motivo.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ motivo.nombre }}
+                            </option>
 
-                        <option value="dolor_lumbar">
-                            Dolor lumbar
-                        </option>
+                        {% empty %}
 
-                        <option value="dolor_cervical">
-                            Dolor cervical
-                        </option>
+                            <option value="" disabled>
+                                No hay motivos registrados
+                            </option>
 
-                        <option value="valoracion_inicial">
-                            Valoración inicial
-                        </option>
-
-                        <option value="rehabilitacion">
-                            Rehabilitación
-                        </option>
-
-                        <option value="otro">
-                            Otro
-                        </option>
+                        {% endfor %}
 
                     </select>
+
+                    {% if form.motivo.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.motivo.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -234,19 +336,25 @@
                 <div class="sm:col-span-2">
 
                     <label
-                        for="informacion_adicional"
+                        for="observaciones"
                         class="mb-2 block text-sm font-medium text-slate-700"
                     >
                         Información adicional
                     </label>
 
                     <textarea
-                        id="informacion_adicional"
-                        name="informacion_adicional"
+                        id="observaciones"
+                        name="observaciones"
                         rows="4"
                         placeholder="Describe brevemente tu motivo de consulta..."
                         class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    ></textarea>
+                    >{{ form.observaciones.value|default_if_none:'' }}</textarea>
+
+                    {% if form.observaciones.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.observaciones.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -262,7 +370,7 @@
 
                 <!-- ATENCIÓN PRIORITARIA -->
                 <a
-                    href="cita_emergencia.html"
+                    href="{% url 'citas:cita_emergencia' %}"
                     class="flex items-center gap-2 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800"
                 >
                     <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100">
@@ -277,7 +385,7 @@
                 <div class="flex flex-col gap-3 sm:flex-row">
 
                     <a
-                        href="mis_citas.html"
+                        href="{% url 'citas:mis_citas' %}"
                         class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                     >
                         Cancelar
@@ -287,7 +395,7 @@
                         type="submit"
                         class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-emerald-700"
                     >
-                        Ver horarios disponibles
+                        Agendar cita
                     </button>
 
                 </div>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,7 +25,7 @@
         </div>
 
         <a
-            href="detalle_cita.html"
+            href="{% url 'citas:detalle_cita' cita.pk %}"
             class="text-sm font-medium text-blue-700 hover:text-blue-800"
         >
             ← Regresar
@@ -52,13 +53,35 @@
 
     <form
         method="POST"
-        action="#"
+        action="{% url 'citas:editar_cita' cita.pk %}"
         class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
     >
 
         {% csrf_token %}
 
         <div class="p-6">
+
+            <!-- ERRORES GENERALES -->
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- INFORMACIÓN DE LA CITA -->
+            <div class="mb-6 rounded-xl bg-blue-50 p-4">
+
+                <p class="text-sm font-medium text-blue-900">
+                    Paciente:
+                    {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                </p>
+
+                <p class="mt-1 text-xs text-blue-700">
+                    Cita #{{ cita.pk }}
+                </p>
+
+            </div>
+
 
             <div class="grid gap-5 sm:grid-cols-2">
 
@@ -79,19 +102,34 @@
                         class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     >
 
-                        {% for fisioterapeuta in fisioterapeutas %}
-
-                        <option
-                            value="{{ fisioterapeuta.id }}"
-                            {% if fisioterapeuta.id == cita.fisioterapeuta.id %}selected{% endif %}
-                        >
-                            {{ fisioterapeuta.nombre }}
-                            {{ fisioterapeuta.apellidos }}
+                        <option value="">
+                            Selecciona un fisioterapeuta
                         </option>
+
+                        {% for fisioterapeuta in form.fisioterapeuta.field.queryset %}
+
+                            <option
+                                value="{{ fisioterapeuta.pk }}"
+                                {% if form.fisioterapeuta.value|stringformat:"s" == fisioterapeuta.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No hay fisioterapeutas registrados
+                            </option>
 
                         {% endfor %}
 
                     </select>
+
+                    {% if form.fisioterapeuta.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.fisioterapeuta.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -113,27 +151,34 @@
                         class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                     >
 
-                        <option value="{{ cita.servicio }}" selected>
-                            {{ cita.servicio }}
+                        <option value="">
+                            Selecciona un servicio
                         </option>
 
-                        <option value="Valoración inicial">
-                            Valoración inicial
-                        </option>
+                        {% for servicio in form.servicio.field.queryset %}
 
-                        <option value="Fisioterapia general">
-                            Fisioterapia general
-                        </option>
+                            <option
+                                value="{{ servicio.pk }}"
+                                {% if form.servicio.value|stringformat:"s" == servicio.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ servicio.nombre }} - ${{ servicio.precio_base }}
+                            </option>
 
-                        <option value="Terapia deportiva">
-                            Terapia deportiva
-                        </option>
+                        {% empty %}
 
-                        <option value="Rehabilitación">
-                            Rehabilitación
-                        </option>
+                            <option value="" disabled>
+                                No hay servicios registrados
+                            </option>
+
+                        {% endfor %}
 
                     </select>
+
+                    {% if form.servicio.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.servicio.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -152,10 +197,16 @@
                         type="date"
                         id="fecha"
                         name="fecha"
-                        value="{{ cita.fecha|date:'Y-m-d' }}"
+                        value="{% if form.is_bound %}{{ form.fecha.value|default_if_none:'' }}{% else %}{{ cita.fecha|date:'Y-m-d' }}{% endif %}"
                         required
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     >
+
+                    {% if form.fecha.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.fecha.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -174,10 +225,16 @@
                         type="time"
                         id="hora"
                         name="hora"
-                        value="{{ cita.hora|time:'H:i' }}"
+                        value="{% if form.is_bound %}{{ form.hora.value|default_if_none:'' }}{% else %}{{ cita.hora|time:'H:i' }}{% endif %}"
                         required
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                     >
+
+                    {% if form.hora.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.hora.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -192,12 +249,68 @@
                         Motivo
                     </label>
 
-                    <textarea
+                    <select
                         id="motivo"
                         name="motivo"
+                        required
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    >
+
+                        <option value="">
+                            Selecciona un motivo
+                        </option>
+
+                        {% for motivo in form.motivo.field.queryset %}
+
+                            <option
+                                value="{{ motivo.pk }}"
+                                {% if form.motivo.value|stringformat:"s" == motivo.pk|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ motivo.nombre }}
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No hay motivos registrados
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    {% if form.motivo.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.motivo.errors }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- INFORMACIÓN ADICIONAL -->
+                <div class="sm:col-span-2">
+
+                    <label
+                        for="observaciones"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        Información adicional
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        name="observaciones"
                         rows="4"
+                        placeholder="Agrega alguna observación..."
                         class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    >{{ cita.motivo }}</textarea>
+                    >{{ form.observaciones.value|default_if_none:'' }}</textarea>
+
+                    {% if form.observaciones.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.observaciones.errors }}
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -206,10 +319,11 @@
         </div>
 
 
+        <!-- BOTONES -->
         <div class="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 p-6 sm:flex-row sm:justify-end">
 
             <a
-                href="detalle_cita.html"
+                href="{% url 'citas:detalle_cita' cita.pk %}"
                 class="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
                 Cancelar

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +12,7 @@
 
 <main class="mx-auto max-w-3xl px-6 py-12">
 
+    <!-- ENCABEZADO -->
     <section class="mb-8 text-center">
 
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-emerald-600 font-bold text-white shadow-sm">
@@ -18,7 +20,7 @@
         </div>
 
         <h1 class="mt-5 text-3xl font-bold text-blue-950">
-            Confirma tu cita
+            Confirmar citas
         </h1>
 
         <p class="mt-2 text-sm text-slate-500">
@@ -28,146 +30,211 @@
     </section>
 
 
-    <section class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+    <!-- MENSAJES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-        <div class="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-6">
 
-            <div class="flex items-center justify-between gap-4">
+    <!-- CITAS PENDIENTES -->
+    {% for cita in citas %}
 
+        <section class="mb-6 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+
+            <!-- SERVICIO -->
+            <div class="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-6">
+
+                <div class="flex items-center justify-between gap-4">
+
+                    <div>
+                        <p class="text-sm text-slate-500">
+                            Servicio
+                        </p>
+
+                        <h2 class="mt-1 text-lg font-semibold text-blue-950">
+                            {{ cita.servicio.nombre }}
+                        </h2>
+                    </div>
+
+                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                        {{ cita.get_estado_display }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DATOS DE LA CITA -->
+            <div class="grid gap-6 p-6 sm:grid-cols-2">
+
+                <!-- PACIENTE -->
                 <div>
-                    <p class="text-sm text-slate-500">
-                        Servicio
+                    <p class="text-xs uppercase text-slate-400">
+                        Paciente
                     </p>
 
-                    <h2 class="mt-1 text-lg font-semibold text-blue-950">
-                        {{ cita.servicio }}
-                    </h2>
+                    <p class="mt-1 text-sm font-medium">
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    </p>
                 </div>
 
-                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                    Por confirmar
-                </span>
+
+                <!-- FISIOTERAPEUTA -->
+                <div>
+                    <p class="text-xs uppercase text-slate-400">
+                        Fisioterapeuta
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+
+                <!-- FECHA -->
+                <div>
+                    <p class="text-xs uppercase text-slate-400">
+                        Fecha
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </p>
+                </div>
+
+
+                <!-- HORA -->
+                <div>
+                    <p class="text-xs uppercase text-slate-400">
+                        Hora
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ cita.hora|time:"H:i" }}
+                    </p>
+                </div>
+
+
+                <!-- MOTIVO -->
+                <div>
+                    <p class="text-xs uppercase text-slate-400">
+                        Motivo
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium">
+                        {{ cita.motivo.nombre }}
+                    </p>
+                </div>
+
+
+                <!-- COSTO ESTIMADO -->
+                <div>
+                    <p class="text-xs uppercase text-slate-400">
+                        Costo estimado
+                    </p>
+
+                    <p class="mt-1 text-sm font-semibold text-emerald-700">
+                        ${{ cita.costo_estimado }} MXN
+                    </p>
+                </div>
 
             </div>
 
-        </div>
+
+            <!-- FORMULARIO -->
+            <form
+                method="POST"
+                action="{% url 'citas:confirmar_cita' %}"
+            >
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="cita_id"
+                    value="{{ cita.pk }}"
+                >
+
+                <!-- BOTONES -->
+                <div class="border-t border-slate-100 bg-slate-50 p-6">
+
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                        <div class="flex items-center gap-2 text-sm font-medium text-emerald-700">
+
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100">
+                                ✓
+                            </span>
+
+                            Pendiente de confirmación
+
+                        </div>
 
 
-        <div class="grid gap-6 p-6 sm:grid-cols-2">
+                        <div class="flex flex-col gap-3 sm:flex-row">
 
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Paciente
-                </p>
+                            <a
+                                href="{% url 'citas:detalle_cita' cita.pk %}"
+                                class="rounded-xl border border-blue-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-50"
+                            >
+                                Ver detalle
+                            </a>
 
-                <p class="mt-1 text-sm font-medium">
-                    {{ cita.paciente.nombre }}
-                    {{ cita.paciente.apellidos }}
-                </p>
-            </div>
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
+                            >
+                                Confirmar cita
+                            </button>
 
-
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Fisioterapeuta
-                </p>
-
-                <p class="mt-1 text-sm font-medium">
-                    {{ cita.fisioterapeuta.nombre }}
-                    {{ cita.fisioterapeuta.apellidos }}
-                </p>
-            </div>
-
-
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Fecha
-                </p>
-
-                <p class="mt-1 text-sm font-medium">
-                    {{ cita.fecha }}
-                </p>
-            </div>
-
-
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Hora
-                </p>
-
-                <p class="mt-1 text-sm font-medium">
-                    {{ cita.hora }}
-                </p>
-            </div>
-
-
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Motivo
-                </p>
-
-                <p class="mt-1 text-sm font-medium">
-                    {{ cita.motivo }}
-                </p>
-            </div>
-
-
-            <div>
-                <p class="text-xs uppercase text-slate-400">
-                    Costo estimado
-                </p>
-
-                <p class="mt-1 text-sm font-semibold text-emerald-700">
-                    ${{ cita.costo }} MXN
-                </p>
-            </div>
-
-        </div>
-
-
-        <form method="POST" action="#">
-            {% csrf_token %}
-
-            <div class="border-t border-slate-100 bg-slate-50 p-6">
-
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                    <div class="flex items-center gap-2 text-sm font-medium text-emerald-700">
-
-                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100">
-                            ✓
-                        </span>
-
-                        Horario disponible
-
-                    </div>
-
-
-                    <div class="flex flex-col gap-3 sm:flex-row">
-
-                        <a
-                            href="horarios_disponibles.html"
-                            class="rounded-xl border border-blue-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-50"
-                        >
-                            Regresar
-                        </a>
-
-                        <button
-                            type="submit"
-                            class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
-                        >
-                            Confirmar cita
-                        </button>
+                        </div>
 
                     </div>
 
                 </div>
 
+            </form>
+
+        </section>
+
+    {% empty %}
+
+        <!-- SIN CITAS -->
+        <section class="rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-sm">
+
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-xl text-emerald-700">
+                ✓
             </div>
 
-        </form>
+            <h2 class="mt-4 text-lg font-semibold text-blue-950">
+                No hay citas pendientes
+            </h2>
 
-    </section>
+            <p class="mt-2 text-sm text-slate-500">
+                Todas las citas registradas están confirmadas
+                o tienen otro estado.
+            </p>
+
+        </section>
+
+    {% endfor %}
+
+
+    <!-- REGRESAR -->
+    <div class="mt-8 text-center">
+
+        <a
+            href="{% url 'citas:agenda' %}"
+            class="inline-block rounded-xl border border-blue-200 bg-white px-5 py-2.5 text-sm font-medium text-blue-700 transition hover:bg-blue-50"
+        >
+            ← Regresar a la agenda
+        </a>
+
+    </div>
 
 </main>
 

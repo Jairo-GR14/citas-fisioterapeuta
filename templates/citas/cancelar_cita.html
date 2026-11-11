@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,12 +44,11 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-blue-900">
-                    {{ cita.servicio }}
+                    {{ cita.servicio.nombre }}
                 </p>
 
                 <p class="mt-1 text-sm text-emerald-700">
-                    {{ cita.fisioterapeuta.nombre }}
-                    {{ cita.fisioterapeuta.apellidos }}
+                    {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
                 </p>
 
 
@@ -61,7 +61,7 @@
                         </p>
 
                         <p class="mt-1 text-sm font-medium text-slate-700">
-                            {{ cita.fecha }}
+                            {{ cita.fecha|date:"d/m/Y" }}
                         </p>
 
                     </div>
@@ -74,7 +74,7 @@
                         </p>
 
                         <p class="mt-1 text-sm font-medium text-slate-700">
-                            {{ cita.hora }}
+                            {{ cita.hora|time:"H:i" }}
                         </p>
 
                     </div>
@@ -94,8 +94,22 @@
             </div>
 
 
+            <!-- MENSAJES -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+
             <!-- FORMULARIO -->
-            <form method="POST" action="#" class="mt-6">
+            <form
+                method="POST"
+                action="{% url 'citas:cancelar_cita' cita.pk %}"
+                class="mt-6"
+            >
 
                 {% csrf_token %}
 
@@ -119,19 +133,31 @@
                             Selecciona un motivo
                         </option>
 
-                        <option value="cambio_horario">
+                        <option
+                            value="cambio_horario"
+                            {% if request.POST.motivo_cancelacion == "cambio_horario" %}selected{% endif %}
+                        >
                             Cambio de horario
                         </option>
 
-                        <option value="problemas_personales">
+                        <option
+                            value="problemas_personales"
+                            {% if request.POST.motivo_cancelacion == "problemas_personales" %}selected{% endif %}
+                        >
                             Problemas personales
                         </option>
 
-                        <option value="ya_no_necesita">
+                        <option
+                            value="ya_no_necesita"
+                            {% if request.POST.motivo_cancelacion == "ya_no_necesita" %}selected{% endif %}
+                        >
                             Ya no necesito la cita
                         </option>
 
-                        <option value="otro">
+                        <option
+                            value="otro"
+                            {% if request.POST.motivo_cancelacion == "otro" %}selected{% endif %}
+                        >
                             Otro
                         </option>
 
@@ -159,7 +185,7 @@
                         rows="3"
                         placeholder="Agrega información adicional si es necesario..."
                         class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    ></textarea>
+                    >{{ request.POST.observaciones|default:"" }}</textarea>
 
                 </div>
 
@@ -168,7 +194,7 @@
                 <div class="mt-6 grid gap-3 sm:grid-cols-2">
 
                     <a
-                        href="detalle_cita.html"
+                        href="{% url 'citas:detalle_cita' cita.pk %}"
                         class="rounded-xl border border-blue-200 bg-white px-4 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-50"
                     >
                         Conservar cita

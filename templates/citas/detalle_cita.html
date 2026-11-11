@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +10,7 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
+<!-- HEADER -->
 <header class="border-b border-blue-100 bg-white">
 
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -24,7 +26,7 @@
         </div>
 
         <a
-            href="mis_citas.html"
+            href="{% url 'citas:mis_citas' %}"
             class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Mis citas
@@ -35,14 +37,16 @@
 </header>
 
 
+<!-- CONTENIDO -->
 <main class="mx-auto max-w-5xl px-6 py-10">
 
+    <!-- ENCABEZADO -->
     <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
         <div>
 
             <p class="text-sm font-semibold text-emerald-600">
-                Cita #{{ cita.id }}
+                Cita #{{ cita.pk }}
             </p>
 
             <h2 class="mt-2 text-3xl font-bold text-blue-950">
@@ -52,31 +56,49 @@
         </div>
 
 
-        {% if cita.estado == "Confirmada" %}
+        <!-- ESTADO -->
+        {% if cita.estado == "CONFIRMADA" %}
 
-        <span class="w-fit rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            Confirmada
-        </span>
+            <span class="w-fit rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+                {{ cita.get_estado_display }}
+            </span>
 
-        {% elif cita.estado == "Cancelada" %}
+        {% elif cita.estado == "CANCELADA" %}
 
-        <span class="w-fit rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
-            Cancelada
-        </span>
+            <span class="w-fit rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
+                {{ cita.get_estado_display }}
+            </span>
+
+        {% elif cita.estado == "FINALIZADA" %}
+
+            <span class="w-fit rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                {{ cita.get_estado_display }}
+            </span>
 
         {% else %}
 
-        <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-            {{ cita.estado }}
-        </span>
+            <span class="w-fit rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
+                {{ cita.get_estado_display }}
+            </span>
 
         {% endif %}
 
     </div>
 
 
+    <!-- MENSAJES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
     <div class="grid gap-6 lg:grid-cols-[1fr_280px]">
 
+        <!-- INFORMACIÓN DE LA CITA -->
         <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
             <h3 class="mb-6 text-lg font-semibold text-blue-900">
@@ -86,76 +108,81 @@
 
             <div class="grid gap-6 sm:grid-cols-2">
 
+                <!-- PACIENTE -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Paciente
                     </p>
 
                     <p class="mt-1 font-medium">
-                        {{ cita.paciente.nombre }}
-                        {{ cita.paciente.apellidos }}
+                        {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
                     </p>
                 </div>
 
 
+                <!-- FISIOTERAPEUTA -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Fisioterapeuta
                     </p>
 
                     <p class="mt-1 font-medium">
-                        {{ cita.fisioterapeuta.nombre }}
-                        {{ cita.fisioterapeuta.apellidos }}
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
                     </p>
                 </div>
 
 
+                <!-- FECHA -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Fecha
                     </p>
 
                     <p class="mt-1 font-medium">
-                        {{ cita.fecha }}
+                        {{ cita.fecha|date:"d/m/Y" }}
                     </p>
                 </div>
 
 
+                <!-- HORA -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Hora
                     </p>
 
                     <p class="mt-1 font-medium">
-                        {{ cita.hora }}
+                        {{ cita.hora|time:"H:i" }}
                     </p>
                 </div>
 
 
+                <!-- SERVICIO -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Servicio
                     </p>
 
                     <p class="mt-1 font-medium">
-                        {{ cita.servicio }}
+                        {{ cita.servicio.nombre }}
                     </p>
                 </div>
 
 
+                <!-- COSTO APROXIMADO -->
                 <div>
                     <p class="text-xs uppercase text-slate-400">
                         Costo aproximado
                     </p>
 
                     <p class="mt-1 font-semibold text-emerald-700">
-                        ${{ cita.costo }} MXN
+                        ${{ cita.costo_estimado }} MXN
                     </p>
                 </div>
 
             </div>
 
 
+            <!-- MOTIVO DE CONSULTA -->
             <div class="mt-8 border-t border-slate-100 pt-6">
 
                 <p class="text-xs uppercase text-slate-400">
@@ -163,25 +190,44 @@
                 </p>
 
                 <p class="mt-2 text-sm leading-6 text-slate-600">
-                    {{ cita.motivo }}
+                    {{ cita.motivo.nombre }}
                 </p>
 
             </div>
 
 
-            {% if cita.informacion_adicional %}
+            <!-- INFORMACIÓN ADICIONAL -->
+            {% if cita.observaciones %}
 
-            <div class="mt-6 rounded-xl bg-slate-50 p-4">
+                <div class="mt-6 rounded-xl bg-slate-50 p-4">
 
-                <p class="text-xs uppercase text-slate-400">
-                    Información adicional
-                </p>
+                    <p class="text-xs uppercase text-slate-400">
+                        Información adicional
+                    </p>
 
-                <p class="mt-2 text-sm text-slate-600">
-                    {{ cita.informacion_adicional }}
-                </p>
+                    <p class="mt-2 whitespace-pre-line text-sm text-slate-600">
+                        {{ cita.observaciones }}
+                    </p>
 
-            </div>
+                </div>
+
+            {% endif %}
+
+
+            <!-- MOTIVO DE CANCELACIÓN -->
+            {% if cita.estado == "CANCELADA" and cita.motivo_cancelacion %}
+
+                <div class="mt-6 rounded-xl border border-red-100 bg-red-50 p-4">
+
+                    <p class="text-xs font-semibold uppercase text-red-600">
+                        Motivo de cancelación
+                    </p>
+
+                    <p class="mt-2 whitespace-pre-line text-sm text-red-700">
+                        {{ cita.motivo_cancelacion }}
+                    </p>
+
+                </div>
 
             {% endif %}
 
@@ -191,26 +237,43 @@
         <!-- ACCIONES -->
         <aside class="space-y-3">
 
-            <a
-                href="editar_cita.html"
-                class="block w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
-            >
-                Editar cita
-            </a>
+            {% if cita.estado == "PROGRAMADA" or cita.estado == "CONFIRMADA" %}
 
-            <a
-                href="horarios_disponibles.html"
-                class="block w-full rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-100"
-            >
-                Reprogramar
-            </a>
+                {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" or request.user.perfil.rol == "PACIENTE" %}
 
-            <a
-                href="cancelar_cita.html"
-                class="block w-full rounded-xl border border-red-100 bg-red-50 px-5 py-3 text-center text-sm font-medium text-red-700 transition hover:bg-red-100"
-            >
-                Cancelar cita
-            </a>
+                    <!-- EDITAR CITA -->
+                    <a
+                        href="{% url 'citas:editar_cita' cita.pk %}"
+                        class="block w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
+                    >
+                        Editar cita
+                    </a>
+
+                    <!-- REPROGRAMAR -->
+                    <a
+                        href="{% url 'citas:editar_cita' cita.pk %}"
+                        class="block w-full rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                    >
+                        Reprogramar
+                    </a>
+
+                    <!-- CANCELAR CITA -->
+                    <a
+                        href="{% url 'citas:cancelar_cita' cita.pk %}"
+                        class="block w-full rounded-xl border border-red-100 bg-red-50 px-5 py-3 text-center text-sm font-medium text-red-700 transition hover:bg-red-100"
+                    >
+                        Cancelar cita
+                    </a>
+
+                {% endif %}
+
+            {% else %}
+
+                <div class="rounded-xl border border-slate-200 bg-slate-100 p-4 text-center text-sm text-slate-500">
+                    Esta cita ya no permite modificaciones.
+                </div>
+
+            {% endif %}
 
         </aside>
 

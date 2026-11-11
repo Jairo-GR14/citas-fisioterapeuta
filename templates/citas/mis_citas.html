@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +10,7 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
+<!-- HEADER -->
 <header class="border-b border-blue-100 bg-white">
 
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -24,10 +26,11 @@
         </div>
 
 
+        <!-- NAVEGACIÓN -->
         <nav class="hidden gap-6 text-sm md:flex">
 
             <a
-                href="mis_citas.html"
+                href="{% url 'citas:mis_citas' %}"
                 class="font-semibold text-blue-700"
             >
                 Mis citas
@@ -44,7 +47,7 @@
 
 
         <a
-            href="agendar_cita.html"
+            href="{% url 'citas:agendar_cita' %}"
             class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
         >
             + Agendar cita
@@ -55,6 +58,7 @@
 </header>
 
 
+<!-- CONTENIDO -->
 <main class="mx-auto max-w-6xl px-6 py-10">
 
     <!-- ENCABEZADO -->
@@ -73,6 +77,16 @@
         </p>
 
     </section>
+
+
+    <!-- MENSAJES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
 
     <!-- PRÓXIMA CITA -->
@@ -97,38 +111,39 @@
                 </p>
 
                 <p class="mt-4 text-sm font-semibold">
-                    {{ proxima_cita.hora }}
+                    {{ proxima_cita.hora|time:"H:i" }}
                 </p>
 
             </div>
 
 
+            <!-- INFORMACIÓN DE LA PRÓXIMA CITA -->
             <div class="p-6">
 
                 <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                    {{ proxima_cita.estado }}
+                    {{ proxima_cita.get_estado_display }}
                 </span>
 
                 <h3 class="mt-4 text-xl font-semibold text-blue-950">
-                    {{ proxima_cita.motivo }}
+                    {{ proxima_cita.motivo.nombre }}
                 </h3>
 
                 <p class="mt-2 text-sm text-slate-500">
-                    {{ proxima_cita.fisioterapeuta.nombre }}
-                    {{ proxima_cita.fisioterapeuta.apellidos }}
+                    {{ proxima_cita.fisioterapeuta.usuario.usuario.get_full_name|default:proxima_cita.fisioterapeuta.usuario.usuario.username }}
                 </p>
 
                 <p class="mt-1 text-sm text-slate-400">
-                    {{ proxima_cita.servicio }}
+                    {{ proxima_cita.servicio.nombre }}
                 </p>
 
             </div>
 
 
+            <!-- VER DETALLE -->
             <div class="flex items-center p-6">
 
                 <a
-                    href="#"
+                    href="{% url 'citas:detalle_cita' proxima_cita.pk %}"
                     class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
                 >
                     Ver detalle
@@ -142,6 +157,7 @@
 
     {% else %}
 
+    <!-- SIN PRÓXIMA CITA -->
     <section class="mb-8 rounded-2xl border border-emerald-100 bg-white p-8 text-center">
 
         <h3 class="font-semibold text-blue-900">
@@ -153,7 +169,7 @@
         </p>
 
         <a
-            href="agendar_cita.html"
+            href="{% url 'citas:agendar_cita' %}"
             class="mt-5 inline-block rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white"
         >
             Agendar cita
@@ -174,7 +190,7 @@
             </h3>
 
             <a
-                href="agenda.html"
+                href="{% url 'citas:agenda' %}"
                 class="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
             >
                 Ver agenda
@@ -187,10 +203,12 @@
 
             {% for cita in citas %}
 
+            <!-- CITA -->
             <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-200">
 
                 <div class="flex flex-col gap-4 md:flex-row md:items-center">
 
+                    <!-- FECHA Y HORA -->
                     <div class="w-28">
 
                         <p class="text-sm font-semibold text-blue-900">
@@ -198,44 +216,46 @@
                         </p>
 
                         <p class="text-xs text-slate-400">
-                            {{ cita.hora }}
+                            {{ cita.hora|time:"H:i" }}
                         </p>
 
                     </div>
 
 
+                    <!-- INFORMACIÓN -->
                     <div class="flex-1">
 
                         <div class="flex flex-wrap items-center gap-2">
 
                             <h4 class="font-medium">
-                                {{ cita.motivo }}
+                                {{ cita.motivo.nombre }}
                             </h4>
 
 
-                            {% if cita.estado == "Confirmada" %}
+                            <!-- ESTADO -->
+                            {% if cita.estado == "CONFIRMADA" %}
 
-                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-                                Confirmada
-                            </span>
+                                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                                    {{ cita.get_estado_display }}
+                                </span>
 
-                            {% elif cita.estado == "Finalizada" %}
+                            {% elif cita.estado == "FINALIZADA" %}
 
-                            <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-                                Finalizada
-                            </span>
+                                <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                                    {{ cita.get_estado_display }}
+                                </span>
 
-                            {% elif cita.estado == "Cancelada" %}
+                            {% elif cita.estado == "CANCELADA" %}
 
-                            <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700">
-                                Cancelada
-                            </span>
+                                <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700">
+                                    {{ cita.get_estado_display }}
+                                </span>
 
                             {% else %}
 
-                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-                                {{ cita.estado }}
-                            </span>
+                                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+                                    {{ cita.get_estado_display }}
+                                </span>
 
                             {% endif %}
 
@@ -243,29 +263,35 @@
 
 
                         <p class="mt-1 text-sm text-slate-500">
-                            {{ cita.fisioterapeuta.nombre }}
-                            {{ cita.fisioterapeuta.apellidos }}
+                            {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            {{ cita.servicio.nombre }}
                         </p>
 
                     </div>
 
 
+                    <!-- BOTONES -->
                     <div class="flex gap-2">
 
-                        {% if cita.estado != "Cancelada" and cita.estado != "Finalizada" %}
+                        {% if cita.estado == "PROGRAMADA" or cita.estado == "CONFIRMADA" %}
 
-                        <a
-                            href="#"
-                            class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                        >
-                            Editar
-                        </a>
+                            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" or request.user.perfil.rol == "PACIENTE" %}
+                                <a
+                                    href="{% url 'citas:editar_cita' cita.pk %}"
+                                    class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                                >
+                                    Editar
+                                </a>
+                            {% endif %}
 
                         {% endif %}
 
 
                         <a
-                            href="#"
+                            href="{% url 'citas:detalle_cita' cita.pk %}"
                             class="rounded-lg bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 text-sm font-medium text-white"
                         >
                             Ver
@@ -279,6 +305,7 @@
 
             {% empty %}
 
+            <!-- SIN CITAS -->
             <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center">
 
                 <p class="font-semibold text-blue-900">

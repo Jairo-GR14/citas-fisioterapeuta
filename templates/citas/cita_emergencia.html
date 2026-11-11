@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +12,7 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
+<!-- HEADER -->
 <header class="border-b border-blue-100 bg-white">
 
     <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
@@ -26,7 +28,7 @@
         </div>
 
         <a
-            href="agendar_cita.html"
+            href="{% url 'citas:agendar_cita' %}"
             class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar
@@ -37,8 +39,10 @@
 </header>
 
 
+<!-- CONTENIDO -->
 <main class="mx-auto max-w-4xl px-6 py-10">
 
+    <!-- ENCABEZADO -->
     <section class="mb-8">
 
         <p class="text-sm font-semibold text-emerald-600">
@@ -81,15 +85,15 @@
 
                     {% if clinica.telefono %}
 
-                    <p class="mt-1 font-semibold text-blue-900">
-                        {{ clinica.telefono }}
-                    </p>
+                        <p class="mt-1 font-semibold text-blue-900">
+                            {{ clinica.telefono }}
+                        </p>
 
                     {% else %}
 
-                    <p class="mt-1 text-sm text-slate-500">
-                        No hay teléfono registrado.
-                    </p>
+                        <p class="mt-1 text-sm text-slate-500">
+                            No hay teléfono registrado.
+                        </p>
 
                     {% endif %}
 
@@ -105,24 +109,23 @@
 
                     {% if clinica.dias_atencion %}
 
-                    <p class="mt-1 font-medium text-slate-800">
-                        {{ clinica.dias_atencion }}
-                    </p>
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ clinica.dias_atencion }}
+                        </p>
 
                     {% endif %}
 
-
                     {% if clinica.horario_atencion %}
 
-                    <p class="mt-1 text-sm text-slate-500">
-                        {{ clinica.horario_atencion }}
-                    </p>
+                        <p class="mt-1 text-sm text-slate-500">
+                            {{ clinica.horario_atencion }}
+                        </p>
 
                     {% else %}
 
-                    <p class="mt-1 text-sm text-slate-500">
-                        No hay horario registrado.
-                    </p>
+                        <p class="mt-1 text-sm text-slate-500">
+                            No hay horario registrado.
+                        </p>
 
                     {% endif %}
 
@@ -131,14 +134,15 @@
             </div>
 
 
+            <!-- CONTACTAR CLÍNICA -->
             {% if clinica.telefono %}
 
-            <a
-                href="tel:{{ clinica.telefono }}"
-                class="mt-6 block rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
-            >
-                Contactar clínica
-            </a>
+                <a
+                    href="tel:{{ clinica.telefono|cut:' '|cut:'-' }}"
+                    class="mt-6 block rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Contactar clínica
+                </a>
 
             {% endif %}
 
@@ -171,7 +175,17 @@
                     La disponibilidad dependerá de los horarios y fisioterapeutas registrados en el sistema.
                 </p>
 
+                <p class="mt-3 text-xs leading-5 text-emerald-700">
+                    Esta página no registra una cita automáticamente.
+                    Debes contactar a la clínica para solicitar atención prioritaria.
+                </p>
+
             </div>
+
+            <p class="mt-5 text-xs leading-5 text-slate-500">
+                Si se trata de una emergencia médica grave o existe peligro inmediato,
+                solicita atención a los servicios de emergencia.
+            </p>
 
         </section>
 

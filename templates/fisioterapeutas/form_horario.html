@@ -1,0 +1,143 @@
+
+{% extends "fisioterapeutas/base_fisioterapeutas.html" %}
+
+{% block titulo %}
+{{ titulo_pagina }}
+{% endblock %}
+
+{% block contenido %}
+
+<div class="mx-auto max-w-2xl">
+
+    <!-- TÍTULO -->
+    <p class="text-sm font-semibold text-emerald-700">
+        Administración de horarios
+    </p>
+
+    <h1 class="mt-2 text-3xl font-bold text-blue-950">
+        {{ titulo_pagina }}
+    </h1>
+
+    <p class="mt-2 text-sm text-slate-500">
+        {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
+    </p>
+
+    <p class="mt-1 text-sm text-slate-500">
+        Las jornadas deben contener bloques completos
+        de 60 minutos.
+    </p>
+
+
+    <!-- FORMULARIO -->
+    <form
+        method="post"
+        class="mt-8 space-y-5 rounded-2xl border border-blue-100 bg-white p-7 shadow-sm"
+    >
+
+        {% csrf_token %}
+
+        <!-- ERRORES -->
+        {% if form.non_field_errors %}
+
+            <div class="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                {{ form.non_field_errors }}
+            </div>
+
+        {% endif %}
+
+
+        <!-- DÍA -->
+        <div>
+
+            <label
+                for="{{ form.dia_semana.id_for_label }}"
+                class="mb-2 block text-sm font-semibold"
+            >
+                Día de la semana
+            </label>
+
+            {{ form.dia_semana }}
+
+            <p class="mt-1 text-sm text-red-600">
+                {{ form.dia_semana.errors }}
+            </p>
+
+        </div>
+
+
+        <!-- HORAS -->
+        <div class="grid gap-5 sm:grid-cols-2">
+
+            <div>
+
+                <label
+                    for="{{ form.hora_inicio.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold"
+                >
+                    Hora de inicio
+                </label>
+
+                {{ form.hora_inicio }}
+
+                <p class="mt-1 text-sm text-red-600">
+                    {{ form.hora_inicio.errors }}
+                </p>
+
+            </div>
+
+            <div>
+
+                <label
+                    for="{{ form.hora_fin.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold"
+                >
+                    Hora de fin
+                </label>
+
+                {{ form.hora_fin }}
+
+                <p class="mt-1 text-sm text-red-600">
+                    {{ form.hora_fin.errors }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ESTADO -->
+        <label class="flex items-center gap-3 rounded-xl bg-blue-50 p-4">
+
+            {{ form.activo }}
+
+            <span class="text-sm font-semibold">
+                Jornada activa
+            </span>
+
+        </label>
+
+
+        <!-- BOTONES -->
+        <div class="flex justify-end gap-3 pt-4">
+
+            <a
+                href="{% url 'fisioterapeutas:horario_fisioterapeuta' fisioterapeuta.pk %}"
+                class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white"
+            >
+                {{ accion }}
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,84 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar paciente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 
-<body class="bg-slate-50">
+{% extends "pacientes/base_pacientes.html" %}
 
-<main class="flex min-h-screen items-center justify-center px-6 py-10">
+{% block titulo %}Desactivar paciente{% endblock %}
 
-    <div class="w-full max-w-xl overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+{% block contenido %}
 
-        <div class="bg-gradient-to-r from-blue-600 to-emerald-600 p-6 text-center">
+<div class="mx-auto max-w-2xl rounded-2xl border border-red-100 bg-white p-8 shadow-sm">
 
-            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-2xl font-bold text-blue-700">
-                !
-            </div>
+    <h1 class="text-2xl font-bold text-red-800">
+        Desactivar paciente
+    </h1>
 
-            <h1 class="mt-4 text-2xl font-bold text-white">
-                Eliminar paciente
-            </h1>
+    <p class="mt-4 text-slate-700">
+        ¿Quieres desactivar la cuenta de
+        <strong>
+            {{ paciente.usuario.usuario.get_full_name|default:paciente.usuario.usuario.username }}
+        </strong>?
+    </p>
 
-        </div>
+    <p class="mt-3 text-sm leading-7 text-slate-600">
+        No se eliminarán sus citas ni su expediente clínico.
+        El paciente no podrá iniciar sesión.
+        Si tiene citas activas o futuras, primero deben resolverse.
+    </p>
 
+    <form
+        method="post"
+        action="{% url 'pacientes:eliminar_paciente' paciente.pk %}"
+        class="mt-7 flex flex-wrap justify-end gap-3"
+    >
 
-        <div class="p-6">
+        {% csrf_token %}
 
-            <p class="text-center text-slate-600">
-                ¿Estás seguro de que deseas eliminar al paciente?
-            </p>
+        <a
+            href="{% url 'pacientes:detalle_paciente' paciente.pk %}"
+            class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold"
+        >
+            Conservar paciente
+        </a>
 
-            <div class="my-6 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-emerald-50 p-5 text-center">
+        <button
+            type="submit"
+            class="rounded-xl bg-red-700 px-6 py-3 text-sm font-semibold text-white"
+        >
+            Confirmar desactivación
+        </button>
 
-                <h2 class="font-semibold text-blue-950">
-                    {{ paciente.nombre }} {{ paciente.apellidos }}
-                </h2>
+    </form>
 
-                <p class="mt-1 text-sm text-slate-500">
-                    {{ paciente.email }}
-                </p>
+</div>
 
-            </div>
-
-
-            <div class="rounded-xl bg-amber-50 p-4">
-
-                <p class="text-sm text-amber-800">
-                    Esta acción puede eliminar permanentemente la información asociada al paciente.
-                </p>
-
-            </div>
-
-
-            <form method="POST" class="mt-6">
-
-                {% csrf_token %}
-
-                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-
-                    <a href="#"
-                       class="rounded-xl border border-blue-200 bg-white px-6 py-3 text-center font-medium text-blue-700 hover:bg-blue-50">
-                        Cancelar
-                    </a>
-
-                    <button type="submit"
-                            class="rounded-xl bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700">
-                        Eliminar paciente
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</main>
-
-</body>
-</html>
+{% endblock %}

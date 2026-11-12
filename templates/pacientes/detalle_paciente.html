@@ -1,197 +1,170 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del paciente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 
-<body class="bg-slate-50 text-slate-800">
+{% extends "pacientes/base_pacientes.html" %}
 
-<header class="border-b border-blue-100 bg-white">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+{% block titulo %}Detalle de paciente{% endblock %}
 
-        <div>
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+{% block contenido %}
 
-            <p class="text-sm text-slate-500">
-                Gestión de pacientes
-            </p>
-        </div>
+<div class="mb-7 flex flex-wrap items-start justify-between gap-4">
 
-        <a href="#"
-           class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700">
-            Volver
-        </a>
+    <div>
+        <p class="text-sm font-semibold text-emerald-700">
+            Expediente #{{ paciente.pk }}
+        </p>
+
+        <h1 class="mt-2 text-3xl font-bold text-blue-950">
+            {{ paciente.usuario.usuario.get_full_name|default:paciente.usuario.usuario.username }}
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Usuario: {{ paciente.usuario.usuario.username }}
+        </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+
+        {% if puede_gestionar %}
+            <a
+                href="{% url 'pacientes:editar_paciente' paciente.pk %}"
+                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white"
+            >
+                Editar
+            </a>
+        {% endif %}
+
+        {% if puede_historial %}
+            <a
+                href="{% url 'pacientes:historial_paciente' paciente.pk %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700"
+            >
+                Historial de citas
+            </a>
+        {% endif %}
+
+        {% if puede_desactivar and paciente.activo %}
+            <a
+                href="{% url 'pacientes:eliminar_paciente' paciente.pk %}"
+                class="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-700"
+            >
+                Desactivar
+            </a>
+        {% endif %}
 
     </div>
-</header>
-
-<main class="mx-auto max-w-6xl px-6 py-8">
-
-    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-        <div>
-            <p class="text-sm font-semibold text-emerald-600">
-                Expediente del paciente
-            </p>
-
-            <h1 class="text-3xl font-bold text-blue-950">
-                Detalle del paciente
-            </h1>
-        </div>
-
-        <div class="flex flex-col gap-3 sm:flex-row">
-
-    <!-- EDITAR -->
-    <a href="#"
-       class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700">
-        Editar paciente
-    </a>
-
-    <!-- ELIMINAR -->
-    <a href="#"
-       class="rounded-xl bg-red-600 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-red-700">
-        Eliminar paciente
-    </a>
 
 </div>
 
-    </div>
+<!-- INFORMACIÓN GENERAL -->
+<section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
+    <h2 class="mb-5 text-lg font-semibold text-blue-900">
+        Datos del paciente
+    </h2>
 
-    <div class="mb-6 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+    <dl class="grid gap-5 sm:grid-cols-2">
 
-        <div class="bg-gradient-to-r from-blue-600 to-emerald-600 p-6">
-
-            <div class="flex items-center gap-4">
-
-                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white text-2xl font-bold text-blue-700">
-                    {{ paciente.nombre|slice:":1" }}
-                </div>
-
-                <div>
-                    <h2 class="text-2xl font-bold text-white">
-                        {{ paciente.nombre }} {{ paciente.apellidos }}
-                    </h2>
-
-                    <p class="mt-1 text-sm text-blue-50">
-                        Paciente registrado
-                    </p>
-                </div>
-
-            </div>
-
+        <div>
+            <dt class="text-sm text-slate-500">Correo</dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.usuario.usuario.email|default:"Sin registrar" }}
+            </dd>
         </div>
 
-    </div>
-
-
-    <div class="grid gap-6 lg:grid-cols-2">
-
-        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-            <h3 class="mb-5 text-lg font-semibold text-blue-900">
-                Información personal
-            </h3>
-
-            <div class="space-y-4">
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Nombre completo</p>
-                    <p class="font-medium">
-                        {{ paciente.nombre }} {{ paciente.apellidos }}
-                    </p>
-                </div>
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Fecha de nacimiento</p>
-                    <p class="font-medium">
-                        {{ paciente.fecha_nacimiento }}
-                    </p>
-                </div>
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Sexo</p>
-                    <p class="font-medium">
-                        {{ paciente.sexo }}
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs uppercase text-slate-400">Dirección</p>
-                    <p class="font-medium">
-                        {{ paciente.direccion }}
-                    </p>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <section class="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
-
-            <h3 class="mb-5 text-lg font-semibold text-emerald-700">
-                Información de contacto
-            </h3>
-
-            <div class="space-y-4">
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Teléfono</p>
-                    <p class="font-medium">{{ paciente.telefono }}</p>
-                </div>
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Correo</p>
-                    <p class="font-medium">{{ paciente.email }}</p>
-                </div>
-
-                <div class="border-b border-slate-100 pb-3">
-                    <p class="text-xs uppercase text-slate-400">Contacto de emergencia</p>
-                    <p class="font-medium">{{ paciente.contacto_emergencia }}</p>
-                </div>
-
-                <div>
-                    <p class="text-xs uppercase text-slate-400">Teléfono de emergencia</p>
-                    <p class="font-medium">{{ paciente.telefono_emergencia }}</p>
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-        <div class="flex items-center justify-between">
-
-            <div>
-                <h3 class="text-lg font-semibold text-blue-900">
-                    Historial clínico
-                </h3>
-
-                <p class="text-sm text-slate-500">
-                    Consulta las consultas y tratamientos registrados.
-                </p>
-            </div>
-
-            <a href="#"
-               class="rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-100">
-                Ver historial
-            </a>
-
+        <div>
+            <dt class="text-sm text-slate-500">Teléfono</dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.usuario.telefono|default:"Sin registrar" }}
+            </dd>
         </div>
+
+        <div>
+            <dt class="text-sm text-slate-500">
+                Fecha de nacimiento
+            </dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.fecha_nacimiento|date:"d/m/Y"|default:"Sin registrar" }}
+            </dd>
+        </div>
+
+        <div>
+            <dt class="text-sm text-slate-500">Estado</dt>
+            <dd class="mt-1 font-medium">
+                {% if paciente.activo %}
+                    Activo
+                {% else %}
+                    Inactivo
+                {% endif %}
+            </dd>
+        </div>
+
+        <div class="sm:col-span-2">
+            <dt class="text-sm text-slate-500">Dirección</dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.direccion|default:"Sin registrar" }}
+            </dd>
+        </div>
+
+        <div>
+            <dt class="text-sm text-slate-500">
+                Contacto de emergencia
+            </dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.contacto_emergencia|default:"Sin registrar" }}
+            </dd>
+        </div>
+
+        <div>
+            <dt class="text-sm text-slate-500">
+                Teléfono de emergencia
+            </dt>
+            <dd class="mt-1 font-medium">
+                {{ paciente.telefono_emergencia|default:"Sin registrar" }}
+            </dd>
+        </div>
+
+    </dl>
+
+</section>
+
+<!-- INFORMACIÓN CLÍNICA -->
+{% if puede_ver_antecedentes %}
+
+    <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+        <h2 class="text-lg font-semibold text-emerald-800">
+            Antecedentes médicos
+        </h2>
+
+        <p class="mt-4 whitespace-pre-line text-sm leading-7">
+            {{ paciente.antecedentes_medicos|default:"No se han registrado antecedentes." }}
+        </p>
 
     </section>
 
-</main>
+{% endif %}
 
-</body>
-</html>
+<div class="mt-8">
+
+    {% if puede_ver_lista %}
+
+        <a
+            href="{% url 'pacientes:lista_pacientes' %}"
+            class="text-sm font-semibold text-blue-700"
+        >
+            Volver a la lista
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'usuarios:redireccion_por_rol' %}"
+            class="text-sm font-semibold text-blue-700"
+        >
+            Volver a mi panel
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,104 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del progreso - Clínica de Fisioterapia</title>
+    <title>Mi progreso - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-800">
 
+    <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
+
         <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
             <div>
-                <h1 class="text-xl font-semibold text-blue-900">
+                <h1 class="text-xl font-bold text-blue-900">
                     Clínica de Fisioterapia
                 </h1>
+
                 <p class="text-sm text-slate-500">
-                    Seguimiento clínico
+                    Seguimiento de recuperación
                 </p>
             </div>
 
             <a
-                href="{% url 'consultas:detalle_consulta' consulta.id %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+                href="{% url 'usuarios:redireccion_por_rol' %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700"
             >
-                Volver a consulta
+                Volver a mi panel
             </a>
 
         </div>
     </header>
 
 
+    <!-- CONTENIDO -->
     <main class="mx-auto max-w-5xl px-6 py-10">
 
+        <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
-                <p class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+                <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
                     {{ message }}
-                </p>
+                </div>
             {% endfor %}
         {% endif %}
 
 
-        <!-- ENCABEZADO -->
-        <div class="flex flex-wrap items-center justify-between gap-4">
+        <!-- TÍTULO -->
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
 
             <div>
                 <p class="text-sm font-semibold text-emerald-600">
-                    Consulta #{{ consulta.id }}
+                    Mi recuperación
                 </p>
 
                 <h1 class="mt-2 text-3xl font-bold text-blue-950">
-                    Detalle del progreso
+                    Mi progreso
                 </h1>
 
                 <p class="mt-2 text-sm text-slate-500">
-                    Paciente:
-                    {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                    Avances registrados por tu fisioterapeuta
+                    durante la consulta #{{ consulta.id }}.
                 </p>
             </div>
 
-            {% if cita.estado == "EN_PROCESO" %}
-
-                <a
-                    href="{% url 'progreso:editar_progreso' consulta.id %}"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-sm font-semibold text-white"
-                >
-                    Editar progreso
-                </a>
-
-            {% else %}
-
-                <span class="rounded-xl bg-slate-200 px-5 py-3 text-sm font-semibold text-slate-500">
-                    Edición no disponible
-                </span>
-
-            {% endif %}
+            <span class="rounded-xl bg-blue-100 px-5 py-3 text-sm font-semibold text-blue-700">
+                Información de solo lectura
+            </span>
 
         </div>
 
 
         <!-- INFORMACIÓN GENERAL -->
-        <section class="mt-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
             <h2 class="mb-5 text-lg font-semibold text-blue-900">
-                Información general
+                Información de mi consulta
             </h2>
 
             <div class="grid gap-5 sm:grid-cols-2">
-
-                <div>
-                    <p class="text-sm text-slate-500">
-                        Fisioterapeuta
-                    </p>
-                    <p class="mt-1 font-semibold">
-                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
-                    </p>
-                </div>
 
                 <div>
                     <p class="text-sm text-slate-500">
@@ -111,26 +94,56 @@
 
                 <div>
                     <p class="text-sm text-slate-500">
-                        Estado de consulta
+                        Fisioterapeuta
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Servicio
+                    </p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.servicio.nombre }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-slate-500">
+                        Estado de la consulta
                     </p>
                     <p class="mt-1 font-semibold">
                         {{ cita.get_estado_display }}
                     </p>
                 </div>
 
-                <div>
-                    <p class="text-sm text-slate-500">
-                        Nivel de dolor
-                    </p>
-                    <p class="mt-1 text-2xl font-bold text-blue-900">
-                        {{ progreso.nivel_dolor|default_if_none:"Sin registrar" }}
-                        {% if progreso.nivel_dolor != None %}
-                            / 10
-                        {% endif %}
-                    </p>
-                </div>
-
             </div>
+        </section>
+
+
+        <!-- NIVEL DE DOLOR -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Nivel de dolor registrado
+            </h2>
+
+            <p class="mt-4 text-4xl font-bold text-blue-900">
+                {% if progreso.nivel_dolor != None %}
+                    {{ progreso.nivel_dolor }}
+                    <span class="text-lg text-slate-500">/ 10</span>
+                {% else %}
+                    <span class="text-lg text-slate-500">
+                        Sin registrar
+                    </span>
+                {% endif %}
+            </p>
+
+            <p class="mt-2 text-sm text-slate-500">
+                Escala de 0 (sin dolor) a 10 (dolor máximo).
+            </p>
 
         </section>
 
@@ -143,17 +156,18 @@
             </h2>
 
             <div class="mt-4 rounded-xl bg-blue-50 p-4 text-sm leading-7">
+
                 {% if progreso.movilidad %}
                     {{ progreso.movilidad|linebreaksbr }}
                 {% else %}
                     Sin información registrada.
                 {% endif %}
-            </div>
 
+            </div>
         </section>
 
 
-        <!-- EJERCICIOS -->
+        <!-- EJERCICIOS REALIZADOS -->
         <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
             <h2 class="text-lg font-semibold text-blue-900">
@@ -161,13 +175,14 @@
             </h2>
 
             <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+
                 {% if progreso.ejercicios_realizados %}
                     {{ progreso.ejercicios_realizados|linebreaksbr }}
                 {% else %}
                     Sin ejercicios registrados.
                 {% endif %}
-            </div>
 
+            </div>
         </section>
 
 
@@ -175,17 +190,18 @@
         <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
 
             <h2 class="text-lg font-semibold text-emerald-700">
-                Avances observados
+                Mis avances
             </h2>
 
             <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+
                 {% if progreso.avances %}
                     {{ progreso.avances|linebreaksbr }}
                 {% else %}
-                    Todavía no se registran avances.
+                    Todavía no hay avances registrados.
                 {% endif %}
-            </div>
 
+            </div>
         </section>
 
 
@@ -197,13 +213,14 @@
             </h2>
 
             <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+
                 {% if progreso.observaciones %}
                     {{ progreso.observaciones|linebreaksbr }}
                 {% else %}
-                    Sin observaciones.
+                    Sin observaciones registradas.
                 {% endif %}
-            </div>
 
+            </div>
         </section>
 
 
@@ -211,18 +228,45 @@
         <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
 
             <h2 class="text-lg font-semibold text-emerald-700">
-                Recomendaciones
+                Recomendaciones de mi fisioterapeuta
             </h2>
 
             <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+
                 {% if progreso.recomendaciones %}
                     {{ progreso.recomendaciones|linebreaksbr }}
                 {% else %}
                     Sin recomendaciones registradas.
                 {% endif %}
+
             </div>
+        </section>
+
+
+        <!-- AVISO -->
+        <section class="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-5">
+
+            <p class="text-sm leading-6 text-blue-800">
+                Esta información fue registrada por el personal
+                clínico. Si tienes dudas sobre tu recuperación,
+                ejercicios o recomendaciones, consulta directamente
+                con tu fisioterapeuta.
+            </p>
 
         </section>
+
+
+        <!-- REGRESAR -->
+        <div class="mt-8 flex justify-end">
+
+            <a
+                href="{% url 'usuarios:redireccion_por_rol' %}"
+                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+            >
+                Regresar a mi panel
+            </a>
+
+        </div>
 
     </main>
 

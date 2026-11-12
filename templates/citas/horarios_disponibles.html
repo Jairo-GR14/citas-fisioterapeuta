@@ -1,152 +1,229 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horarios Disponibles</title>
+
+    <title>Horarios disponibles</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-blue-100 bg-white">
+    <!-- ENCABEZADO -->
+    <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
-        <div>
-            <h1 class="font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+            <div>
+                <h1 class="font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
 
-            <p class="text-xs text-slate-400">
-                Disponibilidad
-            </p>
+                <p class="text-xs text-slate-400">
+                    Disponibilidad de citas
+                </p>
+            </div>
+
+            <a
+                href="{% url 'citas:agendar_cita' %}"
+                class="text-sm font-semibold text-blue-700"
+            >
+                Volver a agendar
+            </a>
+
         </div>
 
-        <a
-            href="agendar_cita.html"
-            class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-        >
-            ← Regresar
-        </a>
-
-    </div>
-
-</header>
+    </header>
 
 
-<main class="mx-auto max-w-5xl px-6 py-10">
+    <!-- CONTENIDO -->
+    <main class="mx-auto max-w-5xl px-6 py-10">
 
-    <section class="mb-8">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Disponibilidad
-        </p>
-
-        <h2 class="mt-2 text-3xl font-bold text-blue-950">
-            Selecciona un horario
+        <h2 class="mb-2 text-3xl font-bold text-blue-950">
+            Consultar horarios
         </h2>
 
-        <p class="mt-2 text-sm text-slate-500">
-            {{ fisioterapeuta.nombre }} {{ fisioterapeuta.apellidos }}
-            · {{ fecha }}
+        <p class="mb-7 text-sm text-slate-500">
+            Selecciona un fisioterapeuta y una fecha
+            para revisar bloques de 60 minutos.
         </p>
 
-    </section>
 
+        <!-- FILTROS DE BÚSQUEDA -->
+        <form
+            method="get"
+            action="{% url 'citas:horarios_disponibles' %}"
+            class="grid gap-4 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+        >
 
-    <form method="POST" action="#">
+            <div>
+                <label
+                    for="fisioterapeuta"
+                    class="mb-2 block text-sm font-semibold"
+                >
+                    Fisioterapeuta
+                </label>
 
-        {% csrf_token %}
+                <select
+                    id="fisioterapeuta"
+                    name="fisioterapeuta"
+                    required
+                    class="w-full rounded-xl border border-slate-300 p-3 text-sm"
+                >
 
-        <div class="grid gap-6 lg:grid-cols-[1fr_300px]">
+                    <option value="">
+                        Seleccionar
+                    </option>
 
-            <!-- HORARIOS -->
-            <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+                    {% for profesional in fisioterapeutas %}
 
-                <h3 class="mb-5 font-semibold text-blue-900">
-                    Horarios disponibles
-                </h3>
-
-
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-
-                    {% for horario in horarios %}
-
-                    {% if horario.disponible %}
-
-                    <label class="cursor-pointer">
-
-                        <input
-                            type="radio"
-                            name="horario"
-                            value="{{ horario.hora }}"
-                            required
-                            class="peer sr-only"
+                        <option
+                            value="{{ profesional.pk }}"
+                            {% if fisioterapeuta_id == profesional.pk|stringformat:'s' %}selected{% endif %}
                         >
-
-                        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-center text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 peer-checked:border-blue-700 peer-checked:bg-blue-700 peer-checked:text-white">
-                            {{ horario.hora }}
-                        </div>
-
-                    </label>
-
-                    {% else %}
-
-                    <div class="cursor-not-allowed rounded-xl bg-slate-100 px-4 py-4 text-center text-sm text-slate-300">
-                        {{ horario.hora }}
-                    </div>
-
-                    {% endif %}
-
-                    {% empty %}
-
-                    <div class="col-span-full rounded-xl bg-slate-50 p-6 text-center text-sm text-slate-500">
-                        No hay horarios disponibles para esta fecha.
-                    </div>
+                            {{ profesional.usuario.usuario.get_full_name|default:profesional.usuario.usuario.username }}
+                        </option>
 
                     {% endfor %}
 
-                </div>
+                </select>
+            </div>
+
+
+            <div>
+                <label
+                    for="fecha"
+                    class="mb-2 block text-sm font-semibold"
+                >
+                    Fecha
+                </label>
+
+                <input
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    value="{{ fecha }}"
+                    required
+                    class="w-full rounded-xl border border-slate-300 p-3 text-sm"
+                >
+            </div>
+
+
+            <button
+                type="submit"
+                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white"
+            >
+                Consultar
+            </button>
+
+        </form>
+
+
+        <!-- ERRORES -->
+        {% if error %}
+
+            <p class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                {{ error }}
+            </p>
+
+        {% endif %}
+
+
+        <!-- RESULTADOS -->
+        {% if fisioterapeuta and not error %}
+
+            <section class="mt-7 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+                <h3 class="mb-2 text-xl font-semibold text-blue-900">
+                    {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
+                </h3>
+
+                <p class="mb-5 text-sm text-slate-500">
+                    {{ fecha }} · Selecciona un horario disponible
+                </p>
+
+
+                <!-- ENVIAR SELECCIÓN A AGENDAR CITA -->
+                <form
+                    method="get"
+                    action="{% url 'citas:agendar_cita' %}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="fisioterapeuta"
+                        value="{{ fisioterapeuta.pk }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="fecha"
+                        value="{{ fecha }}"
+                    >
+
+
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+
+                        {% for horario in horarios %}
+
+                            {% if horario.disponible %}
+
+                                <label class="cursor-pointer">
+
+                                    <input
+                                        class="peer sr-only"
+                                        type="radio"
+                                        name="hora"
+                                        value="{{ horario.hora }}"
+                                        required
+                                    >
+
+                                    <span class="block rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-center text-sm font-semibold text-emerald-700 peer-checked:bg-blue-700 peer-checked:text-white">
+                                        {{ horario.hora }}
+                                    </span>
+
+                                </label>
+
+                            {% else %}
+
+                                <span class="block rounded-xl bg-slate-100 p-4 text-center text-sm text-slate-400">
+                                    {{ horario.hora }} (ocupado)
+                                </span>
+
+                            {% endif %}
+
+                        {% empty %}
+
+                            <p class="col-span-full rounded-xl bg-slate-50 p-5 text-sm text-slate-500">
+                                No hay bloques disponibles en esa jornada.
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    {% if hay_disponibles %}
+
+                        <button
+                            type="submit"
+                            class="mt-6 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white"
+                        >
+                            Continuar a la reservación
+                        </button>
+
+                    {% endif %}
+
+                </form>
 
             </section>
 
+        {% endif %}
 
-            <!-- RESUMEN -->
-            <aside class="rounded-2xl bg-gradient-to-br from-blue-700 to-emerald-700 p-6 text-white">
-
-                <p class="text-xs uppercase tracking-widest text-blue-100">
-                    Información
-                </p>
-
-                <h3 class="mt-5 text-xl font-semibold">
-                    Selecciona tu horario
-                </h3>
-
-                <p class="mt-4 text-sm text-blue-50">
-                    {{ fecha }}
-                </p>
-
-                <p class="mt-1 text-sm text-blue-100">
-                    {{ fisioterapeuta.nombre }}
-                    {{ fisioterapeuta.apellidos }}
-                </p>
-
-
-                <button
-                    type="submit"
-                    class="mt-8 w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-blue-800 transition hover:bg-blue-50"
-                >
-                    Continuar
-                </button>
-
-            </aside>
-
-        </div>
-
-    </form>
-
-</main>
+    </main>
 
 </body>
 </html>

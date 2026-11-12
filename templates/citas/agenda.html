@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar cita - Clínica de Fisioterapia</title>
+    <title>Agenda de citas - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -12,415 +12,178 @@
 
     <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
-        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
             <div>
-                <h1 class="font-semibold text-blue-900">
+                <h1 class="text-xl font-bold text-blue-900">
                     Clínica de Fisioterapia
                 </h1>
-                <p class="text-xs text-slate-400">
-                    Gestión de citas
+                <p class="text-sm text-slate-500">
+                    Agenda de citas
                 </p>
             </div>
 
-            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" %}
+            {% if puede_agendar %}
                 <a
-                    href="{% url 'citas:agenda' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                    href="{% url 'citas:agendar_cita' %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
                 >
-                    Volver a la agenda
-                </a>
-            {% else %}
-                <a
-                    href="{% url 'citas:mis_citas' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
-                    Mis citas
+                    + Agendar cita
                 </a>
             {% endif %}
 
         </div>
     </header>
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="mx-auto max-w-6xl px-6 py-10">
 
-    <!-- CONTENIDO -->
-    <main class="mx-auto max-w-4xl px-6 py-10">
-
-        <section class="mb-8">
+        <div class="mb-8">
             <p class="text-sm font-semibold text-emerald-600">
-                Reservación
+                Gestión de citas
             </p>
 
             <h1 class="mt-2 text-3xl font-bold text-blue-950">
-                Agendar cita
+                Agenda de citas
             </h1>
 
             <p class="mt-2 text-sm text-slate-500">
-                Completa la información para programar una sesión
-                de fisioterapia.
+                Consulta las citas programadas y el historial
+                de atención disponible para tu usuario.
             </p>
-        </section>
-
+        </div>
 
         <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
-                <div class="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+                <div class="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
 
+        <!-- LISTADO -->
+        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-        <!-- CONSULTAR HORARIOS -->
-        <section class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Citas registradas
+            </h2>
 
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="space-y-4">
 
-                <div>
-                    <h2 class="font-semibold text-emerald-800">
-                        ¿No sabes qué horario elegir?
-                    </h2>
+                {% for cita in citas %}
 
-                    <p class="mt-1 text-sm text-emerald-700">
-                        Consulta las horas disponibles antes
-                        de registrar tu cita.
-                    </p>
-                </div>
+                    <article class="rounded-xl border border-slate-200 p-5">
 
-                <a
-                    href="{% url 'citas:horarios_disponibles' %}"
-                    class="rounded-xl bg-emerald-700 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-800"
-                >
-                    Consultar horarios disponibles
-                </a>
+                        <div class="flex flex-col gap-4 md:flex-row md:items-center">
+
+                            <!-- INFORMACIÓN -->
+                            <div class="flex-1">
+
+                                <h3 class="font-semibold text-blue-900">
+                                    {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
+                                </h3>
+
+                                <p class="mt-2 text-sm text-slate-600">
+                                    <strong>Fecha:</strong>
+                                    {{ cita.fecha|date:"d/m/Y" }}
+                                </p>
+
+                                <p class="mt-1 text-sm text-slate-600">
+                                    <strong>Hora:</strong>
+                                    {{ cita.hora|time:"H:i" }}
+                                </p>
+
+                                <p class="mt-1 text-sm text-slate-600">
+                                    <strong>Servicio:</strong>
+                                    {{ cita.servicio.nombre }}
+                                </p>
+
+                                <p class="mt-1 text-sm text-slate-600">
+                                    <strong>Fisioterapeuta:</strong>
+                                    {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                                </p>
+
+                            </div>
+
+                            <!-- ESTADO -->
+                            <div>
+                                {% if cita.estado == "PROGRAMADA" %}
+                                    <span class="rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
+                                        Programada
+                                    </span>
+
+                                {% elif cita.estado == "CONFIRMADA" %}
+                                    <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+                                        Confirmada
+                                    </span>
+
+                                {% elif cita.estado == "EN_PROCESO" %}
+                                    <span class="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+                                        En proceso
+                                    </span>
+
+                                {% elif cita.estado == "FINALIZADA" %}
+                                    <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                                        Finalizada
+                                    </span>
+
+                                {% elif cita.estado == "CANCELADA" %}
+                                    <span class="rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
+                                        Cancelada
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- ACCIÓN -->
+                            <a
+                                href="{% url 'citas:detalle_cita' cita.pk %}"
+                                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-center text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                            >
+                                Ver detalle
+                            </a>
+
+                        </div>
+                    </article>
+
+                {% empty %}
+
+                    <div class="rounded-xl bg-slate-50 p-10 text-center">
+
+                        <h3 class="font-semibold text-blue-900">
+                            No hay citas registradas
+                        </h3>
+
+                        <p class="mt-2 text-sm text-slate-500">
+                            Las citas que tengas permiso de consultar
+                            aparecerán aquí.
+                        </p>
+
+                        {% if puede_agendar %}
+                            <a
+                                href="{% url 'citas:agendar_cita' %}"
+                                class="mt-5 inline-block rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white"
+                            >
+                                Agendar primera cita
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
 
             </div>
 
         </section>
 
-
-        <!-- FORMULARIO -->
-        <form
-            method="POST"
-            action="{% url 'citas:agendar_cita' %}"
-            class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
-        >
-
-            {% csrf_token %}
-
-            <div class="p-6">
-
-                <!-- ERRORES GENERALES -->
-                {% if form.non_field_errors %}
-                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
-
-
-                <div class="grid gap-5 sm:grid-cols-2">
-
-                    <!-- PACIENTE -->
-                    {% if form.paciente.is_hidden %}
-
-                        {{ form.paciente }}
-
-                        {% if form.paciente.errors %}
-                            <div class="sm:col-span-2 text-sm text-red-600">
-                                {{ form.paciente.errors }}
-                            </div>
-                        {% endif %}
-
-                    {% else %}
-
-                        <div class="sm:col-span-2">
-
-                            <label for="paciente" class="mb-2 block text-sm font-medium text-slate-700">
-                                Paciente
-                            </label>
-
-                            <select
-                                id="paciente"
-                                name="paciente"
-                                required
-                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                            >
-
-                                <option value="">
-                                    Selecciona un paciente
-                                </option>
-
-                                {% for paciente in form.paciente.field.queryset %}
-                                    <option
-                                        value="{{ paciente.pk }}"
-                                        {% if form.paciente.value|stringformat:"s" == paciente.pk|stringformat:"s" %}selected{% endif %}
-                                    >
-                                        {{ paciente.usuario.usuario.get_full_name|default:paciente.usuario.usuario.username }}
-                                    </option>
-                                {% endfor %}
-
-                            </select>
-
-                            {% if form.paciente.errors %}
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ form.paciente.errors }}
-                                </p>
-                            {% endif %}
-
-                        </div>
-
-                    {% endif %}
-
-
-                    <!-- SERVICIO -->
-                    <div>
-
-                        <label for="servicio" class="mb-2 block text-sm font-medium text-slate-700">
-                            Servicio
-                        </label>
-
-                        <select
-                            id="servicio"
-                            name="servicio"
-                            required
-                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >
-
-                            <option value="">
-                                Selecciona un servicio
-                            </option>
-
-                            {% for servicio in form.servicio.field.queryset %}
-                                <option
-                                    value="{{ servicio.pk }}"
-                                    {% if form.servicio.value|stringformat:"s" == servicio.pk|stringformat:"s" %}selected{% endif %}
-                                >
-                                    {{ servicio.nombre }} - ${{ servicio.precio_base }}
-                                </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay servicios disponibles
-                                </option>
-                            {% endfor %}
-
-                        </select>
-
-                        {% if form.servicio.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.servicio.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- FISIOTERAPEUTA -->
-                    <div>
-
-                        <label for="fisioterapeuta" class="mb-2 block text-sm font-medium text-slate-700">
-                            Fisioterapeuta
-                        </label>
-
-                        <select
-                            id="fisioterapeuta"
-                            name="fisioterapeuta"
-                            required
-                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >
-
-                            <option value="">
-                                Selecciona un fisioterapeuta
-                            </option>
-
-                            {% for fisioterapeuta in form.fisioterapeuta.field.queryset %}
-                                <option
-                                    value="{{ fisioterapeuta.pk }}"
-                                    {% if form.fisioterapeuta.value|stringformat:"s" == fisioterapeuta.pk|stringformat:"s" %}selected{% endif %}
-                                >
-                                    {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
-                                </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay fisioterapeutas disponibles
-                                </option>
-                            {% endfor %}
-
-                        </select>
-
-                        {% if form.fisioterapeuta.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.fisioterapeuta.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- FECHA -->
-                    <div>
-
-                        <label for="fecha" class="mb-2 block text-sm font-medium text-slate-700">
-                            Fecha
-                        </label>
-
-                        <input
-                            type="date"
-                            id="fecha"
-                            name="fecha"
-                            value="{{ form.fecha.value|default_if_none:'' }}"
-                            required
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >
-
-                        {% if form.fecha.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.fecha.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- HORA -->
-                    <div>
-
-                        <label for="hora" class="mb-2 block text-sm font-medium text-slate-700">
-                            Hora
-                        </label>
-
-                        <input
-                            type="time"
-                            id="hora"
-                            name="hora"
-                            value="{{ form.hora.value|default_if_none:'' }}"
-                            required
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >
-
-                        {% if form.hora.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.hora.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- MOTIVO -->
-                    <div class="sm:col-span-2">
-
-                        <label for="motivo" class="mb-2 block text-sm font-medium text-slate-700">
-                            Motivo de consulta
-                        </label>
-
-                        <select
-                            id="motivo"
-                            name="motivo"
-                            required
-                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >
-
-                            <option value="">
-                                Selecciona un motivo
-                            </option>
-
-                            {% for motivo in form.motivo.field.queryset %}
-                                <option
-                                    value="{{ motivo.pk }}"
-                                    {% if form.motivo.value|stringformat:"s" == motivo.pk|stringformat:"s" %}selected{% endif %}
-                                >
-                                    {{ motivo.nombre }}
-                                </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay motivos disponibles
-                                </option>
-                            {% endfor %}
-
-                        </select>
-
-                        {% if form.motivo.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.motivo.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- OBSERVACIONES -->
-                    <div class="sm:col-span-2">
-
-                        <label for="observaciones" class="mb-2 block text-sm font-medium text-slate-700">
-                            Información adicional
-                        </label>
-
-                        <textarea
-                            id="observaciones"
-                            name="observaciones"
-                            rows="4"
-                            placeholder="Agrega información que consideres importante..."
-                            class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
-                        >{{ form.observaciones.value|default_if_none:'' }}</textarea>
-
-                        {% if form.observaciones.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.observaciones.errors }}
-                            </p>
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- BOTONES -->
-            <div class="border-t border-slate-100 bg-slate-50 px-6 py-5">
-
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                    <a
-                        href="{% url 'citas:cita_emergencia' %}"
-                        class="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
-                    >
-                        ¿Necesitas atención prioritaria?
-                    </a>
-
-                    <div class="flex flex-col gap-3 sm:flex-row">
-
-                        {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" %}
-                            <a
-                                href="{% url 'citas:agenda' %}"
-                                class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-medium text-slate-700"
-                            >
-                                Cancelar
-                            </a>
-                        {% else %}
-                            <a
-                                href="{% url 'citas:mis_citas' %}"
-                                class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-medium text-slate-700"
-                            >
-                                Cancelar
-                            </a>
-                        {% endif %}
-
-                        <button
-                            type="submit"
-                            class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-                        >
-                            Agendar cita
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </form>
+        <div class="mt-8 text-right">
+            <a
+                href="{% url 'usuarios:redireccion_por_rol' %}"
+                class="text-sm font-semibold text-blue-700 hover:text-blue-900"
+            >
+                Volver al panel
+            </a>
+        </div>
 
     </main>
 

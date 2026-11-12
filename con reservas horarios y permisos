@@ -1,0 +1,7 @@
+ citas/forms.py                            |  96 [32m++[m[31m--[m
+ citas/urls.py                             |   2 [32m+[m[31m-[m
+ citas/views.py                            | 887 [32m+++++++++++++++++++++++++++++[m[31m-[m
+ templates/citas/agenda.html               | 469 [32m++++++++++++[m[31m----[m
+ templates/citas/horarios_disponibles.html | 257 [32m++++++[m[31m---[m
+ templates/citas/mis_citas.html            | 437 [32m++++++++[m[31m-------[m
+ 6 files changed, 1682 insertions(+), 466 deletions(-)

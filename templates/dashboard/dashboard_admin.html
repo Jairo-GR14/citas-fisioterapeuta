@@ -1,477 +1,282 @@
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Panel de Administración</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<body class="bg-slate-50 text-slate-800">
-
-    <!-- Barra superior -->
     <header class="border-b border-blue-100 bg-white">
 
-        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
 
             <div>
-
                 <h1 class="text-xl font-semibold text-blue-900">
                     Clínica de Fisioterapia
                 </h1>
-
                 <p class="text-sm text-slate-500">
                     Panel de Administración
                 </p>
-
             </div>
 
-
-            <div class="flex flex-wrap items-center gap-3">
-
-                <!-- Perfil -->
-                <a
-                    href="{% url 'usuarios:perfil' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
+            <div class="flex flex-wrap gap-3">
+                <a href="{% url 'usuarios:perfil' %}"
+                   class="rounded-xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
                     Mi perfil
                 </a>
 
-
-                <!-- Administrar usuarios -->
-                <a
-                    href="{% url 'administracion:lista_usuarios' %}"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-                >
+                <a href="{% url 'administracion:lista_usuarios' %}"
+                   class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white">
                     Administrar usuarios
                 </a>
 
-
-                <!-- Cerrar sesión -->
-                <a
-                    href="{% url 'usuarios:logout' %}"
-                    class="rounded-xl bg-red-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-800"
-                >
+                <a href="{% url 'usuarios:logout' %}"
+                   class="rounded-xl bg-red-700 px-4 py-3 text-sm font-semibold text-white">
                     Cerrar sesión
                 </a>
-
             </div>
 
         </div>
-
     </header>
 
+    <main class="mx-auto max-w-7xl px-6 py-10">
 
-    <!-- Contenido principal -->
-    <main class="mx-auto max-w-7xl px-6 py-8">
-
-
-        <!-- Mensajes -->
         {% if messages %}
-
             <div class="mb-6 space-y-3">
-
                 {% for message in messages %}
-
-                    <div
-                        class="
-                            rounded-xl border px-4 py-3 text-sm
-                            {% if message.tags == 'error' %}
-                                border-red-200 bg-red-50 text-red-700
-                            {% else %}
-                                border-emerald-200 bg-emerald-50 text-emerald-700
-                            {% endif %}
-                        "
-                    >
+                    <div class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm">
                         {{ message }}
                     </div>
-
                 {% endfor %}
-
             </div>
-
         {% endif %}
 
-
-        <!-- Bienvenida -->
         <div class="mb-8">
-
             <p class="text-sm font-semibold text-emerald-600">
                 Administración general
             </p>
 
-            <h1 class="text-3xl font-bold text-blue-950">
+            <h2 class="mt-1 text-3xl font-bold text-blue-950">
+                Hola, {{ user.first_name|default:user.username }}
+            </h2>
 
-                {% if user.first_name %}
-                    Hola, {{ user.first_name }}
-                {% else %}
-                    Hola, {{ user.username }}
-                {% endif %}
-
-            </h1>
-
-            <p class="mt-2 text-sm text-slate-500">
-                Consulta el estado general de la clínica y administra los principales módulos del sistema.
+            <p class="mt-2 text-slate-500">
+                Consulta el estado general de la clínica y administra sus módulos.
             </p>
-
         </div>
 
-
-        <!-- Tarjetas de resumen -->
+        <!-- INDICADORES -->
         <section class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-            <!-- Pacientes -->
             <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-                <p class="text-sm font-medium text-slate-500">
+                <p class="text-sm text-slate-500">
                     Pacientes registrados
                 </p>
-
-                <p class="mt-2 text-3xl font-bold text-blue-950">
+                <p class="mt-3 text-3xl font-bold text-blue-950">
                     {{ total_pacientes|default:"0" }}
                 </p>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Pacientes dentro del sistema
-                </p>
-
             </article>
 
-
-            <!-- Fisioterapeutas -->
             <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-                <p class="text-sm font-medium text-slate-500">
+                <p class="text-sm text-slate-500">
                     Fisioterapeutas
                 </p>
-
-                <p class="mt-2 text-3xl font-bold text-emerald-700">
+                <p class="mt-3 text-3xl font-bold text-emerald-700">
                     {{ total_fisioterapeutas|default:"0" }}
                 </p>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Profesionales registrados
-                </p>
-
             </article>
 
-
-            <!-- Citas de hoy -->
             <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-                <p class="text-sm font-medium text-slate-500">
+                <p class="text-sm text-slate-500">
                     Citas de hoy
                 </p>
-
-                <p class="mt-2 text-3xl font-bold text-blue-950">
+                <p class="mt-3 text-3xl font-bold text-blue-950">
                     {{ citas_hoy|default:"0" }}
                 </p>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Sesiones programadas
-                </p>
-
             </article>
 
-
-            <!-- Ingreso estimado -->
             <article class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
-
-                <p class="text-sm font-medium text-slate-500">
+                <p class="text-sm text-slate-500">
                     Ingreso estimado
                 </p>
-
-                <p class="mt-2 text-3xl font-bold text-emerald-700">
-                    ${{ ingreso_estimado|default:"0" }}
+                <p class="mt-3 text-3xl font-bold text-emerald-700">
+                    ${{ ingreso_estimado|floatformat:2 }}
                 </p>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Según las citas registradas
+                <p class="mt-2 text-xs text-slate-500">
+                    Proyección de citas futuras. No son pagos cobrados.
                 </p>
-
             </article>
 
         </section>
 
-
-        <!-- Resumen de citas -->
+        <!-- CITAS RECIENTES -->
         <section class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
-            <div class="border-b border-slate-100 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-6">
 
-                <p class="text-sm font-semibold text-emerald-600">
-                    Actividad reciente
-                </p>
+                <div>
+                    <p class="text-sm font-semibold text-emerald-600">
+                        Actividad reciente
+                    </p>
+                    <h3 class="mt-1 text-xl font-semibold text-blue-900">
+                        Citas recientes
+                    </h3>
+                </div>
 
-                <h2 class="text-xl font-semibold text-blue-900">
-                    Citas recientes
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Consulta las citas registradas recientemente en el sistema.
-                </p>
+                <a href="{% url 'citas:agenda' %}"
+                   class="rounded-xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
+                    Ver agenda
+                </a>
 
             </div>
 
-
             <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
 
-                <table class="w-full text-left text-sm">
-
-                    <thead class="border-b border-slate-100 bg-slate-50 text-slate-500">
-
+                    <thead class="bg-slate-50 text-slate-600">
                         <tr>
-
-                            <th class="px-6 py-4 font-medium">
-                                Fecha
-                            </th>
-
-                            <th class="px-6 py-4 font-medium">
-                                Paciente
-                            </th>
-
-                            <th class="px-6 py-4 font-medium">
-                                Fisioterapeuta
-                            </th>
-
-                            <th class="px-6 py-4 font-medium">
-                                Estado
-                            </th>
-
-                            <th class="px-6 py-4 font-medium">
-                                Acción
-                            </th>
-
+                            <th class="px-5 py-4">Fecha</th>
+                            <th class="px-5 py-4">Paciente</th>
+                            <th class="px-5 py-4">Fisioterapeuta</th>
+                            <th class="px-5 py-4">Estado</th>
+                            <th class="px-5 py-4">Acción</th>
                         </tr>
-
                     </thead>
 
-
                     <tbody class="divide-y divide-slate-100">
-
                         {% for cita in citas %}
-
                             <tr class="hover:bg-slate-50">
 
-                                <td class="px-6 py-4 font-medium text-slate-700">
-                                    {{ cita.fecha }}
+                                <td class="px-5 py-4">
+                                    {{ cita.fecha|date:"d/m/Y" }}
+                                    {{ cita.hora|time:"H:i" }}
                                 </td>
 
-                                <td class="px-6 py-4">
+                                <td class="px-5 py-4">
                                     {{ cita.paciente }}
                                 </td>
 
-                                <td class="px-6 py-4">
+                                <td class="px-5 py-4">
                                     {{ cita.fisioterapeuta }}
                                 </td>
 
-                                <td class="px-6 py-4">
-
-                                    <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-                                        {{ cita.get_estado_display|default:cita.estado }}
+                                <td class="px-5 py-4">
+                                    <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                                        {{ cita.get_estado_display }}
                                     </span>
-
                                 </td>
 
-                                <td class="px-6 py-4">
-
-                                    <!--
-                                    Esta URL se conectará cuando el módulo
-                                    de citas esté terminado.
-                                    -->
-
-                                    <span class="text-sm text-slate-400">
-                                        Pendiente
-                                    </span>
-
+                                <td class="px-5 py-4">
+                                    <a href="{% url 'citas:detalle_cita' cita.id %}"
+                                       class="font-semibold text-blue-700 hover:underline">
+                                        Ver detalle
+                                    </a>
                                 </td>
 
                             </tr>
 
                         {% empty %}
-
                             <tr>
-
-                                <td
-                                    colspan="5"
-                                    class="px-6 py-8 text-center text-slate-500"
-                                >
+                                <td colspan="5"
+                                    class="px-5 py-10 text-center text-slate-500">
                                     No hay citas registradas.
                                 </td>
-
                             </tr>
-
                         {% endfor %}
-
                     </tbody>
 
                 </table>
-
             </div>
-
         </section>
 
-
-        <!-- Administración -->
-        <section class="mt-8">
+        <!-- ACCESOS RÁPIDOS -->
+        <section class="mt-10">
 
             <div class="mb-5">
-
                 <p class="text-sm font-semibold text-emerald-600">
                     Administración
                 </p>
 
-                <h2 class="text-xl font-semibold text-blue-900">
+                <h3 class="mt-1 text-xl font-semibold text-blue-900">
                     Gestión del sistema
-                </h2>
-
+                </h3>
             </div>
-
 
             <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 
-
-                <!-- Usuarios -->
-                <a
-                    href="{% url 'administracion:lista_usuarios' %}"
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm transition hover:bg-blue-50"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
+                <a href="{% url 'administracion:lista_usuarios' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50">
+                    <h4 class="font-semibold text-blue-900">
                         Usuarios y permisos
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Administra usuarios, roles y permisos del sistema.
+                        Consulta las cuentas y sus roles.
                     </p>
-
                 </a>
 
-
-                <!-- Pacientes -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-emerald-700">
+                <a href="{% url 'pacientes:lista_pacientes' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50">
+                    <h4 class="font-semibold text-blue-900">
                         Pacientes
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Consulta y administra los pacientes registrados.
+                        Administra los pacientes registrados.
                     </p>
+                </a>
 
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
-
-
-                <!-- Fisioterapeutas -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
+                <a href="{% url 'fisioterapeutas:lista_fisioterapeutas' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50">
+                    <h4 class="font-semibold text-blue-900">
                         Fisioterapeutas
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Gestiona los fisioterapeutas de la clínica.
+                        Consulta profesionales y horarios.
                     </p>
+                </a>
 
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
-
-
-                <!-- Citas -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
+                <a href="{% url 'citas:agenda' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50">
+                    <h4 class="font-semibold text-blue-900">
                         Citas
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Consulta y administra las citas del sistema.
+                        Consulta la agenda de la clínica.
                     </p>
+                </a>
 
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
-
-
-                <!-- Precios -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-emerald-700">
+                <a href="{% url 'precios:lista_precios' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm hover:bg-blue-50">
+                    <h4 class="font-semibold text-blue-900">
                         Precios y servicios
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Gestiona los precios de los servicios de fisioterapia.
+                        Consulta los servicios disponibles.
                     </p>
+                </a>
 
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
-
-
-                <!-- Reportes -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
+                <a href="{% url 'reportes:inicio' %}"
+                   class="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm hover:bg-emerald-50">
+                    <h4 class="font-semibold text-emerald-700">
                         Reportes
-                    </h3>
-
+                    </h4>
                     <p class="mt-2 text-sm text-slate-500">
-                        Consulta reportes y estadísticas generales de la clínica.
+                        Consulta estadísticas de citas, pacientes,
+                        fisioterapeutas e ingresos.
                     </p>
-
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
+                </a>
 
             </div>
-
         </section>
 
     </main>
 
-
-    <!-- Pie de página -->
-    <footer class="mt-8 border-t border-blue-100 bg-white">
-
-        <div class="mx-auto max-w-7xl px-6 py-4 text-center">
-
-            <p class="text-sm text-slate-500">
-                © 2026 Clínica de Fisioterapia
-            </p>
-
-        </div>
-
+    <footer class="mt-10 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+        © 2026 Clínica de Fisioterapia
     </footer>
 
 </body>
-
 </html>

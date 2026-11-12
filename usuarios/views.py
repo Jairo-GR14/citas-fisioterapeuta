@@ -19,6 +19,16 @@ from .decorators import rol_requerido
 from .models import PerfilUsuario
 
 
+from decimal import Decimal
+
+from django.db.models import Q, Sum
+from django.utils import timezone
+
+from citas.models import Cita
+from fisioterapeutas.models import Fisioterapeuta
+
+
+
 # =========================================================
 # INICIO DE SESIÓN
 # =========================================================
@@ -430,6 +440,32 @@ def cambiar_contrasena(request):
     )
 
 
+
+# =========================================================
+# FUNCIÓN AUXILIAR: CITAS FUTURAS
+# =========================================================
+
+def obtener_citas_futuras(citas):
+    """
+    Devuelve citas programadas o confirmadas
+    que todavía no han comenzado.
+    """
+    ahora = timezone.localtime()
+
+    return citas.filter(
+        estado__in=[
+            Cita.Estado.PROGRAMADA,
+            Cita.Estado.CONFIRMADA,
+        ]
+    ).filter(
+        Q(fecha__gt=ahora.date())
+        | Q(
+            fecha=ahora.date(),
+            hora__gte=ahora.time(),
+        )
+    )
+
+
 # =========================================================
 # DASHBOARD ADMINISTRADOR
 # =========================================================
@@ -437,9 +473,51 @@ def cambiar_contrasena(request):
 @login_required
 @rol_requerido(["ADMINISTRADOR"])
 def dashboard_administrador(request):
+
+    hoy = timezone.localdate()
+
+    total_pacientes = Paciente.objects.count()
+
+    total_fisioterapeutas = (
+        Fisioterapeuta.objects.count()
+    )
+
+    citas_hoy = Cita.objects.filter(
+        fecha=hoy
+    ).exclude(
+        estado=Cita.Estado.CANCELADA
+    ).count()
+
+    # Proyección de ingresos por citas pendientes.
+    # No representa pagos recibidos.
+    ingreso_estimado = obtener_citas_futuras(
+        Cita.objects.all()
+    ).aggregate(
+        total=Sum("costo_estimado")
+    )["total"] or Decimal("0.00")
+
+    citas = Cita.objects.select_related(
+        "paciente__usuario__usuario",
+        "fisioterapeuta__usuario__usuario",
+        "servicio",
+        "motivo",
+    ).order_by(
+        "-fecha_creacion",
+        "-pk",
+    )[:10]
+
+    contexto = {
+        "total_pacientes": total_pacientes,
+        "total_fisioterapeutas": total_fisioterapeutas,
+        "citas_hoy": citas_hoy,
+        "ingreso_estimado": ingreso_estimado,
+        "citas": citas,
+    }
+
     return render(
         request,
         "dashboard/dashboard_admin.html",
+        contexto,
     )
 
 
@@ -450,9 +528,45 @@ def dashboard_administrador(request):
 @login_required
 @rol_requerido(["RECEPCIONISTA"])
 def dashboard_recepcionista(request):
+
+    hoy = timezone.localdate()
+
+    citas_hoy = Cita.objects.filter(
+        fecha=hoy
+    ).exclude(
+        estado=Cita.Estado.CANCELADA
+    ).count()
+
+    total_pacientes = Paciente.objects.count()
+
+    citas_pendientes = obtener_citas_futuras(
+        Cita.objects.all()
+    ).count()
+
+    citas = Cita.objects.filter(
+        fecha=hoy
+    ).exclude(
+        estado=Cita.Estado.CANCELADA
+    ).select_related(
+        "paciente__usuario__usuario",
+        "fisioterapeuta__usuario__usuario",
+        "servicio",
+        "motivo",
+    ).order_by(
+        "hora"
+    )
+
+    contexto = {
+        "citas_hoy": citas_hoy,
+        "total_pacientes": total_pacientes,
+        "citas_pendientes": citas_pendientes,
+        "citas": citas,
+    }
+
     return render(
         request,
         "dashboard/dashboard_recepcionista.html",
+        contexto,
     )
 
 
@@ -463,9 +577,66 @@ def dashboard_recepcionista(request):
 @login_required
 @rol_requerido(["FISIOTERAPEUTA"])
 def dashboard_fisioterapeuta(request):
+
+    hoy = timezone.localdate()
+
+    # Solo las citas asignadas al usuario actual.
+    citas_propias = Cita.objects.filter(
+        fisioterapeuta__usuario__usuario=request.user
+    )
+
+    citas_hoy = citas_propias.filter(
+        fecha=hoy
+    ).exclude(
+        estado=Cita.Estado.CANCELADA
+    ).count()
+
+    # Pacientes distintos con citas finalizadas.
+    pacientes_atendidos = citas_propias.filter(
+        estado=Cita.Estado.FINALIZADA
+    ).values(
+        "paciente_id"
+    ).distinct().count()
+
+    citas_pendientes = obtener_citas_futuras(
+        citas_propias
+    ).count()
+
+    proxima_cita = obtener_citas_futuras(
+        citas_propias
+    ).select_related(
+        "paciente__usuario__usuario",
+        "motivo",
+        "servicio",
+    ).order_by(
+        "fecha",
+        "hora",
+    ).first()
+
+    citas = citas_propias.filter(
+        fecha=hoy
+    ).exclude(
+        estado=Cita.Estado.CANCELADA
+    ).select_related(
+        "paciente__usuario__usuario",
+        "motivo",
+        "servicio",
+    ).order_by(
+        "hora"
+    )
+
+    contexto = {
+        "citas_hoy": citas_hoy,
+        "pacientes_atendidos": pacientes_atendidos,
+        "citas_pendientes": citas_pendientes,
+        "proxima_cita": proxima_cita,
+        "citas": citas,
+    }
+
     return render(
         request,
         "dashboard/dashboard_fisioterapeuta.html",
+        contexto,
     )
 
 
@@ -476,7 +647,42 @@ def dashboard_fisioterapeuta(request):
 @login_required
 @rol_requerido(["PACIENTE"])
 def dashboard_paciente(request):
+
+    # Solo las citas del paciente autenticado.
+    citas_propias = Cita.objects.filter(
+        paciente__usuario__usuario=request.user
+    )
+
+    citas_futuras = obtener_citas_futuras(
+        citas_propias
+    )
+
+    citas_pendientes = citas_futuras.count()
+
+    citas_completadas = citas_propias.filter(
+        estado=Cita.Estado.FINALIZADA
+    ).count()
+
+    citas = citas_futuras.select_related(
+        "fisioterapeuta__usuario__usuario",
+        "servicio",
+        "motivo",
+    ).order_by(
+        "fecha",
+        "hora",
+    )
+
+    proxima_cita = citas.first()
+
+    contexto = {
+        "proxima_cita": proxima_cita,
+        "citas_pendientes": citas_pendientes,
+        "citas_completadas": citas_completadas,
+        "citas": citas,
+    }
+
     return render(
         request,
         "dashboard/dashboard_paciente.html",
+        contexto,
     )

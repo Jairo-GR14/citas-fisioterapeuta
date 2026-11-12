@@ -1,446 +1,297 @@
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Reporte de Citas</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<header class="border-b border-blue-100 bg-white">
-
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
-        <div>
-
-            <h1 class="text-xl font-semibold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
-
-            <p class="text-sm text-slate-500">
-                Reportes
-            </p>
-
-        </div>
-
-
-        <a href="#"
-           class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">
-
-            Volver a reportes
-
-        </a>
-
-    </div>
-
-</header>
-
-
-<main class="mx-auto max-w-7xl px-6 py-8">
-
-
-    <!-- Encabezado -->
-
-    <div class="mb-6">
-
-        <p class="text-sm font-semibold text-emerald-600">
-            Reportes
-        </p>
-
-        <h2 class="text-3xl font-bold text-blue-950">
-            Reporte de citas
-        </h2>
-
-        <p class="mt-2 text-sm text-slate-500">
-            Consulta las citas registradas y su estado dentro del sistema.
-        </p>
-
-    </div>
-
-
-    <!-- Resumen -->
-
-    <div class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-sm font-semibold text-slate-500">
-                Total de citas
-            </p>
-
-            <p class="mt-2 text-3xl font-bold text-blue-900">
-
-                {{ total_citas|default:"0" }}
-
-            </p>
-
-        </div>
-
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-sm font-semibold text-slate-500">
-                Programadas
-            </p>
-
-            <p class="mt-2 text-3xl font-bold text-blue-900">
-
-                {{ citas_programadas|default:"0" }}
-
-            </p>
-
-        </div>
-
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-sm font-semibold text-slate-500">
-                Finalizadas
-            </p>
-
-            <p class="mt-2 text-3xl font-bold text-emerald-600">
-
-                {{ citas_finalizadas|default:"0" }}
-
-            </p>
-
-        </div>
-
-
-        <div class="rounded-2xl border border-blue-100 bg-white p-5">
-
-            <p class="text-sm font-semibold text-slate-500">
-                Canceladas
-            </p>
-
-            <p class="mt-2 text-3xl font-bold text-slate-500">
-
-                {{ citas_canceladas|default:"0" }}
-
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- Filtros -->
-
-    <div class="mb-6 rounded-2xl border border-blue-100 bg-white p-5">
-
-        <form method="GET"
-            class="grid gap-4 md:grid-cols-4">
-
-
-            <!-- Buscar -->
-
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <div>
-
-                <label for="buscar"
-                    class="block text-sm font-semibold text-slate-600">
-
-                    Buscar
-
-                </label>
-
-                <input type="text"
-                    id="buscar"
-                    name="buscar"
-                    value="{{ request.GET.buscar }}"
-                    placeholder="Paciente o fisioterapeuta..."
-                    class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm">
-
+                <h1 class="text-xl font-semibold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+                <p class="text-sm text-slate-500">
+                    Reporte de citas
+                </p>
             </div>
 
+            <a href="{% url 'reportes:inicio' %}"
+               class="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                Volver a reportes
+            </a>
+        </div>
+    </header>
 
-            <!-- Fecha inicial -->
+    <main class="mx-auto max-w-7xl px-6 py-10">
 
-            <div>
+        <div class="mb-8">
+            <p class="text-sm font-semibold text-emerald-600">
+                Estadísticas de agenda
+            </p>
+            <h2 class="mt-1 text-3xl font-bold text-blue-950">
+                Reporte de citas
+            </h2>
+            <p class="mt-2 text-slate-500">
+                Consulta las citas registradas y filtra por fechas y estado.
+            </p>
+        </div>
 
-                <label for="fecha_inicio"
-                    class="block text-sm font-semibold text-slate-600">
+        <!-- INDICADORES -->
+        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
-                    Fecha inicial
-
-                </label>
-
-                <input type="date"
-                    id="fecha_inicio"
-                    name="fecha_inicio"
-                    value="{{ request.GET.fecha_inicio }}"
-                    class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm">
-
+            <div class="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">Total de citas</p>
+                <p class="mt-2 text-3xl font-bold text-blue-950">
+                    {{ total_citas|default:"0" }}
+                </p>
             </div>
 
-
-            <!-- Fecha final -->
-
-            <div>
-
-                <label for="fecha_fin"
-                    class="block text-sm font-semibold text-slate-600">
-
-                    Fecha final
-
-                </label>
-
-                <input type="date"
-                    id="fecha_fin"
-                    name="fecha_fin"
-                    value="{{ request.GET.fecha_fin }}"
-                    class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm">
-
+            <div class="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">Programadas</p>
+                <p class="mt-2 text-3xl font-bold text-blue-950">
+                    {{ citas_programadas|default:"0" }}
+                </p>
             </div>
 
+            <div class="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">Confirmadas</p>
+                <p class="mt-2 text-3xl font-bold text-blue-700">
+                    {{ citas_confirmadas|default:"0" }}
+                </p>
+            </div>
 
-            <!-- Estado -->
+            <div class="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">En proceso</p>
+                <p class="mt-2 text-3xl font-bold text-amber-600">
+                    {{ citas_en_proceso|default:"0" }}
+                </p>
+            </div>
 
-            <div>
+            <div class="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">Finalizadas</p>
+                <p class="mt-2 text-3xl font-bold text-emerald-700">
+                    {{ citas_finalizadas|default:"0" }}
+                </p>
+            </div>
 
-                <label for="estado"
-                    class="block text-sm font-semibold text-slate-600">
+            <div class="rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
+                <p class="text-sm text-slate-500">Canceladas</p>
+                <p class="mt-2 text-3xl font-bold text-red-600">
+                    {{ citas_canceladas|default:"0" }}
+                </p>
+            </div>
 
-                    Estado
+        </section>
 
-                </label>
+        <!-- FILTROS -->
+        <section class="mt-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+            <h3 class="mb-5 text-lg font-semibold text-blue-900">
+                Filtrar citas
+            </h3>
 
-                <select id="estado"
+            <form method="get" class="grid gap-4 md:grid-cols-4">
+
+                <div>
+                    <label for="buscar" class="block text-sm font-medium">
+                        Buscar
+                    </label>
+                    <input
+                        id="buscar"
+                        name="buscar"
+                        type="text"
+                        value="{{ request.GET.buscar|default:'' }}"
+                        placeholder="Paciente o fisioterapeuta"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                    >
+                </div>
+
+                <div>
+                    <label for="fecha_inicio" class="block text-sm font-medium">
+                        Fecha inicial
+                    </label>
+                    <input
+                        id="fecha_inicio"
+                        name="fecha_inicio"
+                        type="date"
+                        value="{{ request.GET.fecha_inicio|default:'' }}"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                    >
+                </div>
+
+                <div>
+                    <label for="fecha_fin" class="block text-sm font-medium">
+                        Fecha final
+                    </label>
+                    <input
+                        id="fecha_fin"
+                        name="fecha_fin"
+                        type="date"
+                        value="{{ request.GET.fecha_fin|default:'' }}"
+                        class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                    >
+                </div>
+
+                <div>
+                    <label for="estado" class="block text-sm font-medium">
+                        Estado
+                    </label>
+                    <select
+                        id="estado"
                         name="estado"
-                        class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+                        class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"
+                    >
+                        <option value="">Todos</option>
 
-                    <option value="">
-                        Todos
-                    </option>
+                        {% for valor, nombre in estados %}
+                            <option
+                                value="{{ valor }}"
+                                {% if estado_elegido == valor %}selected{% endif %}
+                            >
+                                {{ nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                    <option value="programada">
-                        Programada
-                    </option>
+                <div class="md:col-span-4 flex flex-wrap justify-end gap-3">
+                    <a href="{% url 'reportes:reporte_citas' %}"
+                       class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-600">
+                        Limpiar
+                    </a>
 
-                    <option value="confirmada">
-                        Confirmada
-                    </option>
+                    <button type="submit"
+                            class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                        Filtrar
+                    </button>
+                </div>
 
-                    <option value="en_proceso">
-                        En proceso
-                    </option>
+            </form>
+        </section>
 
-                    <option value="finalizada">
-                        Finalizada
-                    </option>
+        <!-- TABLA -->
+        <section class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
-                    <option value="cancelada">
-                        Cancelada
-                    </option>
-
-                </select>
-
+            <div class="border-b border-slate-100 p-6">
+                <h3 class="text-xl font-semibold text-blue-900">
+                    Citas registradas
+                </h3>
+                <p class="mt-1 text-sm text-slate-500">
+                    {{ total_citas }} resultado(s) con los filtros actuales.
+                </p>
             </div>
 
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
 
-            <!-- Boton -->
+                    <thead class="bg-slate-50 text-slate-600">
+                        <tr>
+                            <th class="px-5 py-4">Fecha</th>
+                            <th class="px-5 py-4">Hora</th>
+                            <th class="px-5 py-4">Paciente</th>
+                            <th class="px-5 py-4">Fisioterapeuta</th>
+                            <th class="px-5 py-4">Servicio</th>
+                            <th class="px-5 py-4">Estado</th>
+                            <th class="px-5 py-4">Detalle</th>
+                        </tr>
+                    </thead>
 
-            <div class="md:col-span-4 flex justify-end">
+                    <tbody class="divide-y divide-slate-100">
+                        {% for cita in citas %}
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-5 py-4">
+                                    {{ cita.fecha|date:"d/m/Y" }}
+                                </td>
 
-                <button type="submit"
-                        class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white">
+                                <td class="px-5 py-4">
+                                    {{ cita.hora|time:"H:i" }}
+                                </td>
 
-                    Filtrar
+                                <td class="px-5 py-4">
+                                    {{ cita.paciente }}
+                                </td>
 
-                </button>
+                                <td class="px-5 py-4">
+                                    {{ cita.fisioterapeuta }}
+                                </td>
 
+                                <td class="px-5 py-4">
+                                    {{ cita.servicio.nombre }}
+                                </td>
+
+                                <td class="px-5 py-4">
+                                    <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                                        {{ cita.get_estado_display }}
+                                    </span>
+                                </td>
+
+                                <td class="px-5 py-4">
+                                    <a href="{% url 'citas:detalle_cita' cita.id %}"
+                                       class="font-semibold text-blue-700 hover:underline">
+                                        Ver
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7"
+                                    class="px-5 py-10 text-center text-slate-500">
+                                    No hay citas con los filtros seleccionados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+
+        <!-- RESUMEN MENSUAL -->
+        <section class="mt-8 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-6">
+                <h3 class="text-xl font-semibold text-blue-900">
+                    Citas por mes
+                </h3>
             </div>
 
-        </form>
-
-    </div>
-
-
-    <!-- Tabla -->
-
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-
-        <div class="overflow-x-auto">
-
-            <table class="min-w-full">
-
-                <thead class="bg-slate-50">
-
-                    <tr>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Paciente
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Fisioterapeuta
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Fecha
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Hora
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Motivo
-                        </th>
-
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500">
-                            Estado
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody class="divide-y divide-slate-100">
-
-
-                    {% for cita in citas %}
-
-                    <tr class="hover:bg-slate-50">
-
-
-                        <!-- Paciente -->
-
-                        <td class="px-6 py-4 font-medium text-blue-900">
-
-                            {{ cita.paciente.nombre }}
-
-                        </td>
-
-
-                        <!-- Fisioterapeuta -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ cita.fisioterapeuta.nombre }}
-
-                        </td>
-
-
-                        <!-- Fecha -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ cita.fecha|date:"d/m/Y" }}
-
-                        </td>
-
-
-                        <!-- Hora -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ cita.hora }}
-
-                        </td>
-
-
-                        <!-- Motivo -->
-
-                        <td class="px-6 py-4 text-sm text-slate-600">
-
-                            {{ cita.motivo_consulta|truncatechars:35 }}
-
-                        </td>
-
-
-                        <!-- Estado -->
-
-                        <td class="px-6 py-4">
-
-
-                            {% if cita.estado == "finalizada" %}
-
-                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-
-                                Finalizada
-
-                            </span>
-
-
-                            {% elif cita.estado == "confirmada" %}
-
-                            <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-
-                                Confirmada
-
-                            </span>
-
-
-                            {% elif cita.estado == "en_proceso" %}
-
-                            <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-
-                                En proceso
-
-                            </span>
-
-
-                            {% elif cita.estado == "cancelada" %}
-
-                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
-
-                                Cancelada
-
-                            </span>
-
-
-                            {% else %}
-
-                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-
-                                Programada
-
-                            </span>
-
-                            {% endif %}
-
-
-                        </td>
-
-                    </tr>
-
-
-                    {% empty %}
-
-
-                    <tr>
-
-                        <td colspan="6"
-                            class="px-6 py-10 text-center text-slate-500">
-
-                            No hay citas registradas.
-
-                        </td>
-
-                    </tr>
-
-
-                    {% endfor %}
-
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-</main>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-4">Mes</th>
+                            <th class="px-6 py-4">Total de citas</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-100">
+                        {% for registro in citas_por_mes %}
+                            <tr>
+                                <td class="px-6 py-4">
+                                    {{ registro.mes|date:"F Y" }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ registro.cantidad }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2"
+                                    class="px-6 py-8 text-center text-slate-500">
+                                    No hay estadísticas mensuales disponibles.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
 
 </body>
-
-</html
+</html>

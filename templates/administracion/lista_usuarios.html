@@ -166,6 +166,23 @@
                                         Ver
                                     </a>
 
+                                    {% if usuario.pk != user.pk and not usuario.is_superuser %}
+                                        <form method="post"
+                                              action="{% url 'administracion:cambiar_estado_usuario' usuario.pk %}"
+                                              class="ml-3 inline-block"
+                                              onsubmit="return confirm('¿Confirmas que deseas cambiar el estado de esta cuenta?');">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="text-sm font-semibold {% if usuario.is_active %}text-red-700 hover:text-red-900{% else %}text-emerald-700 hover:text-emerald-900{% endif %}">
+                                                {% if usuario.is_active %}Desactivar{% else %}Activar{% endif %}
+                                            </button>
+                                        </form>
+                                    {% elif usuario.pk == user.pk %}
+                                        <span class="ml-3 text-xs text-slate-400">Tu cuenta</span>
+                                    {% else %}
+                                        <span class="ml-3 text-xs text-slate-400">Cuenta privilegiada</span>
+                                    {% endif %}
+
                                 </td>
 
                             </tr>

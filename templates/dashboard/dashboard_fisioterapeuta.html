@@ -43,12 +43,11 @@
                 </a>
 
 
-                <!-- Agenda pendiente de integración -->
-                <span
-                    class="cursor-not-allowed rounded-xl bg-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-500"
-                >
+                <!-- Ver agenda -->
+                <a href="{% url 'citas:agenda' %}"
+                   class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700">
                     Ver agenda
-                </span>
+                </a>
 
 
                 <!-- Cerrar sesión -->
@@ -220,7 +219,7 @@
                         </p>
 
                         <p class="mt-1 text-lg font-semibold text-emerald-700">
-                            {{ proxima_cita.hora }}
+                            {{ proxima_cita.fecha|date:"d/m/Y" }} · {{ proxima_cita.hora|time:"H:i" }}
                         </p>
 
                     </div>
@@ -256,11 +255,10 @@
 
                 <div class="flex justify-end border-t border-slate-100 bg-slate-50 p-6">
 
-                    <span
-                        class="cursor-not-allowed rounded-xl bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-500"
-                    >
-                        Iniciar consulta
-                    </span>
+                    <a href="{% url 'consultas:iniciar_consulta' proxima_cita.pk %}"
+                       class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700">
+                        Abrir atención
+                    </a>
 
                 </div>
 
@@ -360,9 +358,17 @@
 
                                 <td class="px-6 py-4">
 
-                                    <span class="text-sm text-slate-400">
-                                        Pendiente
-                                    </span>
+                                    <a href="{% url 'citas:detalle_cita' cita.pk %}"
+                                       class="text-sm font-semibold text-blue-700 hover:text-blue-900">
+                                        Ver cita
+                                    </a>
+                                    {% if cita.estado != 'FINALIZADA' %}
+                                        <span class="mx-1 text-slate-300">|</span>
+                                        <a href="{% url 'consultas:iniciar_consulta' cita.pk %}"
+                                           class="text-sm font-semibold text-emerald-700 hover:text-emerald-900">
+                                            Atender
+                                        </a>
+                                    {% endif %}
 
                                 </td>
 
@@ -411,63 +417,30 @@
             <div class="grid gap-5 md:grid-cols-3">
 
                 <!-- Mis pacientes -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
-                        Mis pacientes
-                    </h3>
-
-                    <p class="mt-2 text-sm text-slate-500">
-                        Consulta pacientes y expedientes registrados.
-                    </p>
-
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
+                <a href="{% url 'pacientes:lista_pacientes' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm transition hover:border-blue-300 hover:bg-blue-50">
+                    <h3 class="font-semibold text-blue-900">Mis pacientes</h3>
+                    <p class="mt-2 text-sm text-slate-500">Consulta tus pacientes y los expedientes a los que tienes acceso.</p>
+                    <p class="mt-3 text-sm font-semibold text-emerald-700">Ver pacientes</p>
+                </a>
 
 
                 <!-- Seguimientos -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-emerald-700">
-                        Seguimientos
-                    </h3>
-
-                    <p class="mt-2 text-sm text-slate-500">
-                        Registra y consulta el progreso de los tratamientos.
-                    </p>
-
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
+                <a href="{% url 'citas:agenda' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm transition hover:border-blue-300 hover:bg-blue-50">
+                    <h3 class="font-semibold text-blue-900">Seguimientos</h3>
+                    <p class="mt-2 text-sm text-slate-500">Elige una cita y entra a su consulta para registrar o consultar progresos.</p>
+                    <p class="mt-3 text-sm font-semibold text-emerald-700">Abrir agenda</p>
+                </a>
 
 
                 <!-- Tratamientos -->
-                <div
-                    class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
-                >
-
-                    <h3 class="font-semibold text-blue-900">
-                        Tratamientos
-                    </h3>
-
-                    <p class="mt-2 text-sm text-slate-500">
-                        Consulta tratamientos e indicaciones asignadas.
-                    </p>
-
-                    <p class="mt-3 text-xs font-medium text-slate-400">
-                        Pendiente de integración
-                    </p>
-
-                </div>
+                <a href="{% url 'citas:agenda' %}"
+                   class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm transition hover:border-blue-300 hover:bg-blue-50">
+                    <h3 class="font-semibold text-blue-900">Tratamientos</h3>
+                    <p class="mt-2 text-sm text-slate-500">Selecciona la cita asociada para revisar los tratamientos de su consulta.</p>
+                    <p class="mt-3 text-sm font-semibold text-emerald-700">Abrir agenda</p>
+                </a>
 
             </div>
 

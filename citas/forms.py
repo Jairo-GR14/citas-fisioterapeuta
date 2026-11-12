@@ -5,14 +5,18 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from fisioterapeutas.models import HorarioDisponible
+from fisioterapeutas.models import Fisioterapeuta, HorarioDisponible
+from pacientes.models import Paciente
+from precios.models import Servicio
 
-from .models import Cita
+from .models import Cita, MotivoConsulta
 
-
-# FORMULARIO DE CITA
 
 class CitaForm(forms.ModelForm):
+    """
+    Formulario para reservar citas de 60 minutos.
+    Valida horarios del fisioterapeuta y citas ocupadas.
+    """
 
     class Meta:
         model = Cita
@@ -41,8 +45,31 @@ class CitaForm(forms.ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    # VALIDAR HORARIOS
+        if "paciente" in self.fields:
+            self.fields["paciente"].queryset = (
+                Paciente.objects.filter(
+                    activo=True,
+                    usuario__activo=True,
+                ).select_related("usuario__usuario")
+            )
+
+        self.fields["fisioterapeuta"].queryset = (
+            Fisioterapeuta.objects.filter(
+                activo=True,
+                usuario__activo=True,
+            ).select_related("usuario__usuario")
+        )
+
+        self.fields["servicio"].queryset = (
+            Servicio.objects.filter(activo=True)
+        )
+
+        self.fields["motivo"].queryset = (
+            MotivoConsulta.objects.filter(activo=True)
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -51,38 +78,37 @@ class CitaForm(forms.ModelForm):
         fecha = cleaned_data.get("fecha")
         hora = cleaned_data.get("hora")
 
-        if not all([fisioterapeuta, fecha, hora]):
+        if not all((fisioterapeuta, fecha, hora)):
             return cleaned_data
 
-        if not fisioterapeuta.activo:
+        # Verificar que el fisioterapeuta esté activo.
+        if (
+            not fisioterapeuta.activo
+            or not fisioterapeuta.usuario.activo
+        ):
             raise ValidationError(
                 "El fisioterapeuta seleccionado no está activo."
             )
 
-        if not fisioterapeuta.usuario.activo:
-            raise ValidationError(
-                "El perfil del fisioterapeuta no está activo."
-            )
+        # Comprobar que la fecha no sea pasada.
+        zona = timezone.get_current_timezone()
 
-        # FECHA Y HORA
         inicio = timezone.make_aware(
             datetime.combine(fecha, hora),
-            timezone.get_current_timezone(),
+            zona,
         )
 
-        ahora = timezone.localtime()
-
-        if inicio <= ahora:
+        if inicio <= timezone.now():
             raise ValidationError(
                 "No puedes agendar una cita en una fecha "
                 "u hora pasada."
             )
 
-        # DURACIÓN DE LA CITA
+        # Las citas duran 60 minutos.
         duracion = timedelta(minutes=60)
         fin = inicio + duracion
 
-        # HORARIO DEL FISIOTERAPEUTA
+        # Buscar los horarios disponibles del fisioterapeuta.
         jornadas = HorarioDisponible.objects.filter(
             fisioterapeuta=fisioterapeuta,
             dia_semana=fecha.isoweekday(),
@@ -97,7 +123,7 @@ class CitaForm(forms.ModelForm):
                     fecha,
                     jornada.hora_inicio,
                 ),
-                timezone.get_current_timezone(),
+                zona,
             )
 
             fin_jornada = timezone.make_aware(
@@ -105,29 +131,26 @@ class CitaForm(forms.ModelForm):
                     fecha,
                     jornada.hora_fin,
                 ),
-                timezone.get_current_timezone(),
+                zona,
             )
 
-            if not (
+            if (
                 inicio_jornada <= inicio
                 and fin <= fin_jornada
             ):
-                continue
+                diferencia = inicio - inicio_jornada
 
-            # BLOQUES DE 60 MINUTOS
-            diferencia = inicio - inicio_jornada
-
-            if diferencia.total_seconds() % 3600 == 0:
-                horario_valido = True
-                break
+                if diferencia.total_seconds() % 3600 == 0:
+                    horario_valido = True
+                    break
 
         if not horario_valido:
             raise ValidationError(
-                "El horario seleccionado no pertenece "
-                "a la jornada disponible del fisioterapeuta."
+                "Selecciona un bloque de 60 minutos dentro "
+                "de la jornada disponible del fisioterapeuta."
             )
 
-        # CITAS OCUPADAS
+        # Evitar citas que se traslapen.
         citas_ocupadas = Cita.objects.filter(
             fisioterapeuta=fisioterapeuta,
             fecha=fecha,
@@ -135,7 +158,7 @@ class CitaForm(forms.ModelForm):
             estado=Cita.Estado.CANCELADA
         )
 
-        # EXCLUIR LA CITA ACTUAL AL EDITAR
+        # Al editar, excluir la propia cita.
         if self.instance.pk:
             citas_ocupadas = citas_ocupadas.exclude(
                 pk=self.instance.pk
@@ -147,7 +170,7 @@ class CitaForm(forms.ModelForm):
                     cita.fecha,
                     cita.hora,
                 ),
-                timezone.get_current_timezone(),
+                zona,
             )
 
             fin_ocupado = inicio_ocupado + duracion
@@ -158,15 +181,16 @@ class CitaForm(forms.ModelForm):
             ):
                 raise ValidationError(
                     "Este fisioterapeuta ya tiene una cita "
-                    "en ese horario. Selecciona otro."
+                    "en ese horario."
                 )
 
         return cleaned_data
 
 
-# EDITAR CITA
-
 class EditarCitaForm(CitaForm):
+    """
+    Permite modificar una cita sin cambiar el paciente.
+    """
 
     class Meta(CitaForm.Meta):
         fields = [

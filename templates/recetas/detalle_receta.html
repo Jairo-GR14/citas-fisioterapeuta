@@ -1,14 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar receta - Clínica de Fisioterapia</title>
+    <title>Detalle de receta - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-800">
 
+    <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
         <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
@@ -17,19 +19,24 @@
                     Clínica de Fisioterapia
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Edición de recetas
+                    Recetas e indicaciones
                 </p>
             </div>
 
-            <a href="{% url 'recetas:detalle_receta' receta.id %}"
-               class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                Volver al detalle
+            <a
+                href="{% url 'recetas:lista_recetas' consulta.id %}"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700"
+            >
+                Volver a recetas
             </a>
+
         </div>
     </header>
 
-    <main class="mx-auto max-w-4xl px-6 py-10">
 
+    <main class="mx-auto max-w-5xl px-6 py-10">
+
+        <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
                 <div class="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
@@ -38,22 +45,42 @@
             {% endfor %}
         {% endif %}
 
-        <section class="mb-8">
-            <p class="text-sm font-semibold text-emerald-600">
-                Consulta #{{ consulta.id }}
-            </p>
 
-            <h1 class="mt-2 text-3xl font-bold text-blue-950">
-                Editar receta #{{ receta.id }}
-            </h1>
+        <!-- TÍTULO -->
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
 
-            <p class="mt-2 text-sm text-slate-500">
-                Modifica las indicaciones que recibirá el paciente.
-            </p>
-        </section>
+            <div>
+                <p class="text-sm font-semibold text-emerald-600">
+                    Consulta #{{ consulta.id }}
+                </p>
 
-        <!-- INFORMACIÓN -->
-        <section class="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+                <h1 class="mt-2 text-3xl font-bold text-blue-950">
+                    Detalle de receta #{{ receta.id }}
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Indicaciones registradas para el paciente.
+                </p>
+            </div>
+
+            {% if cita.estado == "EN_PROCESO" %}
+                <a
+                    href="{% url 'recetas:editar_receta' receta.id %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-5 py-3 text-sm font-semibold text-white"
+                >
+                    Editar receta
+                </a>
+            {% endif %}
+
+        </div>
+
+
+        <!-- DATOS GENERALES -->
+        <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Información de la consulta
+            </h2>
 
             <div class="grid gap-5 sm:grid-cols-2">
 
@@ -65,88 +92,171 @@
                 </div>
 
                 <div>
+                    <p class="text-sm text-slate-500">Fisioterapeuta</p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
+                    </p>
+                </div>
+
+                <div>
                     <p class="text-sm text-slate-500">Fecha de consulta</p>
                     <p class="mt-1 font-semibold">
                         {{ cita.fecha|date:"d/m/Y" }}
                     </p>
                 </div>
 
-            </div>
-        </section>
-
-        <!-- FORMULARIO -->
-        <form method="post"
-              action="{% url 'recetas:editar_receta' receta.id %}"
-              class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
-
-            {% csrf_token %}
-
-            <div class="space-y-6 p-6">
-
-                <h2 class="text-lg font-semibold text-blue-900">
-                    Modificar indicaciones
-                </h2>
-
-                {% if formulario.non_field_errors %}
-                    <div class="rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                        {{ formulario.non_field_errors }}
-                    </div>
-                {% endif %}
-
-                <!-- SE MUESTRAN TODOS LOS CAMPOS DE RECETAFORM -->
-                {% for campo in formulario %}
-                    <div>
-
-                        <label for="{{ campo.id_for_label }}"
-                               class="mb-2 block text-sm font-semibold text-blue-900">
-                            {{ campo.label }}
-                        </label>
-
-                        {{ campo }}
-
-                        {% if campo.help_text %}
-                            <p class="mt-2 text-xs text-slate-500">
-                                {{ campo.help_text }}
-                            </p>
-                        {% endif %}
-
-                        {% for error in campo.errors %}
-                            <p class="mt-2 text-sm text-red-600">
-                                {{ error }}
-                            </p>
-                        {% endfor %}
-
-                    </div>
-                {% endfor %}
-
-                <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
-                    <p class="text-sm text-amber-800">
-                        Solo se permite modificar esta receta mientras
-                        la consulta esté en proceso.
+                <div>
+                    <p class="text-sm text-slate-500">Estado</p>
+                    <p class="mt-1 font-semibold">
+                        {{ cita.get_estado_display }}
                     </p>
                 </div>
 
             </div>
+        </section>
 
-            <!-- BOTONES -->
-            <div class="flex flex-wrap justify-end gap-3 border-t bg-slate-50 p-6">
 
-                <a href="{% url 'recetas:detalle_receta' receta.id %}"
-                   class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold">
-                    Cancelar
-                </a>
+        <!-- INDICACIONES -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-                <button type="submit"
-                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white">
-                    Guardar cambios
-                </button>
+            <h2 class="text-lg font-semibold text-blue-900">
+                Indicaciones generales
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-blue-50 p-4 text-sm leading-7">
+
+                {% if receta.indicaciones %}
+                    {{ receta.indicaciones|linebreaksbr }}
+                {% else %}
+                    Sin indicaciones registradas.
+                {% endif %}
 
             </div>
+        </section>
 
-        </form>
+
+        <!-- EJERCICIOS -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-blue-900">
+                Ejercicios recomendados
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-7">
+
+                {% if receta.ejercicios %}
+                    {{ receta.ejercicios|linebreaksbr }}
+                {% else %}
+                    Sin ejercicios registrados.
+                {% endif %}
+
+            </div>
+        </section>
+
+
+        <!-- PLAN DE EJERCICIOS -->
+        <section class="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+
+            <h2 class="mb-5 text-lg font-semibold text-blue-900">
+                Plan de ejercicios
+            </h2>
+
+            <div class="grid gap-5 sm:grid-cols-3">
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="text-sm font-semibold text-blue-800">
+                        Repeticiones
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.repeticiones|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="text-sm font-semibold text-blue-800">
+                        Frecuencia
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.frecuencia|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-blue-50 p-4">
+                    <p class="text-sm font-semibold text-blue-800">
+                        Duración
+                    </p>
+                    <p class="mt-2 text-sm">
+                        {{ receta.duracion|default:"Sin registrar" }}
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- RECOMENDACIONES -->
+        <section class="mt-6 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-emerald-700">
+                Recomendaciones
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-7">
+
+                {% if receta.recomendaciones %}
+                    {{ receta.recomendaciones|linebreaksbr }}
+                {% else %}
+                    Sin recomendaciones registradas.
+                {% endif %}
+
+            </div>
+        </section>
+
+
+        <!-- RESTRICCIONES -->
+        <section class="mt-6 rounded-2xl border border-red-100 bg-white p-6 shadow-sm">
+
+            <h2 class="text-lg font-semibold text-red-700">
+                Restricciones
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-red-50 p-4 text-sm leading-7">
+
+                {% if receta.restricciones %}
+                    {{ receta.restricciones|linebreaksbr }}
+                {% else %}
+                    Sin restricciones registradas.
+                {% endif %}
+
+            </div>
+        </section>
+
+
+        <!-- ACCIONES -->
+        <div class="mt-8 flex flex-wrap justify-end gap-3">
+
+            <a
+                href="{% url 'recetas:lista_recetas' consulta.id %}"
+                class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700"
+            >
+                Ver todas las recetas
+            </a>
+
+            {% if cita.estado == "EN_PROCESO" %}
+                <a
+                    href="{% url 'recetas:editar_receta' receta.id %}"
+                    class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white"
+                >
+                    Editar receta
+                </a>
+            {% endif %}
+
+        </div>
+
     </main>
 
-    <footer class="border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
+
+    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
         © 2026 Clínica de Fisioterapia
     </footer>
 

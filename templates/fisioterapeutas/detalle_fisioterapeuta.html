@@ -21,22 +21,25 @@
         </p>
     </div>
 
+    <!-- ACCIONES DEL FISIOTERAPEUTA -->
     <div class="flex flex-wrap gap-3">
 
         <a
             href="{% url 'fisioterapeutas:horario_fisioterapeuta' fisioterapeuta.pk %}"
-            class="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700"
+            class="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 hover:bg-emerald-100"
         >
             Ver horario
         </a>
 
         {% if puede_gestionar %}
+
             <a
                 href="{% url 'fisioterapeutas:editar_fisioterapeuta' fisioterapeuta.pk %}"
-                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white"
+                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
             >
                 Editar
             </a>
+
         {% endif %}
 
     </div>
@@ -52,28 +55,34 @@
 
     <dl class="grid gap-5 sm:grid-cols-2">
 
+        <!-- ESPECIALIDAD -->
         <div>
             <dt class="text-sm text-slate-500">
                 Especialidad
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ fisioterapeuta.especialidad|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- CÉDULA -->
         <div>
             <dt class="text-sm text-slate-500">
                 Cédula profesional
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ fisioterapeuta.cedula_profesional|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- ESTADO -->
         <div>
             <dt class="text-sm text-slate-500">
                 Estado
             </dt>
+
             <dd class="mt-1 font-medium">
                 {% if fisioterapeuta.activo %}
                     Activo
@@ -83,21 +92,25 @@
             </dd>
         </div>
 
+        <!-- FECHA DE REGISTRO -->
         <div>
             <dt class="text-sm text-slate-500">
                 Fecha de registro
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ fisioterapeuta.fecha_registro|date:"d/m/Y" }}
             </dd>
         </div>
 
+        <!-- CONTACTO -->
         {% if ver_contacto %}
 
             <div>
                 <dt class="text-sm text-slate-500">
                     Correo
                 </dt>
+
                 <dd class="mt-1 font-medium">
                     {{ fisioterapeuta.usuario.usuario.email|default:"Sin registrar" }}
                 </dd>
@@ -107,6 +120,7 @@
                 <dt class="text-sm text-slate-500">
                     Teléfono
                 </dt>
+
                 <dd class="mt-1 font-medium">
                     {{ fisioterapeuta.usuario.telefono|default:"Sin registrar" }}
                 </dd>
@@ -114,10 +128,12 @@
 
         {% endif %}
 
+        <!-- DESCRIPCIÓN -->
         <div class="sm:col-span-2">
             <dt class="text-sm text-slate-500">
                 Descripción
             </dt>
+
             <dd class="mt-2 whitespace-pre-line text-sm leading-7">
                 {{ fisioterapeuta.descripcion|default:"Sin descripción registrada" }}
             </dd>
@@ -166,11 +182,25 @@
 
 {% endif %}
 
-<a
-    href="{% url 'fisioterapeutas:lista_fisioterapeutas' %}"
-    class="mt-7 inline-block text-sm font-semibold text-blue-700"
->
-    Volver al directorio
-</a>
+<!-- NAVEGACIÓN INFERIOR -->
+{% if request.GET.desde == "reportes" %}
+
+    <a
+        href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+        class="mt-7 inline-block text-sm font-semibold text-blue-700 hover:underline"
+    >
+        ← Volver al reporte de fisioterapeutas
+    </a>
+
+{% else %}
+
+    <a
+        href="{% url 'fisioterapeutas:lista_fisioterapeutas' %}"
+        class="mt-7 inline-block text-sm font-semibold text-blue-700 hover:underline"
+    >
+        Volver al directorio
+    </a>
+
+{% endif %}
 
 {% endblock %}

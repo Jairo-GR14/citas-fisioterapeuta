@@ -228,7 +228,7 @@
                             Cancelar
                         </a>
 
-                        {% if cita.estado == "PROGRAMADA" or cita.estado == "CONFIRMADA" %}
+                        {% if cita.estado == "CONFIRMADA" %}
 
                             <button
                                 type="submit"
@@ -272,7 +272,7 @@
                             La cita está confirmada y puede comenzar.
 
                         {% elif cita.estado == "PROGRAMADA" %}
-                            La cita está programada y puede comenzar.
+                            La cita está pendiente de confirmación.
 
                         {% elif cita.estado == "EN_PROCESO" %}
                             La consulta ya está en proceso.

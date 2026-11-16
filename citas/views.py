@@ -11,22 +11,19 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 
-from fisioterapeutas.models import (
-    Fisioterapeuta,
-    HorarioDisponible,
-)
+from consultas.models import Consulta
+from fisioterapeutas.models import Fisioterapeuta, HorarioDisponible
 from pacientes.models import Paciente
 
 from .forms import CitaForm, EditarCitaForm
 from .models import Cita
 
 
-# ROLES AUTORIZADOS
+# =========================================================
+# ROLES Y MOTIVOS DE CANCELACIÓN
+# =========================================================
 
-ROLES_GESTION = (
-    "ADMINISTRADOR",
-    "RECEPCIONISTA",
-)
+ROLES_GESTION = ("ADMINISTRADOR", "RECEPCIONISTA")
 
 ROLES_AGENDAR = (
     "ADMINISTRADOR",
@@ -42,20 +39,17 @@ MOTIVOS_CANCELACION = {
 }
 
 
-# OBTENER ROL
+# =========================================================
+# PERMISOS
+# =========================================================
 
 def obtener_rol(usuario):
-
     if usuario.is_superuser:
         return "ADMINISTRADOR"
 
     perfil = getattr(usuario, "perfil", None)
 
-    if (
-        perfil is None
-        or not perfil.activo
-        or not usuario.is_active
-    ):
+    if perfil is None or not perfil.activo or not usuario.is_active:
         raise PermissionDenied(
             "Tu cuenta no tiene un perfil activo."
         )
@@ -63,10 +57,7 @@ def obtener_rol(usuario):
     return perfil.rol
 
 
-# COMPROBAR PERMISOS
-
 def exigir_rol(usuario, permitidos):
-
     rol = obtener_rol(usuario)
 
     if rol not in permitidos:
@@ -77,10 +68,7 @@ def exigir_rol(usuario, permitidos):
     return rol
 
 
-# FILTRAR CITAS DEL USUARIO
-
 def obtener_citas_permitidas(usuario):
-
     citas = Cita.objects.select_related(
         "paciente__usuario__usuario",
         "fisioterapeuta__usuario__usuario",
@@ -90,17 +78,14 @@ def obtener_citas_permitidas(usuario):
 
     rol = obtener_rol(usuario)
 
-    # Administración y recepción ven todas las citas.
     if rol in ROLES_GESTION:
         return citas
 
-    # El fisioterapeuta ve únicamente sus citas.
     if rol == "FISIOTERAPEUTA":
         return citas.filter(
             fisioterapeuta__usuario=usuario.perfil
         )
 
-    # El paciente ve únicamente sus citas.
     if rol == "PACIENTE":
         return citas.filter(
             paciente__usuario=usuario.perfil
@@ -111,14 +96,15 @@ def obtener_citas_permitidas(usuario):
     )
 
 
-# ASIGNAR PACIENTE AL FORMULARIO
+# =========================================================
+# CONFIGURAR PACIENTE
+# =========================================================
 
 def configurar_paciente(formulario, request, rol):
     """
-    Impide que un paciente reserve citas a nombre
-    de otra persona.
+    Impide que un paciente reserve una cita
+    a nombre de otra persona.
     """
-
     if rol != "PACIENTE":
         return True
 
@@ -145,10 +131,7 @@ def configurar_paciente(formulario, request, rol):
     return True
 
 
-# VERIFICAR SI LA CITA ES FUTURA
-
 def es_fecha_futura(cita):
-
     instante = timezone.make_aware(
         datetime.combine(
             cita.fecha,
@@ -160,11 +143,12 @@ def es_fecha_futura(cita):
     return instante > timezone.now()
 
 
+# =========================================================
 # AGENDA GENERAL
+# =========================================================
 
 @login_required
 def agenda(request):
-
     citas = obtener_citas_permitidas(
         request.user
     ).order_by("fecha", "hora")
@@ -181,11 +165,12 @@ def agenda(request):
     )
 
 
+# =========================================================
 # MIS CITAS
+# =========================================================
 
 @login_required
 def mis_citas(request):
-
     exigir_rol(
         request.user,
         ("PACIENTE",),
@@ -222,11 +207,12 @@ def mis_citas(request):
     )
 
 
+# =========================================================
 # AGENDAR CITA
+# =========================================================
 
 @login_required
 def agendar_cita(request):
-
     rol = exigir_rol(
         request.user,
         ROLES_AGENDAR,
@@ -257,8 +243,7 @@ def agendar_cita(request):
     ):
         messages.error(
             request,
-            "Primero debes tener un registro "
-            "de paciente activo.",
+            "Primero debes tener un registro de paciente activo.",
         )
 
         return redirect(
@@ -269,19 +254,12 @@ def agendar_cita(request):
         request.method == "POST"
         and formulario.is_valid()
     ):
-        cita = formulario.save(
-            commit=False
-        )
+        cita = formulario.save(commit=False)
 
         if rol == "PACIENTE":
-            cita.paciente = (
-                request.user.perfil.paciente
-            )
+            cita.paciente = request.user.perfil.paciente
 
-        cita.costo_estimado = (
-            cita.servicio.precio_base
-        )
-
+        cita.costo_estimado = cita.servicio.precio_base
         cita.estado = Cita.Estado.PROGRAMADA
 
         try:
@@ -291,8 +269,7 @@ def agendar_cita(request):
         except IntegrityError:
             formulario.add_error(
                 None,
-                "El horario acaba de ocuparse; "
-                "selecciona otro.",
+                "El horario acaba de ocuparse; selecciona otro.",
             )
 
         else:
@@ -315,16 +292,36 @@ def agendar_cita(request):
     )
 
 
-# VER DETALLE DE CITA
+# =========================================================
+# DETALLE DE CITA
+# =========================================================
 
 @login_required
 def detalle_cita(request, cita_id):
-
     cita = get_object_or_404(
-        obtener_citas_permitidas(
-            request.user
-        ),
+        obtener_citas_permitidas(request.user),
         pk=cita_id,
+    )
+
+    rol = obtener_rol(request.user)
+
+    puede_gestionar_consulta = rol in (
+        "ADMINISTRADOR",
+        "FISIOTERAPEUTA",
+    )
+
+    consulta_existente = None
+
+    if puede_gestionar_consulta:
+        consulta_existente = Consulta.objects.filter(
+            cita=cita
+        ).first()
+
+    puede_iniciar_consulta = (
+        puede_gestionar_consulta
+        and consulta_existente is None
+        and cita.estado == Cita.Estado.CONFIRMADA
+        and not es_fecha_futura(cita)
     )
 
     return render(
@@ -332,14 +329,17 @@ def detalle_cita(request, cita_id):
         "citas/detalle_cita.html",
         {
             "cita": cita,
+            "consulta_existente": consulta_existente,
+            "puede_iniciar_consulta": puede_iniciar_consulta,
         },
     )
 
 
-# VERIFICAR SI PUEDE MODIFICAR UNA CITA
+# =========================================================
+# VERIFICAR MODIFICACIONES
+# =========================================================
 
 def puede_modificar_cita(usuario, cita):
-
     rol = exigir_rol(
         usuario,
         ROLES_AGENDAR,
@@ -351,20 +351,19 @@ def puede_modificar_cita(usuario, cita):
     )
 
 
+# =========================================================
 # EDITAR CITA
+# =========================================================
 
 @login_required
 def editar_cita(request, cita_id):
-
     exigir_rol(
         request.user,
         ROLES_AGENDAR,
     )
 
     if request.method == "POST":
-
         with transaction.atomic():
-
             cita = get_object_or_404(
                 obtener_citas_permitidas(
                     request.user
@@ -405,7 +404,6 @@ def editar_cita(request, cita_id):
             )
 
             if formulario.is_valid():
-
                 editada = formulario.save(
                     commit=False
                 )
@@ -422,10 +420,7 @@ def editar_cita(request, cita_id):
                         Cita.Estado.PROGRAMADA
                     )
 
-                if (
-                    editada.servicio_id
-                    != anterior[3]
-                ):
+                if editada.servicio_id != anterior[3]:
                     editada.costo_estimado = (
                         editada.servicio.precio_base
                     )
@@ -452,11 +447,8 @@ def editar_cita(request, cita_id):
                     )
 
     else:
-
         cita = get_object_or_404(
-            obtener_citas_permitidas(
-                request.user
-            ),
+            obtener_citas_permitidas(request.user),
             pk=cita_id,
         )
 
@@ -494,20 +486,19 @@ def editar_cita(request, cita_id):
     )
 
 
+# =========================================================
 # CANCELAR CITA
+# =========================================================
 
 @login_required
 def cancelar_cita(request, cita_id):
-
     exigir_rol(
         request.user,
         ROLES_AGENDAR,
     )
 
     if request.method == "POST":
-
         with transaction.atomic():
-
             cita = get_object_or_404(
                 obtener_citas_permitidas(
                     request.user
@@ -541,7 +532,6 @@ def cancelar_cita(request, cita_id):
             )
 
             if motivo in MOTIVOS_CANCELACION:
-
                 detalle = request.POST.get(
                     "observaciones",
                     "",
@@ -580,16 +570,12 @@ def cancelar_cita(request, cita_id):
 
             messages.error(
                 request,
-                "Selecciona un motivo válido "
-                "de cancelación.",
+                "Selecciona un motivo válido de cancelación.",
             )
 
     else:
-
         cita = get_object_or_404(
-            obtener_citas_permitidas(
-                request.user
-            ),
+            obtener_citas_permitidas(request.user),
             pk=cita_id,
         )
 
@@ -622,18 +608,18 @@ def cancelar_cita(request, cita_id):
     )
 
 
+# =========================================================
 # CONFIRMAR CITA
+# =========================================================
 
 @login_required
 def confirmar_cita(request):
-
     exigir_rol(
         request.user,
         ROLES_GESTION,
     )
 
     if request.method == "POST":
-
         cita_id = request.POST.get(
             "cita_id",
             "",
@@ -654,19 +640,15 @@ def confirmar_cita(request):
             )
 
         with transaction.atomic():
-
             cita = get_object_or_404(
                 Cita.objects.select_for_update(),
                 pk=cita_id,
             )
 
-            if cita.estado != (
-                Cita.Estado.PROGRAMADA
-            ):
+            if cita.estado != Cita.Estado.PROGRAMADA:
                 messages.error(
                     request,
-                    "La cita ya no está pendiente "
-                    "de confirmación.",
+                    "La cita ya no está pendiente de confirmación.",
                 )
 
             elif not es_fecha_futura(cita):
@@ -676,9 +658,7 @@ def confirmar_cita(request):
                 )
 
             else:
-                cita.estado = (
-                    Cita.Estado.CONFIRMADA
-                )
+                cita.estado = Cita.Estado.CONFIRMADA
 
                 cita.save(
                     update_fields=[
@@ -717,18 +697,16 @@ def confirmar_cita(request):
     )
 
 
+# =========================================================
 # CITA DE EMERGENCIA
+# =========================================================
 
 @login_required
 def cita_emergencia(request):
-
     exigir_rol(
         request.user,
         ROLES_AGENDAR,
     )
-
-    # Los datos de contacto se configurarán
-    # posteriormente desde Administración.
 
     return render(
         request,
@@ -739,23 +717,22 @@ def cita_emergencia(request):
     )
 
 
+# =========================================================
 # HORARIOS DISPONIBLES
+# =========================================================
 
 @login_required
 def horarios_disponibles(request):
-
     exigir_rol(
         request.user,
         ROLES_AGENDAR,
     )
 
-    fisioterapeutas = (
-        Fisioterapeuta.objects.filter(
-            activo=True,
-            usuario__activo=True,
-        ).select_related(
-            "usuario__usuario"
-        )
+    fisioterapeutas = Fisioterapeuta.objects.filter(
+        activo=True,
+        usuario__activo=True,
+    ).select_related(
+        "usuario__usuario"
     )
 
     fisio_id = request.GET.get(
@@ -783,7 +760,6 @@ def horarios_disponibles(request):
     error = ""
 
     if fisio_id or fecha_str:
-
         if not fisio_id or not fecha:
             error = (
                 "Selecciona un fisioterapeuta "
@@ -812,14 +788,11 @@ def horarios_disponibles(request):
                 )
 
             else:
-
-                jornadas = (
-                    HorarioDisponible.objects.filter(
-                        fisioterapeuta=fisioterapeuta,
-                        dia_semana=fecha.isoweekday(),
-                        activo=True,
-                    ).order_by("hora_inicio")
-                )
+                jornadas = HorarioDisponible.objects.filter(
+                    fisioterapeuta=fisioterapeuta,
+                    dia_semana=fecha.isoweekday(),
+                    activo=True,
+                ).order_by("hora_inicio")
 
                 citas = list(
                     Cita.objects.filter(
@@ -835,7 +808,6 @@ def horarios_disponibles(request):
                 vistos = set()
 
                 for jornada in jornadas:
-
                     cursor = datetime.combine(
                         fecha,
                         jornada.hora_inicio,
@@ -850,13 +822,11 @@ def horarios_disponibles(request):
                         cursor + timedelta(minutes=60)
                         <= limite
                     ):
-
                         clave = cursor.time().strftime(
                             "%H:%M"
                         )
 
                         if clave not in vistos:
-
                             vistos.add(clave)
 
                             inicio = timezone.make_aware(
@@ -871,21 +841,17 @@ def horarios_disponibles(request):
                             ocupado = False
 
                             for cita in citas:
-
-                                ocupado_inicio = (
-                                    timezone.make_aware(
-                                        datetime.combine(
-                                            cita.fecha,
-                                            cita.hora,
-                                        ),
-                                        zona,
-                                    )
+                                ocupado_inicio = timezone.make_aware(
+                                    datetime.combine(
+                                        cita.fecha,
+                                        cita.hora,
+                                    ),
+                                    zona,
                                 )
 
                                 if (
                                     inicio
-                                    < ocupado_inicio
-                                    + timedelta(minutes=60)
+                                    < ocupado_inicio + timedelta(minutes=60)
                                     and ocupado_inicio < fin
                                 ):
                                     ocupado = True

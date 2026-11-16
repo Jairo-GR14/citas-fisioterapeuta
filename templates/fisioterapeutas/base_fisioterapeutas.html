@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         {% block titulo %}Fisioterapeutas{% endblock %}
@@ -15,43 +16,61 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-blue-100 bg-white">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+    <header class="border-b border-blue-100 bg-white">
 
-        <div>
-            <h1 class="text-xl font-bold text-blue-900">
-                Clínica de Fisioterapia
-            </h1>
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
-            <p class="text-sm text-slate-500">
-                Gestión de fisioterapeutas
-            </p>
+            <div>
+                <h1 class="text-xl font-bold text-blue-900">
+                    Clínica de Fisioterapia
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    Gestión de fisioterapeutas
+                </p>
+            </div>
+
+            <!-- NAVEGACIÓN SEGÚN EL ORIGEN -->
+            {% if request.GET.desde == "reportes" %}
+
+                <a
+                    href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                >
+                    ← Volver al reporte de fisioterapeutas
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'usuarios:redireccion_por_rol' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                >
+                    Volver al panel
+                </a>
+
+            {% endif %}
+
         </div>
 
-        <a
-            href="{% url 'usuarios:redireccion_por_rol' %}"
-            class="rounded-xl border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700"
-        >
-            Volver al panel
-        </a>
+    </header>
 
-    </div>
-</header>
+    <main class="mx-auto max-w-6xl px-6 py-10">
 
-<main class="mx-auto max-w-6xl px-6 py-10">
+        {% if messages %}
+            {% for message in messages %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-5 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+                <div class="mb-5 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                    {{ message }}
+                </div>
 
-    {% block contenido %}
-    {% endblock %}
+            {% endfor %}
+        {% endif %}
 
-</main>
+        {% block contenido %}
+        {% endblock %}
+
+    </main>
 
 </body>
 </html>

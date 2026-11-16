@@ -89,13 +89,17 @@
                     class="min-w-0 flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm"
                 >
 
-                <button type="submit"
-                        class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                <button
+                    type="submit"
+                    class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                >
                     Buscar
                 </button>
 
-                <a href="{% url 'reportes:reporte_pacientes' %}"
-                   class="rounded-xl border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-600">
+                <a
+                    href="{% url 'reportes:reporte_pacientes' %}"
+                    class="rounded-xl border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-600"
+                >
                     Limpiar
                 </a>
 
@@ -160,14 +164,18 @@
                                     <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                                         {{ paciente.tratamientos_activos|default:"0" }} activos
                                     </span>
+
                                     <p class="mt-2 text-xs text-slate-500">
                                         {{ paciente.total_tratamientos|default:"0" }} en total
                                     </p>
                                 </td>
 
+                                <!-- VER: CONSERVA EL ORIGEN Y LA BÚSQUEDA -->
                                 <td class="px-5 py-4">
-                                    <a href="{% url 'pacientes:detalle_paciente' paciente.id %}"
-                                       class="font-semibold text-blue-700 hover:underline">
+                                    <a
+                                        href="{% url 'pacientes:detalle_paciente' paciente.id %}?desde=reportes{% if request.GET.buscar %}&amp;buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+                                        class="font-semibold text-blue-700 hover:underline"
+                                    >
                                         Ver
                                     </a>
                                 </td>
@@ -176,8 +184,10 @@
 
                         {% empty %}
                             <tr>
-                                <td colspan="7"
-                                    class="px-5 py-10 text-center text-slate-500">
+                                <td
+                                    colspan="7"
+                                    class="px-5 py-10 text-center text-slate-500"
+                                >
                                     No se encontraron pacientes.
                                 </td>
                             </tr>
@@ -187,6 +197,7 @@
 
                 </table>
             </div>
+
         </section>
 
     </main>

@@ -175,7 +175,9 @@ def reporte_fisioterapeutas(request):
     return render(request, "reportes/reporte_fisioterapeutas.html", {
         "fisioterapeutas": fisioterapeutas,
         "total_fisioterapeutas": len(fisioterapeutas),
-        "total_citas_asignadas": sum(f.total_citas for f in fisioterapeutas),
+        "total_citas_asignadas": sum(
+            f.total_citas for f in fisioterapeutas
+        ),
         "total_citas_finalizadas": sum(
             f.citas_finalizadas for f in fisioterapeutas
         ),

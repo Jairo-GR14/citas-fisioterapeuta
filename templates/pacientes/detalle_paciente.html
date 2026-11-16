@@ -21,12 +21,13 @@
         </p>
     </div>
 
+    <!-- ACCIONES DEL PACIENTE -->
     <div class="flex flex-wrap gap-3">
 
         {% if puede_gestionar %}
             <a
                 href="{% url 'pacientes:editar_paciente' paciente.pk %}"
-                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white"
+                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
             >
                 Editar
             </a>
@@ -35,7 +36,7 @@
         {% if puede_historial %}
             <a
                 href="{% url 'pacientes:historial_paciente' paciente.pk %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100"
             >
                 Historial de citas
             </a>
@@ -44,7 +45,7 @@
         {% if puede_desactivar and paciente.activo %}
             <a
                 href="{% url 'pacientes:eliminar_paciente' paciente.pk %}"
-                class="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-700"
+                class="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-700 hover:bg-red-50"
             >
                 Desactivar
             </a>
@@ -63,31 +64,45 @@
 
     <dl class="grid gap-5 sm:grid-cols-2">
 
+        <!-- CORREO -->
         <div>
-            <dt class="text-sm text-slate-500">Correo</dt>
+            <dt class="text-sm text-slate-500">
+                Correo
+            </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.usuario.usuario.email|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- TELÉFONO -->
         <div>
-            <dt class="text-sm text-slate-500">Teléfono</dt>
+            <dt class="text-sm text-slate-500">
+                Teléfono
+            </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.usuario.telefono|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- FECHA DE NACIMIENTO -->
         <div>
             <dt class="text-sm text-slate-500">
                 Fecha de nacimiento
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.fecha_nacimiento|date:"d/m/Y"|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- ESTADO -->
         <div>
-            <dt class="text-sm text-slate-500">Estado</dt>
+            <dt class="text-sm text-slate-500">
+                Estado
+            </dt>
+
             <dd class="mt-1 font-medium">
                 {% if paciente.activo %}
                     Activo
@@ -97,26 +112,34 @@
             </dd>
         </div>
 
+        <!-- DIRECCIÓN -->
         <div class="sm:col-span-2">
-            <dt class="text-sm text-slate-500">Dirección</dt>
+            <dt class="text-sm text-slate-500">
+                Dirección
+            </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.direccion|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- CONTACTO DE EMERGENCIA -->
         <div>
             <dt class="text-sm text-slate-500">
                 Contacto de emergencia
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.contacto_emergencia|default:"Sin registrar" }}
             </dd>
         </div>
 
+        <!-- TELÉFONO DE EMERGENCIA -->
         <div>
             <dt class="text-sm text-slate-500">
                 Teléfono de emergencia
             </dt>
+
             <dd class="mt-1 font-medium">
                 {{ paciente.telefono_emergencia|default:"Sin registrar" }}
             </dd>
@@ -143,13 +166,23 @@
 
 {% endif %}
 
+<!-- NAVEGACIÓN INFERIOR -->
 <div class="mt-8">
 
-    {% if puede_ver_lista %}
+    {% if request.GET.desde == "reportes" %}
+
+        <a
+            href="{% url 'reportes:reporte_pacientes' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+            class="text-sm font-semibold text-blue-700 hover:underline"
+        >
+            ← Volver al reporte de pacientes
+        </a>
+
+    {% elif puede_ver_lista %}
 
         <a
             href="{% url 'pacientes:lista_pacientes' %}"
-            class="text-sm font-semibold text-blue-700"
+            class="text-sm font-semibold text-blue-700 hover:underline"
         >
             Volver a la lista
         </a>
@@ -158,7 +191,7 @@
 
         <a
             href="{% url 'usuarios:redireccion_por_rol' %}"
-            class="text-sm font-semibold text-blue-700"
+            class="text-sm font-semibold text-blue-700 hover:underline"
         >
             Volver a mi panel
         </a>

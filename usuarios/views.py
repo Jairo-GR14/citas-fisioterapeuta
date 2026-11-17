@@ -1,32 +1,61 @@
+
+from decimal import Decimal
+
 from django.contrib import messages
 from django.contrib.auth import (
     authenticate,
+    get_user_model,
     login,
     logout,
     update_session_auth_hash,
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-from django.db import transaction
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.validators import validate_email
+from django.db import IntegrityError, transaction
+from django.db.models import Q, Sum
 from django.shortcuts import redirect, render
+from django.utils import timezone
+from django.utils.dateparse import parse_date
 
+from citas.models import Cita
+from fisioterapeutas.models import Fisioterapeuta
 from pacientes.models import Paciente
 
 from .decorators import rol_requerido
 from .models import PerfilUsuario
 
 
-from decimal import Decimal
+# =========================================================
+# SEGURIDAD: CUENTA Y PERFIL ACTIVOS
+# =========================================================
 
-from django.db.models import Q, Sum
-from django.utils import timezone
+def obtener_perfil_autorizado(usuario):
+    """
+    Permite superusuarios sin perfil, pero nunca
+    cuentas o perfiles desactivados.
+    """
 
-from citas.models import Cita
-from fisioterapeutas.models import Fisioterapeuta
+    if not usuario.is_authenticated or not usuario.is_active:
+        raise PermissionDenied(
+            "Tu cuenta no está activa."
+        )
 
+    perfil = getattr(usuario, "perfil", None)
+
+    if perfil is not None and not perfil.activo:
+        raise PermissionDenied(
+            "Tu perfil está desactivado."
+        )
+
+    if perfil is None and not usuario.is_superuser:
+        raise PermissionDenied(
+            "Tu usuario no tiene un perfil asignado."
+        )
+
+    return perfil
 
 
 # =========================================================
@@ -34,29 +63,47 @@ from fisioterapeutas.models import Fisioterapeuta
 # =========================================================
 
 def iniciar_sesion(request):
+
     if request.user.is_authenticated:
-        return redirect("usuarios:redireccion_por_rol")
+        return redirect(
+            "usuarios:redireccion_por_rol"
+        )
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
 
         usuario = authenticate(
             request,
-            username=username,
-            password=password,
+            username=request.POST.get(
+                "username", ""
+            ).strip(),
+            password=request.POST.get(
+                "password", ""
+            ),
         )
 
-        if usuario is not None:
-            login(request, usuario)
+        if usuario is not None and usuario.is_active:
 
-            return redirect(
-                "usuarios:redireccion_por_rol"
+            perfil = getattr(
+                usuario,
+                "perfil",
+                None,
             )
+
+            if (
+                (perfil is None and usuario.is_superuser)
+                or (perfil is not None and perfil.activo)
+            ):
+
+                login(request, usuario)
+
+                return redirect(
+                    "usuarios:redireccion_por_rol"
+                )
 
         messages.error(
             request,
-            "Usuario o contraseña incorrectos.",
+            "Usuario o contraseña incorrectos, "
+            "o cuenta no disponible.",
         )
 
     return render(
@@ -70,6 +117,7 @@ def iniciar_sesion(request):
 # =========================================================
 
 def cerrar_sesion(request):
+
     logout(request)
 
     return redirect(
@@ -83,109 +131,133 @@ def cerrar_sesion(request):
 
 @login_required
 def redireccion_por_rol(request):
-    if request.user.is_superuser:
-        return redirect(
-            "usuarios:dashboard_administrador"
-        )
 
-    try:
-        rol = request.user.perfil.rol
+    perfil = getattr(
+        request.user,
+        "perfil",
+        None,
+    )
 
-    except AttributeError:
-        messages.error(
-            request,
-            "Tu usuario no tiene un perfil asignado.",
+    if (
+        not request.user.is_active
+        or (
+            perfil is not None
+            and not perfil.activo
         )
+    ):
 
         logout(request)
+
+        messages.error(
+            request,
+            "Tu cuenta o perfil está desactivado.",
+        )
 
         return redirect(
             "usuarios:login"
         )
 
-    if rol == PerfilUsuario.Rol.ADMINISTRADOR:
+    if request.user.is_superuser:
+
         return redirect(
             "usuarios:dashboard_administrador"
         )
 
-    if rol == PerfilUsuario.Rol.RECEPCIONISTA:
-        return redirect(
-            "usuarios:dashboard_recepcionista"
+    if perfil is None:
+
+        logout(request)
+
+        messages.error(
+            request,
+            "Tu usuario no tiene un perfil asignado.",
         )
 
-    if rol == PerfilUsuario.Rol.FISIOTERAPEUTA:
         return redirect(
-            "usuarios:dashboard_fisioterapeuta"
+            "usuarios:login"
         )
 
-    if rol == PerfilUsuario.Rol.PACIENTE:
-        return redirect(
-            "usuarios:dashboard_paciente"
-        )
+    destinos = {
+        PerfilUsuario.Rol.ADMINISTRADOR:
+            "usuarios:dashboard_administrador",
 
-    messages.error(
-        request,
-        "Tu usuario no tiene un rol válido.",
+        PerfilUsuario.Rol.RECEPCIONISTA:
+            "usuarios:dashboard_recepcionista",
+
+        PerfilUsuario.Rol.FISIOTERAPEUTA:
+            "usuarios:dashboard_fisioterapeuta",
+
+        PerfilUsuario.Rol.PACIENTE:
+            "usuarios:dashboard_paciente",
+    }
+
+    destino = destinos.get(
+        perfil.rol
     )
 
-    return redirect(
-        "usuarios:login"
-    )
+    if destino is None:
+
+        logout(request)
+
+        messages.error(
+            request,
+            "Tu usuario no tiene un rol válido.",
+        )
+
+        return redirect(
+            "usuarios:login"
+        )
+
+    return redirect(destino)
 
 
 # =========================================================
-# REGISTRO DE PACIENTE
+# REGISTRO DE PACIENTES
 # =========================================================
 
 def registro(request):
+
     if request.user.is_authenticated:
+
         return redirect(
             "usuarios:redireccion_por_rol"
         )
 
     if request.method == "POST":
+
         nombre = request.POST.get(
-            "nombre",
-            "",
+            "nombre", ""
         ).strip()
 
         apellidos = request.POST.get(
-            "apellidos",
-            "",
+            "apellidos", ""
         ).strip()
 
-        fecha_nacimiento = (
-            request.POST.get("fecha_nacimiento")
-            or None
-        )
-
         telefono = request.POST.get(
-            "telefono",
-            "",
+            "telefono", ""
         ).strip()
 
         correo = request.POST.get(
-            "correo",
-            "",
-        ).strip()
+            "correo", ""
+        ).strip().lower()
 
         username = request.POST.get(
-            "usuario",
-            "",
+            "usuario", ""
         ).strip()
 
         password = request.POST.get(
-            "password",
-            "",
+            "password", ""
         )
 
         password2 = request.POST.get(
-            "password2",
-            "",
+            "password2", ""
         )
 
-        # Validar campos obligatorios
-        if not all([
+        fecha_texto = request.POST.get(
+            "fecha_nacimiento", ""
+        ).strip()
+
+        # Validar campos obligatorios.
+        if not all((
             nombre,
             apellidos,
             telefono,
@@ -193,7 +265,8 @@ def registro(request):
             username,
             password,
             password2,
-        ]):
+        )):
+
             messages.error(
                 request,
                 "Completa todos los campos obligatorios.",
@@ -204,8 +277,77 @@ def registro(request):
                 "usuarios/registro.html",
             )
 
-        # Validar contraseñas
+        # Validar longitud del usuario y teléfono.
+        if (
+            len(username) > 150
+            or len(telefono) > 20
+        ):
+
+            messages.error(
+                request,
+                "El usuario o teléfono supera "
+                "la longitud permitida.",
+            )
+
+            return render(
+                request,
+                "usuarios/registro.html",
+            )
+
+        # Validar correo electrónico.
+        try:
+
+            validate_email(correo)
+
+            if len(correo) > 254:
+
+                raise ValidationError(
+                    "Correo demasiado largo."
+                )
+
+        except ValidationError:
+
+            messages.error(
+                request,
+                "Ingresa un correo electrónico válido.",
+            )
+
+            return render(
+                request,
+                "usuarios/registro.html",
+            )
+
+        # Validar fecha de nacimiento.
+        try:
+
+            fecha_nacimiento = (
+                parse_date(fecha_texto)
+                if fecha_texto
+                else None
+            )
+
+        except ValueError:
+
+            fecha_nacimiento = None
+
+        if fecha_texto and (
+            fecha_nacimiento is None
+            or fecha_nacimiento > timezone.localdate()
+        ):
+
+            messages.error(
+                request,
+                "La fecha de nacimiento no es válida.",
+            )
+
+            return render(
+                request,
+                "usuarios/registro.html",
+            )
+
+        # Validar contraseñas.
         if password != password2:
+
             messages.error(
                 request,
                 "Las contraseñas no coinciden.",
@@ -216,10 +358,13 @@ def registro(request):
                 "usuarios/registro.html",
             )
 
-        # Validar usuario repetido
-        if User.objects.filter(
+        Usuario = get_user_model()
+
+        # Validar nombre de usuario duplicado.
+        if Usuario.objects.filter(
             username=username
         ).exists():
+
             messages.error(
                 request,
                 "Ese nombre de usuario ya está registrado.",
@@ -230,10 +375,11 @@ def registro(request):
                 "usuarios/registro.html",
             )
 
-        # Validar correo repetido
-        if User.objects.filter(
+        # Validar correo duplicado.
+        if Usuario.objects.filter(
             email__iexact=correo
         ).exists():
+
             messages.error(
                 request,
                 "Ese correo electrónico ya está registrado.",
@@ -244,12 +390,25 @@ def registro(request):
                 "usuarios/registro.html",
             )
 
-        # Validar seguridad de contraseña
+        # Validar seguridad de contraseña.
+        usuario_temporal = Usuario(
+            username=username,
+            email=correo,
+            first_name=nombre,
+            last_name=apellidos,
+        )
+
         try:
-            validate_password(password)
+
+            validate_password(
+                password,
+                user=usuario_temporal,
+            )
 
         except ValidationError as errores:
+
             for error in errores.messages:
+
                 messages.error(
                     request,
                     error,
@@ -260,11 +419,12 @@ def registro(request):
                 "usuarios/registro.html",
             )
 
-        # Crear usuario, perfil y paciente
+        # Crear usuario, perfil y paciente.
         try:
+
             with transaction.atomic():
 
-                usuario = User.objects.create_user(
+                usuario = Usuario.objects.create_user(
                     username=username,
                     email=correo,
                     password=password,
@@ -285,7 +445,12 @@ def registro(request):
                     fecha_nacimiento=fecha_nacimiento,
                 )
 
-        except Exception:
+        except (
+            IntegrityError,
+            ValidationError,
+            ValueError,
+        ):
+
             messages.error(
                 request,
                 "No fue posible crear la cuenta.",
@@ -313,15 +478,14 @@ def registro(request):
 
 
 # =========================================================
-# PERFIL
+# CONSULTAR PERFIL
 # =========================================================
 
 @login_required
 def perfil(request):
-    perfil_usuario = getattr(
-        request.user,
-        "perfil",
-        None,
+
+    perfil_usuario = obtener_perfil_autorizado(
+        request.user
     )
 
     return render(
@@ -339,45 +503,118 @@ def perfil(request):
 
 @login_required
 def editar_perfil(request):
-    perfil_usuario = getattr(
-        request.user,
-        "perfil",
-        None,
+
+    perfil_usuario = obtener_perfil_autorizado(
+        request.user
     )
 
     if request.method == "POST":
-        request.user.first_name = (
-            request.POST.get(
-                "nombre",
-                "",
-            ).strip()
-        )
 
-        request.user.last_name = (
-            request.POST.get(
-                "apellidos",
-                "",
-            ).strip()
-        )
+        nombre = request.POST.get(
+            "nombre", ""
+        ).strip()
 
-        request.user.email = (
-            request.POST.get(
-                "email",
-                "",
-            ).strip()
-        )
+        apellidos = request.POST.get(
+            "apellidos", ""
+        ).strip()
 
-        request.user.save()
+        correo = request.POST.get(
+            "email", ""
+        ).strip().lower()
 
-        if perfil_usuario:
-            perfil_usuario.telefono = (
-                request.POST.get(
-                    "telefono",
-                    "",
-                ).strip()
+        telefono = request.POST.get(
+            "telefono", ""
+        ).strip()
+
+        # Validar correo electrónico.
+        try:
+
+            validate_email(correo)
+
+            if len(correo) > 254:
+
+                raise ValidationError(
+                    "Correo demasiado largo."
+                )
+
+        except ValidationError:
+
+            messages.error(
+                request,
+                "Ingresa un correo electrónico válido.",
             )
 
-            perfil_usuario.save()
+            return render(
+                request,
+                "usuarios/editar_perfil.html",
+                {
+                    "perfil_usuario": perfil_usuario,
+                },
+            )
+
+        # Validar teléfono.
+        if len(telefono) > 20:
+
+            messages.error(
+                request,
+                "El teléfono no puede superar 20 caracteres.",
+            )
+
+            return render(
+                request,
+                "usuarios/editar_perfil.html",
+                {
+                    "perfil_usuario": perfil_usuario,
+                },
+            )
+
+        # Evitar correos duplicados.
+        Usuario = get_user_model()
+
+        if Usuario.objects.filter(
+            email__iexact=correo
+        ).exclude(
+            pk=request.user.pk
+        ).exists():
+
+            messages.error(
+                request,
+                "Ese correo electrónico ya está registrado.",
+            )
+
+            return render(
+                request,
+                "usuarios/editar_perfil.html",
+                {
+                    "perfil_usuario": perfil_usuario,
+                },
+            )
+
+        # Guardar los cambios.
+        with transaction.atomic():
+
+            request.user.first_name = nombre
+            request.user.last_name = apellidos
+            request.user.email = correo
+
+            request.user.save(
+                update_fields=[
+                    "first_name",
+                    "last_name",
+                    "email",
+                ]
+            )
+
+            if perfil_usuario is not None:
+
+                perfil_usuario.telefono = telefono
+
+                perfil_usuario.save(
+                    update_fields=[
+                        "telefono",
+                        "fecha_actualizacion",
+                    ]
+                )
 
         messages.success(
             request,
@@ -403,13 +640,20 @@ def editar_perfil(request):
 
 @login_required
 def cambiar_contrasena(request):
+
+    obtener_perfil_autorizado(
+        request.user
+    )
+
     if request.method == "POST":
+
         formulario = PasswordChangeForm(
             request.user,
             request.POST,
         )
 
         if formulario.is_valid():
+
             usuario = formulario.save()
 
             update_session_auth_hash(
@@ -427,6 +671,7 @@ def cambiar_contrasena(request):
             )
 
     else:
+
         formulario = PasswordChangeForm(
             request.user
         )
@@ -440,7 +685,6 @@ def cambiar_contrasena(request):
     )
 
 
-
 # =========================================================
 # FUNCIÓN AUXILIAR: CITAS FUTURAS
 # =========================================================
@@ -448,8 +692,9 @@ def cambiar_contrasena(request):
 def obtener_citas_futuras(citas):
     """
     Devuelve citas programadas o confirmadas
-    que todavía no han comenzado.
+    cuyo inicio todavía no ha pasado.
     """
+
     ahora = timezone.localtime()
 
     return citas.filter(
@@ -458,7 +703,9 @@ def obtener_citas_futuras(citas):
             Cita.Estado.CONFIRMADA,
         ]
     ).filter(
-        Q(fecha__gt=ahora.date())
+        Q(
+            fecha__gt=ahora.date()
+        )
         | Q(
             fecha=ahora.date(),
             hora__gte=ahora.time(),
@@ -476,7 +723,9 @@ def dashboard_administrador(request):
 
     hoy = timezone.localdate()
 
-    total_pacientes = Paciente.objects.count()
+    total_pacientes = (
+        Paciente.objects.count()
+    )
 
     total_fisioterapeutas = (
         Fisioterapeuta.objects.count()
@@ -488,8 +737,7 @@ def dashboard_administrador(request):
         estado=Cita.Estado.CANCELADA
     ).count()
 
-    # Proyección de ingresos por citas pendientes.
-    # No representa pagos recibidos.
+    # Proyección de ingresos, no pagos recibidos.
     ingreso_estimado = obtener_citas_futuras(
         Cita.objects.all()
     ).aggregate(
@@ -506,18 +754,16 @@ def dashboard_administrador(request):
         "-pk",
     )[:10]
 
-    contexto = {
-        "total_pacientes": total_pacientes,
-        "total_fisioterapeutas": total_fisioterapeutas,
-        "citas_hoy": citas_hoy,
-        "ingreso_estimado": ingreso_estimado,
-        "citas": citas,
-    }
-
     return render(
         request,
         "dashboard/dashboard_admin.html",
-        contexto,
+        {
+            "total_pacientes": total_pacientes,
+            "total_fisioterapeutas": total_fisioterapeutas,
+            "citas_hoy": citas_hoy,
+            "ingreso_estimado": ingreso_estimado,
+            "citas": citas,
+        },
     )
 
 
@@ -537,7 +783,9 @@ def dashboard_recepcionista(request):
         estado=Cita.Estado.CANCELADA
     ).count()
 
-    total_pacientes = Paciente.objects.count()
+    total_pacientes = (
+        Paciente.objects.count()
+    )
 
     citas_pendientes = obtener_citas_futuras(
         Cita.objects.all()
@@ -556,17 +804,15 @@ def dashboard_recepcionista(request):
         "hora"
     )
 
-    contexto = {
-        "citas_hoy": citas_hoy,
-        "total_pacientes": total_pacientes,
-        "citas_pendientes": citas_pendientes,
-        "citas": citas,
-    }
-
     return render(
         request,
         "dashboard/dashboard_recepcionista.html",
-        contexto,
+        {
+            "citas_hoy": citas_hoy,
+            "total_pacientes": total_pacientes,
+            "citas_pendientes": citas_pendientes,
+            "citas": citas,
+        },
     )
 
 
@@ -580,7 +826,7 @@ def dashboard_fisioterapeuta(request):
 
     hoy = timezone.localdate()
 
-    # Solo las citas asignadas al usuario actual.
+    # Solo citas del fisioterapeuta autenticado.
     citas_propias = Cita.objects.filter(
         fisioterapeuta__usuario__usuario=request.user
     )
@@ -591,7 +837,6 @@ def dashboard_fisioterapeuta(request):
         estado=Cita.Estado.CANCELADA
     ).count()
 
-    # Pacientes distintos con citas finalizadas.
     pacientes_atendidos = citas_propias.filter(
         estado=Cita.Estado.FINALIZADA
     ).values(
@@ -625,18 +870,16 @@ def dashboard_fisioterapeuta(request):
         "hora"
     )
 
-    contexto = {
-        "citas_hoy": citas_hoy,
-        "pacientes_atendidos": pacientes_atendidos,
-        "citas_pendientes": citas_pendientes,
-        "proxima_cita": proxima_cita,
-        "citas": citas,
-    }
-
     return render(
         request,
         "dashboard/dashboard_fisioterapeuta.html",
-        contexto,
+        {
+            "citas_hoy": citas_hoy,
+            "pacientes_atendidos": pacientes_atendidos,
+            "citas_pendientes": citas_pendientes,
+            "proxima_cita": proxima_cita,
+            "citas": citas,
+        },
     )
 
 
@@ -648,7 +891,7 @@ def dashboard_fisioterapeuta(request):
 @rol_requerido(["PACIENTE"])
 def dashboard_paciente(request):
 
-    # Solo las citas del paciente autenticado.
+    # Solo citas del paciente autenticado.
     citas_propias = Cita.objects.filter(
         paciente__usuario__usuario=request.user
     )
@@ -657,7 +900,9 @@ def dashboard_paciente(request):
         citas_propias
     )
 
-    citas_pendientes = citas_futuras.count()
+    citas_pendientes = (
+        citas_futuras.count()
+    )
 
     citas_completadas = citas_propias.filter(
         estado=Cita.Estado.FINALIZADA
@@ -674,15 +919,13 @@ def dashboard_paciente(request):
 
     proxima_cita = citas.first()
 
-    contexto = {
-        "proxima_cita": proxima_cita,
-        "citas_pendientes": citas_pendientes,
-        "citas_completadas": citas_completadas,
-        "citas": citas,
-    }
-
     return render(
         request,
         "dashboard/dashboard_paciente.html",
-        contexto,
+        {
+            "proxima_cita": proxima_cita,
+            "citas_pendientes": citas_pendientes,
+            "citas_completadas": citas_completadas,
+            "citas": citas,
+        },
     )

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+
+from datetime import datetime
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -10,21 +11,50 @@ from citas.models import Cita
 from usuarios.decorators import rol_requerido
 from usuarios.models import PerfilUsuario
 
-from .forms import ConsultaForm
+from .forms import ConsultaForm, FinalizarConsultaForm
 from .models import Consulta
 
+
+# =========================================================
+# VERIFICAR PERMISOS
+# =========================================================
+
 def verificar_acceso(request, cita):
-    if request.user.is_superuser:
+
+    usuario = request.user
+
+    # El usuario debe estar autenticado y activo.
+    if not usuario.is_authenticated or not usuario.is_active:
+        raise PermissionDenied(
+            "Tu cuenta no está activa o no has iniciado sesión."
+        )
+
+    # Los superusuarios activos tienen acceso.
+    if usuario.is_superuser:
         return
 
-    perfil = request.user.perfil
+    # Obtener perfil.
+    perfil = getattr(usuario, "perfil", None)
 
+    if perfil is None:
+        raise PermissionDenied(
+            "No tienes un perfil registrado en el sistema."
+        )
+
+    # Bloquear perfiles desactivados.
+    if not perfil.activo:
+        raise PermissionDenied(
+            "Tu perfil está desactivado."
+        )
+
+    # Permitir administradores.
     if perfil.rol == PerfilUsuario.Rol.ADMINISTRADOR:
         return
 
+    # Permitir al fisioterapeuta asignado.
     if (
         perfil.rol == PerfilUsuario.Rol.FISIOTERAPEUTA
-        and cita.fisioterapeuta.usuario_id == perfil.id
+        and cita.fisioterapeuta.usuario_id == perfil.pk
     ):
         return
 
@@ -32,7 +62,13 @@ def verificar_acceso(request, cita):
         "No tienes permiso para acceder a esta consulta."
     )
 
+
+# =========================================================
+# OBTENER CONSULTA
+# =========================================================
+
 def obtener_consulta(request, consulta_id):
+
     consulta = get_object_or_404(
         Consulta.objects.select_related(
             "cita",
@@ -41,12 +77,70 @@ def obtener_consulta(request, consulta_id):
             "cita__motivo",
             "cita__servicio",
         ),
-        id=consulta_id,
+        pk=consulta_id,
     )
 
-    verificar_acceso(request, consulta.cita)
+    verificar_acceso(
+        request,
+        consulta.cita,
+    )
 
     return consulta
+
+
+# =========================================================
+# FECHA Y HORA PROGRAMADAS
+# =========================================================
+
+def _fecha_hora_programada(cita):
+
+    fecha_hora = datetime.combine(
+        cita.fecha,
+        cita.hora,
+    )
+
+    # Convertir a la zona horaria configurada
+    # cuando Django utiliza fechas conscientes.
+    if timezone.is_aware(timezone.now()):
+
+        fecha_hora = timezone.make_aware(
+            fecha_hora,
+            timezone.get_current_timezone(),
+        )
+
+    return fecha_hora
+
+
+# =========================================================
+# VALIDAR SI UNA CITA PUEDE INICIARSE
+# =========================================================
+
+def _motivo_inicio_no_permitido(cita):
+
+    if cita.estado == Cita.Estado.CANCELADA:
+        return "No puedes iniciar una cita cancelada."
+
+    if cita.estado == Cita.Estado.FINALIZADA:
+        return "Esta cita ya fue finalizada."
+
+    if cita.estado != Cita.Estado.CONFIRMADA:
+        return (
+            "La cita debe estar confirmada "
+            "para iniciar la consulta."
+        )
+
+    if timezone.now() < _fecha_hora_programada(cita):
+        return (
+            "No puedes iniciar la consulta antes "
+            "de la fecha y hora programadas."
+        )
+
+    return None
+
+
+# =========================================================
+# INICIAR CONSULTA
+# =========================================================
 
 @rol_requerido(["ADMINISTRADOR", "FISIOTERAPEUTA"])
 def iniciar_consulta(request, cita_id):
@@ -58,58 +152,104 @@ def iniciar_consulta(request, cita_id):
             "motivo",
             "servicio",
         ),
-        id=cita_id,
+        pk=cita_id,
     )
 
     verificar_acceso(request, cita)
 
-    if cita.estado == Cita.Estado.CANCELADA:
+    # Bloquear citas canceladas o finalizadas.
+    if cita.estado in (
+        Cita.Estado.CANCELADA,
+        Cita.Estado.FINALIZADA,
+    ):
+
         messages.error(
             request,
-            "No puedes iniciar una cita cancelada.",
+            _motivo_inicio_no_permitido(cita),
         )
 
         return redirect(
             "usuarios:redireccion_por_rol"
         )
 
-    if cita.estado == Cita.Estado.FINALIZADA:
-        messages.error(
-            request,
-            "Esta cita ya fue finalizada.",
-        )
-
-        return redirect(
-            "usuarios:redireccion_por_rol"
-        )
-
+    # Si ya existe consulta, abrir su detalle.
     consulta_existente = Consulta.objects.filter(
         cita=cita
     ).first()
 
     if consulta_existente:
+
         return redirect(
             "consultas:detalle_consulta",
-            consulta_id=consulta_existente.id,
+            consulta_id=consulta_existente.pk,
+        )
+
+    # Validar estado y horario.
+    motivo = _motivo_inicio_no_permitido(cita)
+
+    if motivo:
+
+        messages.error(request, motivo)
+
+        return redirect(
+            "usuarios:redireccion_por_rol"
         )
 
     if request.method == "POST":
 
         with transaction.atomic():
 
-            consulta, creada = Consulta.objects.get_or_create(
-                cita=cita,
-                defaults={
-                    "fecha_inicio": timezone.now(),
-                },
+            # Bloquear la cita durante la operación.
+            cita_actual = Cita.objects.select_for_update().get(
+                pk=cita.pk
             )
 
-            if not creada and consulta.fecha_inicio is None:
-                consulta.fecha_inicio = timezone.now()
-                consulta.save()
+            verificar_acceso(
+                request,
+                cita_actual,
+            )
 
-            cita.estado = Cita.Estado.EN_PROCESO
-            cita.save()
+            # Comprobar nuevamente si existe
+            # una consulta relacionada.
+            consulta_existente = Consulta.objects.filter(
+                cita=cita_actual
+            ).first()
+
+            if consulta_existente:
+
+                return redirect(
+                    "consultas:detalle_consulta",
+                    consulta_id=consulta_existente.pk,
+                )
+
+            # Volver a validar dentro de la transacción.
+            motivo = _motivo_inicio_no_permitido(
+                cita_actual
+            )
+
+            if motivo:
+
+                messages.error(
+                    request,
+                    motivo,
+                )
+
+                return redirect(
+                    "usuarios:redireccion_por_rol"
+                )
+
+            # Crear consulta.
+            consulta = Consulta.objects.create(
+                cita=cita_actual,
+                fecha_inicio=timezone.now(),
+            )
+
+            # Actualizar estado de la cita.
+            cita_actual.estado = Cita.Estado.EN_PROCESO
+
+            cita_actual.save(
+                update_fields=["estado"]
+            )
 
         messages.success(
             request,
@@ -118,7 +258,7 @@ def iniciar_consulta(request, cita_id):
 
         return redirect(
             "consultas:registrar_valoracion",
-            consulta_id=consulta.id,
+            consulta_id=consulta.pk,
         )
 
     return render(
@@ -129,6 +269,11 @@ def iniciar_consulta(request, cita_id):
         },
     )
 
+
+# =========================================================
+# REGISTRAR VALORACIÓN
+# =========================================================
+
 @rol_requerido(["ADMINISTRADOR", "FISIOTERAPEUTA"])
 def registrar_valoracion(request, consulta_id):
 
@@ -138,6 +283,7 @@ def registrar_valoracion(request, consulta_id):
     )
 
     if consulta.cita.estado != Cita.Estado.EN_PROCESO:
+
         messages.error(
             request,
             "Solo puedes modificar una consulta en proceso.",
@@ -145,7 +291,7 @@ def registrar_valoracion(request, consulta_id):
 
         return redirect(
             "consultas:detalle_consulta",
-            consulta_id=consulta.id,
+            consulta_id=consulta.pk,
         )
 
     if request.method == "POST":
@@ -166,7 +312,7 @@ def registrar_valoracion(request, consulta_id):
 
             return redirect(
                 "consultas:detalle_consulta",
-                consulta_id=consulta.id,
+                consulta_id=consulta.pk,
             )
 
     else:
@@ -185,6 +331,11 @@ def registrar_valoracion(request, consulta_id):
         },
     )
 
+
+# =========================================================
+# DETALLE DE CONSULTA
+# =========================================================
+
 @rol_requerido(["ADMINISTRADOR", "FISIOTERAPEUTA"])
 def detalle_consulta(request, consulta_id):
 
@@ -202,6 +353,11 @@ def detalle_consulta(request, consulta_id):
         },
     )
 
+
+# =========================================================
+# FINALIZAR CONSULTA
+# =========================================================
+
 @rol_requerido(["ADMINISTRADOR", "FISIOTERAPEUTA"])
 def finalizar_consulta(request, consulta_id):
 
@@ -212,6 +368,7 @@ def finalizar_consulta(request, consulta_id):
 
     cita = consulta.cita
 
+    # No finalizar dos veces.
     if cita.estado == Cita.Estado.FINALIZADA:
 
         messages.info(
@@ -221,9 +378,10 @@ def finalizar_consulta(request, consulta_id):
 
         return redirect(
             "consultas:detalle_consulta",
-            consulta_id=consulta.id,
+            consulta_id=consulta.pk,
         )
 
+    # Solo se finalizan consultas en proceso.
     if cita.estado != Cita.Estado.EN_PROCESO:
 
         messages.error(
@@ -233,11 +391,17 @@ def finalizar_consulta(request, consulta_id):
 
         return redirect(
             "consultas:detalle_consulta",
-            consulta_id=consulta.id,
+            consulta_id=consulta.pk,
         )
+
+    # Crear formulario de cierre.
+    formulario_cierre = FinalizarConsultaForm(
+        request.POST if request.method == "POST" else None
+    )
 
     if request.method == "POST":
 
+        # Validar datos clínicos obligatorios.
         if (
             not consulta.valoracion_inicial.strip()
             or not consulta.diagnostico.strip()
@@ -251,26 +415,88 @@ def finalizar_consulta(request, consulta_id):
 
             return redirect(
                 "consultas:registrar_valoracion",
-                consulta_id=consulta.id,
+                consulta_id=consulta.pk,
             )
 
-        with transaction.atomic():
+        # Validar costo final.
+        if formulario_cierre.is_valid():
 
-            consulta.fecha_finalizacion = timezone.now()
-            consulta.save()
+            with transaction.atomic():
 
-            cita.estado = Cita.Estado.FINALIZADA
-            cita.save()
+                cita_actual = (
+                    Cita.objects.select_for_update().get(
+                        pk=cita.pk
+                    )
+                )
 
-        messages.success(
-            request,
-            "Consulta finalizada correctamente.",
-        )
+                consulta_actual = (
+                    Consulta.objects.select_for_update().get(
+                        pk=consulta.pk
+                    )
+                )
 
-        return redirect(
-            "consultas:detalle_consulta",
-            consulta_id=consulta.id,
-        )
+                # Verificar nuevamente el estado.
+                if cita_actual.estado != Cita.Estado.EN_PROCESO:
+
+                    messages.error(
+                        request,
+                        "La cita ya no está en proceso.",
+                    )
+
+                    return redirect(
+                        "consultas:detalle_consulta",
+                        consulta_id=consulta.pk,
+                    )
+
+                # Verificar que la información
+                # clínica siga completa.
+                if (
+                    not consulta_actual.valoracion_inicial.strip()
+                    or not consulta_actual.diagnostico.strip()
+                ):
+
+                    messages.error(
+                        request,
+                        "Debes completar la valoración "
+                        "y el diagnóstico.",
+                    )
+
+                    return redirect(
+                        "consultas:registrar_valoracion",
+                        consulta_id=consulta.pk,
+                    )
+
+                # Guardar fecha de finalización.
+                consulta_actual.fecha_finalizacion = timezone.now()
+
+                consulta_actual.save(
+                    update_fields=["fecha_finalizacion"]
+                )
+
+                # Guardar costo final y estado.
+                cita_actual.costo_final = (
+                    formulario_cierre.cleaned_data["costo_final"]
+                )
+
+                cita_actual.estado = Cita.Estado.FINALIZADA
+
+                cita_actual.save(
+                    update_fields=[
+                        "costo_final",
+                        "estado",
+                    ]
+                )
+
+            messages.success(
+                request,
+                "Consulta finalizada y costo final "
+                "registrado correctamente.",
+            )
+
+            return redirect(
+                "consultas:detalle_consulta",
+                consulta_id=consulta.pk,
+            )
 
     return render(
         request,
@@ -278,5 +504,6 @@ def finalizar_consulta(request, consulta_id):
         {
             "consulta": consulta,
             "cita": cita,
+            "formulario_cierre": formulario_cierre,
         },
     )

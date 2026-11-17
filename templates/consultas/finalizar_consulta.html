@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -7,8 +8,7 @@
 
     <title>Finalizar consulta - Clínica de Fisioterapia</title>
 
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-800">
@@ -47,9 +47,7 @@
             </div>
 
         </div>
-
     </header>
-
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="mx-auto max-w-4xl px-6 py-10">
@@ -77,7 +75,6 @@
 
         {% endif %}
 
-
         <!-- ENCABEZADO -->
         <section class="mb-8">
 
@@ -90,14 +87,13 @@
             </h1>
 
             <p class="mt-2 text-sm text-slate-500">
-                Revisa la información registrada antes de
-                finalizar la atención del paciente.
+                Revisa la información clínica y registra el
+                costo final antes de cerrar la atención.
             </p>
 
         </section>
 
-
-        <!-- DATOS DE LA CONSULTA -->
+        <!-- INFORMACIÓN GENERAL -->
         <section class="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
             <h2 class="mb-6 text-lg font-semibold text-blue-900">
@@ -106,9 +102,7 @@
 
             <div class="grid gap-5 sm:grid-cols-2">
 
-                <!-- PACIENTE -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Paciente
                     </p>
@@ -116,13 +110,9 @@
                     <p class="mt-1 font-medium text-slate-800">
                         {{ cita.paciente.usuario.usuario.get_full_name|default:cita.paciente.usuario.usuario.username }}
                     </p>
-
                 </div>
 
-
-                <!-- FISIOTERAPEUTA -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Fisioterapeuta
                     </p>
@@ -130,13 +120,9 @@
                     <p class="mt-1 font-medium text-slate-800">
                         {{ cita.fisioterapeuta.usuario.usuario.get_full_name|default:cita.fisioterapeuta.usuario.usuario.username }}
                     </p>
-
                 </div>
 
-
-                <!-- FECHA -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Fecha de la cita
                     </p>
@@ -144,13 +130,9 @@
                     <p class="mt-1 font-medium text-slate-800">
                         {{ cita.fecha|date:"d/m/Y" }}
                     </p>
-
                 </div>
 
-
-                <!-- HORA -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Hora
                     </p>
@@ -158,13 +140,9 @@
                     <p class="mt-1 font-medium text-slate-800">
                         {{ cita.hora|time:"H:i" }}
                     </p>
-
                 </div>
 
-
-                <!-- SERVICIO -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Servicio
                     </p>
@@ -172,13 +150,9 @@
                     <p class="mt-1 font-medium text-slate-800">
                         {{ cita.servicio.nombre }}
                     </p>
-
                 </div>
 
-
-                <!-- ESTADO -->
                 <div>
-
                     <p class="text-xs font-semibold uppercase text-slate-400">
                         Estado actual
                     </p>
@@ -186,13 +160,11 @@
                     <span class="mt-1 inline-block rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
                         {{ cita.get_estado_display }}
                     </span>
-
                 </div>
 
             </div>
 
         </section>
-
 
         <!-- RESUMEN CLÍNICO -->
         <section class="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
@@ -202,10 +174,8 @@
             </h2>
 
             <p class="mt-2 text-sm text-slate-500">
-                Confirma que la valoración y el diagnóstico
-                estén registrados correctamente.
+                Confirma los datos registrados antes de finalizar.
             </p>
-
 
             <!-- VALORACIÓN -->
             <div class="mt-6">
@@ -234,7 +204,6 @@
 
             </div>
 
-
             <!-- DIAGNÓSTICO -->
             <div class="mt-6">
 
@@ -262,7 +231,6 @@
 
             </div>
 
-
             <!-- ATENCIÓN REALIZADA -->
             <div class="mt-6">
 
@@ -289,7 +257,6 @@
                 </div>
 
             </div>
-
 
             <!-- OBSERVACIONES -->
             <div class="mt-6">
@@ -320,8 +287,7 @@
 
         </section>
 
-
-        <!-- CONFIRMAR FINALIZACIÓN -->
+        <!-- FINALIZACIÓN -->
         <section class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
 
             <div class="p-6">
@@ -337,16 +303,14 @@
                         <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
 
                             <p class="text-sm leading-6 text-amber-800">
-                                Al finalizar la consulta, la cita
-                                cambiará a estado "Finalizada"
-                                y se registrará la fecha y hora
-                                de cierre.
+                                Al confirmar, se guardarán la fecha de cierre,
+                                el costo final y el estado "Finalizada".
                             </p>
 
                             <p class="mt-2 text-sm text-amber-800">
-                                Después de finalizarla, no podrás
-                                modificar la valoración mediante
-                                el formulario actual.
+                                Después no podrás editar la valoración
+                                o los tratamientos mediante los
+                                formularios actuales.
                             </p>
 
                         </div>
@@ -360,9 +324,8 @@
                             </p>
 
                             <p class="mt-2 text-sm text-red-600">
-                                Para finalizar esta consulta primero
-                                debes registrar la valoración inicial
-                                y el diagnóstico.
+                                Debes registrar la valoración inicial
+                                y el diagnóstico antes de finalizar.
                             </p>
 
                         </div>
@@ -373,12 +336,8 @@
 
                     <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
-                        <p class="text-sm font-semibold text-emerald-700">
+                        <p class="text-sm text-emerald-700">
                             Esta consulta ya está finalizada.
-                        </p>
-
-                        <p class="mt-2 text-sm text-emerald-600">
-                            No es necesario volver a finalizarla.
                         </p>
 
                     </div>
@@ -388,51 +347,103 @@
                     <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
 
                         <p class="text-sm text-red-700">
-                            Esta consulta no se encuentra en proceso
-                            y no puede finalizarse.
+                            Esta consulta no se encuentra en proceso.
                         </p>
 
                     </div>
 
                 {% endif %}
 
-            </div>
+                <!-- FORMULARIO DEL COSTO FINAL -->
+                {% if cita.estado == "EN_PROCESO" and consulta.valoracion_inicial and consulta.diagnostico %}
 
+                    <div class="mt-6 rounded-xl bg-slate-50 p-5">
 
-            <!-- BOTONES -->
-            <div class="border-t border-slate-100 bg-slate-50 p-6">
+                        <p class="text-sm text-slate-500">
+                            Costo estimado del servicio
+                        </p>
 
-                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                        <p class="mt-1 text-lg font-semibold text-slate-700">
+                            $ {{ cita.costo_estimado|floatformat:2 }} MXN
+                        </p>
 
-                    <a
-                        href="{% url 'consultas:detalle_consulta' consulta.id %}"
-                        class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                        <p class="mt-2 text-xs text-slate-500">
+                            El costo estimado es informativo.
+                            No se registra automáticamente como ingreso.
+                        </p>
+
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="{% url 'consultas:finalizar_consulta' consulta.id %}"
+                        class="mt-6"
+                        novalidate
                     >
-                        Volver al detalle
-                    </a>
 
+                        {% csrf_token %}
 
-                    {% if cita.estado == "EN_PROCESO" %}
+                        {% if formulario_cierre.non_field_errors %}
 
-                        {% if consulta.valoracion_inicial and consulta.diagnostico %}
+                            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                                {{ formulario_cierre.non_field_errors }}
+                            </div>
 
-                            <form
-                                method="POST"
-                                action="{% url 'consultas:finalizar_consulta' consulta.id %}"
+                        {% endif %}
+
+                        <label
+                            for="{{ formulario_cierre.costo_final.id_for_label }}"
+                            class="mb-2 block text-sm font-semibold text-blue-950"
+                        >
+                            {{ formulario_cierre.costo_final.label }}
+                        </label>
+
+                        {{ formulario_cierre.costo_final }}
+
+                        {% for error in formulario_cierre.costo_final.errors %}
+
+                            <p class="mt-2 text-sm text-red-700">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                        <p class="mt-2 text-xs text-slate-500">
+                            {{ formulario_cierre.costo_final.help_text }}
+                        </p>
+
+                        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+
+                            <a
+                                href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                                class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50"
                             >
+                                Volver al detalle
+                            </a>
 
-                                {% csrf_token %}
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                            >
+                                Confirmar finalización
+                            </button>
 
-                                <button
-                                    type="submit"
-                                    class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-                                >
-                                    Confirmar finalización
-                                </button>
+                        </div>
 
-                            </form>
+                    </form>
 
-                        {% else %}
+                {% else %}
+
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+
+                        <a
+                            href="{% url 'consultas:detalle_consulta' consulta.id %}"
+                            class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                        >
+                            Volver al detalle
+                        </a>
+
+                        {% if cita.estado == "EN_PROCESO" %}
 
                             <a
                                 href="{% url 'consultas:registrar_valoracion' consulta.id %}"
@@ -443,16 +454,15 @@
 
                         {% endif %}
 
-                    {% endif %}
+                    </div>
 
-                </div>
+                {% endif %}
 
             </div>
 
         </section>
 
     </main>
-
 
     <!-- PIE DE PÁGINA -->
     <footer class="mt-8 border-t border-blue-100 bg-white">
@@ -468,5 +478,4 @@
     </footer>
 
 </body>
-
 </html>

@@ -21,7 +21,9 @@ from .forms import CitaForm, EditarCitaForm
 from .models import Cita
 
 
+# =========================================================
 # ROLES AUTORIZADOS
+# =========================================================
 
 ROLES_GESTION = (
     "ADMINISTRADOR",
@@ -42,28 +44,57 @@ MOTIVOS_CANCELACION = {
 }
 
 
-# OBTENER ROL
+# =========================================================
+# OBTENER ROL DEL USUARIO
+# CORREGIDO: VERIFICA CUENTA Y PERFIL ACTIVOS
+# =========================================================
 
 def obtener_rol(usuario):
 
+    # 1. Comprobar que el usuario esté autenticado.
+    if not usuario.is_authenticated:
+        raise PermissionDenied(
+            "Debes iniciar sesión para acceder."
+        )
+
+    # 2. Bloquear cuentas de Django desactivadas.
+    if not usuario.is_active:
+        raise PermissionDenied(
+            "Tu cuenta de usuario está desactivada."
+        )
+
+    # 3. Obtener el perfil del usuario.
+    perfil = getattr(
+        usuario,
+        "perfil",
+        None,
+    )
+
+    # 4. Bloquear perfiles desactivados.
+    # También se aplica a superusuarios con perfil.
+    if perfil is not None and not perfil.activo:
+        raise PermissionDenied(
+            "Tu perfil está desactivado."
+        )
+
+    # 5. Permitir a superusuarios activos.
+    # Un superusuario sin perfil también puede acceder.
     if usuario.is_superuser:
         return "ADMINISTRADOR"
 
-    perfil = getattr(usuario, "perfil", None)
-
-    if (
-        perfil is None
-        or not perfil.activo
-        or not usuario.is_active
-    ):
+    # 6. Los usuarios normales necesitan un perfil.
+    if perfil is None:
         raise PermissionDenied(
-            "Tu cuenta no tiene un perfil activo."
+            "Tu usuario no tiene un perfil asignado."
         )
 
+    # 7. Devolver el rol del perfil.
     return perfil.rol
 
 
-# COMPROBAR PERMISOS
+# =========================================================
+# COMPROBAR PERMISOS POR ROL
+# =========================================================
 
 def exigir_rol(usuario, permitidos):
 
@@ -77,7 +108,9 @@ def exigir_rol(usuario, permitidos):
     return rol
 
 
-# FILTRAR CITAS DEL USUARIO
+# =========================================================
+# FILTRAR CITAS SEGÚN EL USUARIO
+# =========================================================
 
 def obtener_citas_permitidas(usuario):
 
@@ -90,17 +123,17 @@ def obtener_citas_permitidas(usuario):
 
     rol = obtener_rol(usuario)
 
-    # Administración y recepción ven todas las citas.
+    # Administradores y recepcionistas ven todas las citas.
     if rol in ROLES_GESTION:
         return citas
 
-    # El fisioterapeuta ve únicamente sus citas.
+    # El fisioterapeuta solo ve sus propias citas.
     if rol == "FISIOTERAPEUTA":
         return citas.filter(
             fisioterapeuta__usuario=usuario.perfil
         )
 
-    # El paciente ve únicamente sus citas.
+    # El paciente solo ve sus propias citas.
     if rol == "PACIENTE":
         return citas.filter(
             paciente__usuario=usuario.perfil
@@ -111,7 +144,9 @@ def obtener_citas_permitidas(usuario):
     )
 
 
-# ASIGNAR PACIENTE AL FORMULARIO
+# =========================================================
+# CONFIGURAR PACIENTE EN EL FORMULARIO
+# =========================================================
 
 def configurar_paciente(formulario, request, rol):
     """
@@ -145,7 +180,9 @@ def configurar_paciente(formulario, request, rol):
     return True
 
 
+# =========================================================
 # VERIFICAR SI LA CITA ES FUTURA
+# =========================================================
 
 def es_fecha_futura(cita):
 
@@ -160,14 +197,19 @@ def es_fecha_futura(cita):
     return instante > timezone.now()
 
 
+# =========================================================
 # AGENDA GENERAL
+# =========================================================
 
 @login_required
 def agenda(request):
 
     citas = obtener_citas_permitidas(
         request.user
-    ).order_by("fecha", "hora")
+    ).order_by(
+        "fecha",
+        "hora",
+    )
 
     rol = obtener_rol(request.user)
 
@@ -181,7 +223,9 @@ def agenda(request):
     )
 
 
+# =========================================================
 # MIS CITAS
+# =========================================================
 
 @login_required
 def mis_citas(request):
@@ -193,7 +237,10 @@ def mis_citas(request):
 
     citas = obtener_citas_permitidas(
         request.user
-    ).order_by("-fecha", "-hora")
+    ).order_by(
+        "-fecha",
+        "-hora",
+    )
 
     ahora = timezone.localtime()
 
@@ -222,7 +269,9 @@ def mis_citas(request):
     )
 
 
+# =========================================================
 # AGENDAR CITA
+# =========================================================
 
 @login_required
 def agendar_cita(request):
@@ -233,9 +282,13 @@ def agendar_cita(request):
     )
 
     if request.method == "POST":
-        formulario = CitaForm(request.POST)
+
+        formulario = CitaForm(
+            request.POST
+        )
 
     else:
+
         inicial = {
             clave: request.GET[clave]
             for clave in (
@@ -250,11 +303,14 @@ def agendar_cita(request):
             initial=inicial
         )
 
+    # Evitar que un paciente reserve
+    # a nombre de otra persona.
     if not configurar_paciente(
         formulario,
         request,
         rol,
     ):
+
         messages.error(
             request,
             "Primero debes tener un registro "
@@ -269,26 +325,33 @@ def agendar_cita(request):
         request.method == "POST"
         and formulario.is_valid()
     ):
+
         cita = formulario.save(
             commit=False
         )
 
+        # Asignar automáticamente al paciente autenticado.
         if rol == "PACIENTE":
+
             cita.paciente = (
                 request.user.perfil.paciente
             )
 
+        # Obtener el costo estimado del servicio.
         cita.costo_estimado = (
             cita.servicio.precio_base
         )
 
+        # Las citas nuevas quedan programadas.
         cita.estado = Cita.Estado.PROGRAMADA
 
         try:
+
             with transaction.atomic():
                 cita.save()
 
         except IntegrityError:
+
             formulario.add_error(
                 None,
                 "El horario acaba de ocuparse; "
@@ -296,6 +359,7 @@ def agendar_cita(request):
             )
 
         else:
+
             messages.success(
                 request,
                 "Tu cita se programó correctamente.",
@@ -315,7 +379,9 @@ def agendar_cita(request):
     )
 
 
+# =========================================================
 # VER DETALLE DE CITA
+# =========================================================
 
 @login_required
 def detalle_cita(request, cita_id):
@@ -336,7 +402,9 @@ def detalle_cita(request, cita_id):
     )
 
 
-# VERIFICAR SI PUEDE MODIFICAR UNA CITA
+# =========================================================
+# VERIFICAR SI EL USUARIO PUEDE MODIFICAR LA CITA
+# =========================================================
 
 def puede_modificar_cita(usuario, cita):
 
@@ -351,7 +419,9 @@ def puede_modificar_cita(usuario, cita):
     )
 
 
+# =========================================================
 # EDITAR CITA
+# =========================================================
 
 @login_required
 def editar_cita(request, cita_id):
@@ -378,10 +448,12 @@ def editar_cita(request, cita_id):
             ):
                 raise PermissionDenied
 
+            # Solo editar citas programadas o confirmadas.
             if cita.estado not in (
                 Cita.Estado.PROGRAMADA,
                 Cita.Estado.CONFIRMADA,
             ):
+
                 messages.error(
                     request,
                     "Esta cita ya no admite modificaciones.",
@@ -417,30 +489,39 @@ def editar_cita(request, cita_id):
                     editada.servicio_id,
                 )
 
+                # Si cambian datos importantes,
+                # la cita requiere nueva confirmación.
                 if nuevo != anterior:
+
                     editada.estado = (
                         Cita.Estado.PROGRAMADA
                     )
 
+                # Actualizar costo estimado
+                # cuando cambia el servicio.
                 if (
                     editada.servicio_id
                     != anterior[3]
                 ):
+
                     editada.costo_estimado = (
                         editada.servicio.precio_base
                     )
 
                 try:
+
                     with transaction.atomic():
                         editada.save()
 
                 except IntegrityError:
+
                     formulario.add_error(
                         None,
                         "El horario acaba de ocuparse.",
                     )
 
                 else:
+
                     messages.success(
                         request,
                         "La cita se actualizó correctamente.",
@@ -470,6 +551,7 @@ def editar_cita(request, cita_id):
             Cita.Estado.PROGRAMADA,
             Cita.Estado.CONFIRMADA,
         ):
+
             messages.error(
                 request,
                 "Esta cita ya no admite modificaciones.",
@@ -494,7 +576,9 @@ def editar_cita(request, cita_id):
     )
 
 
+# =========================================================
 # CANCELAR CITA
+# =========================================================
 
 @login_required
 def cancelar_cita(request, cita_id):
@@ -521,10 +605,12 @@ def cancelar_cita(request, cita_id):
             ):
                 raise PermissionDenied
 
+            # Solo cancelar citas programadas o confirmadas.
             if cita.estado not in (
                 Cita.Estado.PROGRAMADA,
                 Cita.Estado.CONFIRMADA,
             ):
+
                 messages.error(
                     request,
                     "Esta cita ya no puede cancelarse.",
@@ -552,13 +638,12 @@ def cancelar_cita(request, cita_id):
                 )
 
                 if detalle:
+
                     cita.motivo_cancelacion += (
                         f". {detalle}"
                     )
 
-                cita.estado = (
-                    Cita.Estado.CANCELADA
-                )
+                cita.estado = Cita.Estado.CANCELADA
 
                 cita.save(
                     update_fields=[
@@ -580,8 +665,7 @@ def cancelar_cita(request, cita_id):
 
             messages.error(
                 request,
-                "Selecciona un motivo válido "
-                "de cancelación.",
+                "Selecciona un motivo válido de cancelación.",
             )
 
     else:
@@ -603,6 +687,7 @@ def cancelar_cita(request, cita_id):
             Cita.Estado.PROGRAMADA,
             Cita.Estado.CONFIRMADA,
         ):
+
             messages.error(
                 request,
                 "Esta cita ya no puede cancelarse.",
@@ -622,7 +707,9 @@ def cancelar_cita(request, cita_id):
     )
 
 
+# =========================================================
 # CONFIRMAR CITA
+# =========================================================
 
 @login_required
 def confirmar_cita(request):
@@ -639,11 +726,13 @@ def confirmar_cita(request):
             "",
         )
 
+        # Validar identificador recibido.
         if (
             not cita_id.isascii()
             or not cita_id.isdecimal()
             or len(cita_id) > 18
         ):
+
             messages.error(
                 request,
                 "Selecciona una cita válida.",
@@ -660,9 +749,8 @@ def confirmar_cita(request):
                 pk=cita_id,
             )
 
-            if cita.estado != (
-                Cita.Estado.PROGRAMADA
-            ):
+            if cita.estado != Cita.Estado.PROGRAMADA:
+
                 messages.error(
                     request,
                     "La cita ya no está pendiente "
@@ -670,15 +758,15 @@ def confirmar_cita(request):
                 )
 
             elif not es_fecha_futura(cita):
+
                 messages.error(
                     request,
                     "No puedes confirmar una cita pasada.",
                 )
 
             else:
-                cita.estado = (
-                    Cita.Estado.CONFIRMADA
-                )
+
+                cita.estado = Cita.Estado.CONFIRMADA
 
                 cita.save(
                     update_fields=[
@@ -717,7 +805,9 @@ def confirmar_cita(request):
     )
 
 
+# =========================================================
 # CITA DE EMERGENCIA
+# =========================================================
 
 @login_required
 def cita_emergencia(request):
@@ -729,7 +819,6 @@ def cita_emergencia(request):
 
     # Los datos de contacto se configurarán
     # posteriormente desde Administración.
-
     return render(
         request,
         "citas/cita_emergencia.html",
@@ -739,7 +828,9 @@ def cita_emergencia(request):
     )
 
 
-# HORARIOS DISPONIBLES
+# =========================================================
+# CONSULTAR HORARIOS DISPONIBLES
+# =========================================================
 
 @login_required
 def horarios_disponibles(request):
@@ -771,11 +862,13 @@ def horarios_disponibles(request):
     fisioterapeuta = None
 
     try:
+
         fecha = (
             parse_date(fecha_str)
             if fecha_str
             else None
         )
+
     except ValueError:
         fecha = None
 
@@ -785,12 +878,14 @@ def horarios_disponibles(request):
     if fisio_id or fecha_str:
 
         if not fisio_id or not fecha:
+
             error = (
                 "Selecciona un fisioterapeuta "
                 "y una fecha válida."
             )
 
         else:
+
             fisioterapeuta = (
                 fisioterapeutas.filter(
                     pk=fisio_id
@@ -800,12 +895,14 @@ def horarios_disponibles(request):
             )
 
             if not fisioterapeuta:
+
                 error = (
                     "El fisioterapeuta seleccionado "
                     "no está disponible."
                 )
 
             elif fecha < timezone.localdate():
+
                 error = (
                     "No puedes consultar horarios "
                     "de una fecha pasada."
@@ -818,7 +915,9 @@ def horarios_disponibles(request):
                         fisioterapeuta=fisioterapeuta,
                         dia_semana=fecha.isoweekday(),
                         activo=True,
-                    ).order_by("hora_inicio")
+                    ).order_by(
+                        "hora_inicio"
+                    )
                 )
 
                 citas = list(

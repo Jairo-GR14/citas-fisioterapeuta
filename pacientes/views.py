@@ -5,11 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from citas.models import Cita
@@ -19,37 +15,52 @@ from .forms import EditarPacienteForm, RegistrarPacienteForm
 from .models import Paciente
 
 
+# =========================================================
+# ROLES DE GESTIÓN
+# =========================================================
+
 GESTION = (
     PerfilUsuario.Rol.ADMINISTRADOR,
     PerfilUsuario.Rol.RECEPCIONISTA,
 )
 
 
-# OBTENER ROL
+# =========================================================
+# OBTENER ROL DE FORMA SEGURA
+# =========================================================
 
 def rol_actual(request):
 
     usuario = request.user
 
-    if not usuario.is_active:
+    if not usuario.is_authenticated or not usuario.is_active:
         raise PermissionDenied(
-            "Tu cuenta está desactivada."
+            "Tu cuenta está desactivada o no has iniciado sesión."
         )
-
-    if usuario.is_superuser:
-        return PerfilUsuario.Rol.ADMINISTRADOR
 
     perfil = getattr(usuario, "perfil", None)
 
-    if perfil is None or not perfil.activo:
+    # Comprobar el perfil incluso si es superusuario.
+    if perfil is not None and not perfil.activo:
         raise PermissionDenied(
-            "No tienes un perfil activo."
+            "Tu perfil está desactivado."
+        )
+
+    # Un superusuario activo puede no tener perfil.
+    if usuario.is_superuser:
+        return PerfilUsuario.Rol.ADMINISTRADOR
+
+    if perfil is None:
+        raise PermissionDenied(
+            "No tienes un perfil asignado."
         )
 
     return perfil.rol
 
 
-# FILTRAR PACIENTES SEGÚN PERMISOS
+# =========================================================
+# PACIENTES VISIBLES SEGÚN EL ROL
+# =========================================================
 
 def pacientes_visibles(request, incluir_propio=False):
 
@@ -77,7 +88,9 @@ def pacientes_visibles(request, incluir_propio=False):
     )
 
 
+# =========================================================
 # LISTAR PACIENTES
+# =========================================================
 
 @login_required
 def lista_pacientes(request):
@@ -113,7 +126,9 @@ def lista_pacientes(request):
     )
 
 
+# =========================================================
 # REGISTRAR PACIENTE
+# =========================================================
 
 @login_required
 def registrar_paciente(request):
@@ -121,7 +136,9 @@ def registrar_paciente(request):
     rol = rol_actual(request)
 
     if rol not in GESTION:
-        raise PermissionDenied
+        raise PermissionDenied(
+            "No tienes permiso para registrar pacientes."
+        )
 
     formulario = RegistrarPacienteForm(
         request.POST if request.method == "POST" else None,
@@ -163,6 +180,7 @@ def registrar_paciente(request):
                 )
 
         except IntegrityError:
+
             formulario.add_error(
                 None,
                 "No fue posible crear la cuenta. "
@@ -170,6 +188,7 @@ def registrar_paciente(request):
             )
 
         else:
+
             messages.success(
                 request,
                 "Paciente registrado correctamente.",
@@ -189,7 +208,9 @@ def registrar_paciente(request):
     )
 
 
+# =========================================================
 # DETALLE DEL PACIENTE
+# =========================================================
 
 @login_required
 def detalle_paciente(request, paciente_id):
@@ -233,7 +254,9 @@ def detalle_paciente(request, paciente_id):
     )
 
 
+# =========================================================
 # EDITAR PACIENTE
+# =========================================================
 
 @login_required
 def editar_paciente(request, paciente_id):
@@ -241,7 +264,9 @@ def editar_paciente(request, paciente_id):
     rol = rol_actual(request)
 
     if rol not in GESTION:
-        raise PermissionDenied
+        raise PermissionDenied(
+            "No tienes permiso para editar pacientes."
+        )
 
     paciente = get_object_or_404(
         Paciente.objects.select_related(
@@ -314,6 +339,7 @@ def editar_paciente(request, paciente_id):
             paciente.contacto_emergencia = datos["contacto_emergencia"]
             paciente.telefono_emergencia = datos["telefono_emergencia"]
 
+            # Recepción no puede modificar antecedentes clínicos.
             if rol == PerfilUsuario.Rol.ADMINISTRADOR:
                 paciente.antecedentes_medicos = datos[
                     "antecedentes_medicos"
@@ -341,14 +367,16 @@ def editar_paciente(request, paciente_id):
     )
 
 
-# HISTORIAL DEL PACIENTE
+# =========================================================
+# HISTORIAL CLÍNICO DEL PACIENTE
+# =========================================================
 
 @login_required
 def historial_paciente(request, paciente_id):
 
     rol = rol_actual(request)
 
-    # Recepción no tiene acceso a diagnósticos.
+    # Recepción no puede consultar el historial clínico.
     if rol == PerfilUsuario.Rol.RECEPCIONISTA:
         raise PermissionDenied(
             "El historial clínico es privado."
@@ -371,10 +399,8 @@ def historial_paciente(request, paciente_id):
         "consulta",
     )
 
-    # El fisioterapeuta solo ve las consultas
-    # que le fueron asignadas.
+    # El fisioterapeuta solo consulta sus citas asignadas.
     if rol == PerfilUsuario.Rol.FISIOTERAPEUTA:
-
         citas = citas.filter(
             fisioterapeuta__usuario=request.user.perfil
         )
@@ -385,19 +411,24 @@ def historial_paciente(request, paciente_id):
         {
             "paciente": paciente,
             "citas": citas.order_by(
-                "-fecha", "-hora"
+                "-fecha",
+                "-hora",
             ),
         },
     )
 
 
+# =========================================================
 # DESACTIVAR PACIENTE SIN BORRAR SU HISTORIAL
+# =========================================================
 
 @login_required
 def eliminar_paciente(request, paciente_id):
 
     if rol_actual(request) != PerfilUsuario.Rol.ADMINISTRADOR:
-        raise PermissionDenied
+        raise PermissionDenied(
+            "Solo administración puede desactivar pacientes."
+        )
 
     paciente = get_object_or_404(
         Paciente.objects.select_related(
@@ -420,6 +451,7 @@ def eliminar_paciente(request, paciente_id):
         ).exists()
 
         if pendientes:
+
             messages.error(
                 request,
                 "No se puede desactivar: "
@@ -434,6 +466,7 @@ def eliminar_paciente(request, paciente_id):
         with transaction.atomic():
 
             paciente.activo = False
+
             paciente.save(
                 update_fields=[
                     "activo",

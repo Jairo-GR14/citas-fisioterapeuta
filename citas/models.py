@@ -1,8 +1,14 @@
+
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+)
 from django.db import models
 from django.db.models import Q
 
 
 class MotivoConsulta(models.Model):
+
     nombre = models.CharField(
         max_length=150,
         unique=True,
@@ -57,6 +63,26 @@ class Cita(models.Model):
 
     hora = models.TimeField()
 
+    # Duración reservada para ESTA cita.
+    #
+    # Se guarda por separado para que cambiar
+    # la duración de un servicio no modifique
+    # retroactivamente las citas existentes.
+    #
+    # Las citas anteriores a esta actualización
+    # conservarán 60 minutos.
+    duracion_minutos = models.PositiveSmallIntegerField(
+        default=60,
+        validators=[
+            MinValueValidator(15),
+            MaxValueValidator(480),
+        ],
+        help_text=(
+            "Duración reservada de esta cita, "
+            "en minutos."
+        ),
+    )
+
     estado = models.CharField(
         max_length=20,
         choices=Estado.choices,
@@ -92,15 +118,28 @@ class Cita(models.Model):
     )
 
     class Meta:
-        ordering = ["fecha", "hora"]
+
+        ordering = [
+            "fecha",
+            "hora",
+        ]
 
         constraints = [
             models.UniqueConstraint(
-                fields=["fisioterapeuta", "fecha", "hora"],
-                condition=~Q(estado="CANCELADA"),
+                fields=[
+                    "fisioterapeuta",
+                    "fecha",
+                    "hora",
+                ],
+                condition=~Q(
+                    estado="CANCELADA"
+                ),
                 name="cita_unica_fisioterapeuta_horario",
             )
         ]
 
     def __str__(self):
-        return f"{self.paciente} - {self.fecha} {self.hora}"
+        return (
+            f"{self.paciente} - "
+            f"{self.fecha} {self.hora}"
+        )

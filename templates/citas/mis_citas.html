@@ -10,11 +10,13 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
+
     <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
 
-        <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
+            <!-- INFORMACIÓN DE LA CLÍNICA -->
             <div>
                 <h1 class="font-semibold text-blue-900">
                     Clínica de Fisioterapia
@@ -25,33 +27,24 @@
                 </p>
             </div>
 
+            <!-- BOTONES AGRUPADOS A LA DERECHA -->
+            <nav
+                aria-label="Navegación de mis citas"
+                class="ml-auto flex flex-wrap items-center justify-end gap-3"
+            >
 
-            <!-- NAVEGACIÓN -->
-            <nav class="hidden gap-6 text-sm md:flex">
-
+                <!-- AGENDAR CITA -->
                 <a
-                    href="{% url 'citas:mis_citas' %}"
-                    class="font-semibold text-blue-700"
+                    href="{% url 'citas:agendar_cita' %}"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
                 >
-                    Mis citas
+                    + Agendar cita
                 </a>
 
-                <a
-                    href="{% url 'usuarios:redireccion_por_rol' %}"
-                    class="text-slate-500 hover:text-emerald-700"
-                >
-                    Mi panel
-                </a>
+                <!-- VOLVER AL PANEL -->
+                {% include "componentes/boton_volver_panel.html" %}
 
             </nav>
-
-
-            <a
-                href="{% url 'citas:agendar_cita' %}"
-                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-            >
-                + Agendar cita
-            </a>
 
         </div>
 

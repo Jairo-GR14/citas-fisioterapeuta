@@ -15,7 +15,7 @@
 <!-- HEADER -->
 <header class="border-b border-blue-100 bg-white">
 
-    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4 flex-wrap gap-4">
 
         <div>
             <h1 class="font-semibold text-blue-900">
@@ -27,14 +27,18 @@
             </p>
         </div>
 
-        <a
+        <nav aria-label="Navegación de citas"
+     class="ml-auto flex flex-wrap items-center justify-end gap-3">
+<a
             href="{% url 'citas:agendar_cita' %}"
             class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
         >
             ← Regresar
         </a>
+{% include "componentes/boton_volver_panel.html" %}
+</nav>
 
-    </div>
+        </div>
 
 </header>
 
@@ -92,7 +96,7 @@
                     {% else %}
 
                         <p class="mt-1 text-sm text-slate-500">
-                            No hay teléfono registrado.
+                            +52 418 100 00 00
                         </p>
 
                     {% endif %}
@@ -124,7 +128,7 @@
                     {% else %}
 
                         <p class="mt-1 text-sm text-slate-500">
-                            No hay horario registrado.
+                            Lunes a Viernes, 9:00 AM - 2:00 PM
                         </p>
 
                     {% endif %}
@@ -151,10 +155,6 @@
 
         <!-- INFORMACIÓN IMPORTANTE -->
         <section class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-blue-50 to-emerald-50 p-6">
-
-            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-xl shadow-sm">
-                +
-            </div>
 
             <h3 class="mt-5 text-lg font-semibold text-blue-950">
                 Atención prioritaria

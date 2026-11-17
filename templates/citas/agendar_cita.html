@@ -10,11 +10,13 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
+
     <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
 
         <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
+            <!-- TÍTULO A LA IZQUIERDA -->
             <div>
                 <h1 class="text-xl font-bold text-blue-900">
                     Clínica de Fisioterapia
@@ -25,12 +27,22 @@
                 </p>
             </div>
 
-            <a
-                href="{% url 'citas:agenda' %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700"
+            <!-- BOTONES AGRUPADOS A LA DERECHA -->
+            <nav
+                aria-label="Navegación de citas"
+                class="ml-auto flex flex-wrap items-center justify-end gap-3"
             >
-                Volver a la agenda
-            </a>
+
+                <a
+                    href="{% url 'citas:agenda' %}"
+                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                >
+                    Volver a la agenda
+                </a>
+
+                {% include "componentes/boton_volver_panel.html" %}
+
+            </nav>
 
         </div>
 
@@ -40,6 +52,7 @@
     <main class="mx-auto max-w-4xl px-6 py-10">
 
         <div class="mb-8">
+
             <p class="text-sm font-semibold text-emerald-600">
                 Reservación
             </p>
@@ -52,6 +65,7 @@
                 Completa la información para programar
                 una nueva sesión de fisioterapia.
             </p>
+
         </div>
 
         <!-- MENSAJES -->
@@ -63,35 +77,9 @@
             {% endfor %}
         {% endif %}
 
-        <!-- CONSULTAR HORARIOS -->
-        <section class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                <div>
-                    <h2 class="font-semibold text-emerald-800">
-                        ¿No sabes qué horario elegir?
-                    </h2>
-
-                    <p class="mt-1 text-sm text-emerald-700">
-                        Consulta los horarios disponibles antes
-                        de registrar tu cita.
-                    </p>
-                </div>
-
-                <a
-                    href="{% url 'citas:horarios_disponibles' %}"
-                    class="rounded-xl bg-emerald-700 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-800"
-                >
-                    Consultar horarios
-                </a>
-
-            </div>
-
-        </section>
-
         <!-- FORMULARIO -->
         <form
+            id="formulario-cita"
             method="POST"
             action="{% url 'citas:agendar_cita' %}"
             class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm"
@@ -125,7 +113,10 @@
 
                         <div class="sm:col-span-2">
 
-                            <label for="paciente" class="mb-2 block text-sm font-semibold text-slate-700">
+                            <label
+                                for="paciente"
+                                class="mb-2 block text-sm font-semibold text-slate-700"
+                            >
                                 Paciente
                             </label>
 
@@ -151,11 +142,11 @@
 
                             </select>
 
-                            {% if form.paciente.errors %}
+                            {% for error in form.paciente.errors %}
                                 <p class="mt-1 text-sm text-red-600">
-                                    {{ form.paciente.errors }}
+                                    {{ error }}
                                 </p>
-                            {% endif %}
+                            {% endfor %}
 
                         </div>
 
@@ -164,7 +155,10 @@
                     <!-- SERVICIO -->
                     <div>
 
-                        <label for="servicio" class="mb-2 block text-sm font-semibold text-slate-700">
+                        <label
+                            for="servicio"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
                             Servicio
                         </label>
 
@@ -184,28 +178,29 @@
                                     value="{{ servicio.pk }}"
                                     {% if form.servicio.value|stringformat:"s" == servicio.pk|stringformat:"s" %}selected{% endif %}
                                 >
-                                    {{ servicio.nombre }} - ${{ servicio.precio_base }}
-                                </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay servicios disponibles
+                                    {{ servicio.nombre }}
+                                    ({{ servicio.duracion_minutos }} min)
+                                    - ${{ servicio.precio_base }}
                                 </option>
                             {% endfor %}
 
                         </select>
 
-                        {% if form.servicio.errors %}
+                        {% for error in form.servicio.errors %}
                             <p class="mt-1 text-sm text-red-600">
-                                {{ form.servicio.errors }}
+                                {{ error }}
                             </p>
-                        {% endif %}
+                        {% endfor %}
 
                     </div>
 
                     <!-- FISIOTERAPEUTA -->
                     <div>
 
-                        <label for="fisioterapeuta" class="mb-2 block text-sm font-semibold text-slate-700">
+                        <label
+                            for="fisioterapeuta"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
                             Fisioterapeuta
                         </label>
 
@@ -227,26 +222,25 @@
                                 >
                                     {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
                                 </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay fisioterapeutas disponibles
-                                </option>
                             {% endfor %}
 
                         </select>
 
-                        {% if form.fisioterapeuta.errors %}
+                        {% for error in form.fisioterapeuta.errors %}
                             <p class="mt-1 text-sm text-red-600">
-                                {{ form.fisioterapeuta.errors }}
+                                {{ error }}
                             </p>
-                        {% endif %}
+                        {% endfor %}
 
                     </div>
 
                     <!-- FECHA -->
-                    <div>
+                    <div class="sm:col-span-2">
 
-                        <label for="fecha" class="mb-2 block text-sm font-semibold text-slate-700">
+                        <label
+                            for="fecha"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
                             Fecha
                         </label>
 
@@ -256,45 +250,85 @@
                             name="fecha"
                             value="{{ form.fecha.value|default_if_none:'' }}"
                             required
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"
                         >
 
-                        {% if form.fecha.errors %}
+                        {% for error in form.fecha.errors %}
                             <p class="mt-1 text-sm text-red-600">
-                                {{ form.fecha.errors }}
+                                {{ error }}
                             </p>
-                        {% endif %}
+                        {% endfor %}
 
                     </div>
 
-                    <!-- HORA -->
-                    <div>
+                    <!-- HORARIOS DISPONIBLES -->
+                    <section class="sm:col-span-2">
 
-                        <label for="hora" class="mb-2 block text-sm font-semibold text-slate-700">
-                            Hora
-                        </label>
+                        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
 
-                        <input
-                            type="time"
-                            id="hora"
-                            name="hora"
-                            value="{{ form.hora.value|default_if_none:'' }}"
-                            required
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
-                        >
+                            <div class="flex flex-wrap items-center justify-between gap-3">
 
-                        {% if form.hora.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ form.hora.errors }}
+                                <div>
+
+                                    <h2 class="text-lg font-semibold text-blue-950">
+                                        Horarios disponibles
+                                    </h2>
+
+                                    <p class="mt-1 text-sm text-slate-600">
+                                        Elige uno de los horarios libres
+                                        según la duración del servicio.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    id="duracion-servicio"
+                                    class="rounded-full border border-emerald-300 bg-white px-3 py-1 text-xs font-semibold text-emerald-700"
+                                >
+                                    Duración pendiente
+                                </span>
+
+                            </div>
+
+                            <p
+                                id="mensaje-horarios"
+                                aria-live="polite"
+                                class="mt-5 rounded-xl border border-emerald-200 bg-white p-4 text-sm text-slate-600"
+                            >
+                                Selecciona servicio, fisioterapeuta y fecha
+                                para mostrar los horarios disponibles.
                             </p>
-                        {% endif %}
 
-                    </div>
+                            <div
+                                id="horarios-disponibles"
+                                class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
+                            ></div>
+
+                            <!-- Campo oculto enviado a Django -->
+                            <input
+                                type="hidden"
+                                id="hora"
+                                name="hora"
+                                value="{{ form.hora.value|default_if_none:'' }}"
+                            >
+
+                            {% for error in form.hora.errors %}
+                                <p class="mt-3 text-sm text-red-600">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </section>
 
                     <!-- MOTIVO -->
                     <div class="sm:col-span-2">
 
-                        <label for="motivo" class="mb-2 block text-sm font-semibold text-slate-700">
+                        <label
+                            for="motivo"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
                             Motivo de consulta
                         </label>
 
@@ -316,26 +350,25 @@
                                 >
                                     {{ motivo.nombre }}
                                 </option>
-                            {% empty %}
-                                <option value="" disabled>
-                                    No hay motivos disponibles
-                                </option>
                             {% endfor %}
 
                         </select>
 
-                        {% if form.motivo.errors %}
+                        {% for error in form.motivo.errors %}
                             <p class="mt-1 text-sm text-red-600">
-                                {{ form.motivo.errors }}
+                                {{ error }}
                             </p>
-                        {% endif %}
+                        {% endfor %}
 
                     </div>
 
                     <!-- OBSERVACIONES -->
                     <div class="sm:col-span-2">
 
-                        <label for="observaciones" class="mb-2 block text-sm font-semibold text-slate-700">
+                        <label
+                            for="observaciones"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
                             Información adicional
                         </label>
 
@@ -344,14 +377,14 @@
                             name="observaciones"
                             rows="4"
                             placeholder="Agrega información que consideres importante..."
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"
                         >{{ form.observaciones.value|default_if_none:'' }}</textarea>
 
-                        {% if form.observaciones.errors %}
+                        {% for error in form.observaciones.errors %}
                             <p class="mt-1 text-sm text-red-600">
-                                {{ form.observaciones.errors }}
+                                {{ error }}
                             </p>
-                        {% endif %}
+                        {% endfor %}
 
                     </div>
 
@@ -360,34 +393,32 @@
             </div>
 
             <!-- ACCIONES -->
-            <div class="border-t border-slate-100 bg-slate-50 px-6 py-5">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-t border-blue-100 bg-slate-50 px-6 py-5">
 
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <a
+                    href="{% url 'citas:cita_emergencia' %}"
+                    class="text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+                >
+                    ¿Necesitas atención prioritaria?
+                </a>
+
+                <div class="flex gap-3">
 
                     <a
-                        href="{% url 'citas:cita_emergencia' %}"
-                        class="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                        href="{% url 'citas:agenda' %}"
+                        class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
                     >
-                        ¿Necesitas atención prioritaria?
+                        Cancelar
                     </a>
 
-                    <div class="flex flex-wrap gap-3">
-
-                        <a
-                            href="{% url 'citas:agenda' %}"
-                            class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-semibold text-slate-700"
-                        >
-                            Cancelar
-                        </a>
-
-                        <button
-                            type="submit"
-                            class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-                        >
-                            Agendar cita
-                        </button>
-
-                    </div>
+                    <button
+                        type="submit"
+                        id="boton-agendar"
+                        disabled
+                        class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                        Agendar cita
+                    </button>
 
                 </div>
 
@@ -396,6 +427,261 @@
         </form>
 
     </main>
+
+    <!-- HORARIOS AUTOMÁTICOS -->
+    <script>
+        const servicioInput =
+            document.getElementById("servicio");
+
+        const fisioterapeutaInput =
+            document.getElementById("fisioterapeuta");
+
+        const fechaInput =
+            document.getElementById("fecha");
+
+        const horaInput =
+            document.getElementById("hora");
+
+        const contenedorHorarios =
+            document.getElementById("horarios-disponibles");
+
+        const mensajeHorarios =
+            document.getElementById("mensaje-horarios");
+
+        const duracionServicio =
+            document.getElementById("duracion-servicio");
+
+        const botonAgendar =
+            document.getElementById("boton-agendar");
+
+        const formulario =
+            document.getElementById("formulario-cita");
+
+        // Utiliza la ruta real definida en Django.
+        const apiUrl =
+            "{% url 'citas:horarios_disponibles_json' %}";
+
+        let consultaActual = 0;
+
+        function mostrarMensaje(texto) {
+            mensajeHorarios.textContent = texto;
+            mensajeHorarios.classList.remove("hidden");
+        }
+
+        function limpiarSeleccion() {
+            horaInput.value = "";
+            botonAgendar.disabled = true;
+            contenedorHorarios.innerHTML = "";
+        }
+
+        function seleccionarHorario(horario) {
+            horaInput.value = horario.hora;
+            botonAgendar.disabled = false;
+
+            contenedorHorarios
+                .querySelectorAll("button[data-hora]")
+                .forEach((boton) => {
+
+                    const seleccionado =
+                        boton.dataset.hora === horario.hora;
+
+                    boton.classList.toggle(
+                        "border-blue-600",
+                        seleccionado
+                    );
+
+                    boton.classList.toggle(
+                        "bg-blue-100",
+                        seleccionado
+                    );
+
+                    boton.classList.toggle(
+                        "ring-2",
+                        seleccionado
+                    );
+
+                    boton.classList.toggle(
+                        "ring-blue-300",
+                        seleccionado
+                    );
+
+                    boton.setAttribute(
+                        "aria-pressed",
+                        seleccionado ? "true" : "false"
+                    );
+                });
+        }
+
+        function crearBotonHorario(horario) {
+            const boton = document.createElement("button");
+
+            boton.type = "button";
+            boton.dataset.hora = horario.hora;
+
+            boton.className = [
+                "rounded-xl",
+                "border",
+                "border-emerald-300",
+                "bg-white",
+                "px-3",
+                "py-4",
+                "text-center",
+                "text-emerald-800",
+                "transition",
+                "hover:bg-emerald-100",
+            ].join(" ");
+
+            boton.setAttribute("aria-pressed", "false");
+
+            const inicio = document.createElement("span");
+            inicio.className = "block text-base font-bold";
+            inicio.textContent = horario.hora;
+
+            const fin = document.createElement("span");
+            fin.className = "mt-1 block text-xs text-slate-500";
+            fin.textContent = `Hasta ${horario.hora_fin}`;
+
+            boton.appendChild(inicio);
+            boton.appendChild(fin);
+
+            boton.addEventListener("click", () => {
+                seleccionarHorario(horario);
+            });
+
+            return boton;
+        }
+
+        async function cargarHorarios(conservarHora = false) {
+            const numeroConsulta = ++consultaActual;
+
+            const horaAnterior = conservarHora
+                ? horaInput.value.slice(0, 5)
+                : "";
+
+            limpiarSeleccion();
+            duracionServicio.textContent =
+                "Duración pendiente";
+
+            const servicio = servicioInput.value;
+            const fisioterapeuta = fisioterapeutaInput.value;
+            const fecha = fechaInput.value;
+
+            if (!servicio || !fisioterapeuta || !fecha) {
+                mostrarMensaje(
+                    "Selecciona servicio, fisioterapeuta y fecha."
+                );
+                return;
+            }
+
+            mostrarMensaje("Consultando horarios disponibles...");
+
+            const parametros = new URLSearchParams({
+                servicio,
+                fisioterapeuta,
+                fecha,
+            });
+
+            try {
+                const respuesta = await fetch(
+                    `${apiUrl}?${parametros.toString()}`,
+                    {
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                    }
+                );
+
+                const datos = await respuesta.json();
+
+                // Ignorar respuestas de consultas anteriores.
+                if (numeroConsulta !== consultaActual) {
+                    return;
+                }
+
+                if (!respuesta.ok || !datos.ok) {
+                    mostrarMensaje(
+                        datos.error ||
+                        "No se pudieron consultar los horarios."
+                    );
+                    return;
+                }
+
+                duracionServicio.textContent =
+                    `${datos.duracion_minutos} minutos`;
+
+                // Mostrar únicamente los horarios libres.
+                const disponibles = datos.horarios.filter(
+                    (horario) => horario.disponible
+                );
+
+                if (disponibles.length === 0) {
+                    mostrarMensaje(
+                        "No hay horarios libres para esta fecha y servicio."
+                    );
+                    return;
+                }
+
+                mensajeHorarios.classList.add("hidden");
+
+                disponibles.forEach((horario) => {
+                    contenedorHorarios.appendChild(
+                        crearBotonHorario(horario)
+                    );
+                });
+
+                // Conservar la selección después de un
+                // error del formulario, si sigue disponible.
+                if (horaAnterior) {
+                    const anterior = disponibles.find(
+                        (horario) => horario.hora === horaAnterior
+                    );
+
+                    if (anterior) {
+                        seleccionarHorario(anterior);
+                    }
+                }
+
+            } catch (error) {
+                if (numeroConsulta !== consultaActual) {
+                    return;
+                }
+
+                mostrarMensaje(
+                    "No se pudieron cargar los horarios. " +
+                    "Comprueba la conexión con el servidor."
+                );
+            }
+        }
+
+        servicioInput.addEventListener(
+            "change",
+            () => cargarHorarios()
+        );
+
+        fisioterapeutaInput.addEventListener(
+            "change",
+            () => cargarHorarios()
+        );
+
+        fechaInput.addEventListener(
+            "change",
+            () => cargarHorarios()
+        );
+
+        formulario.addEventListener("submit", (evento) => {
+            if (!horaInput.value) {
+                evento.preventDefault();
+
+                mostrarMensaje(
+                    "Primero selecciona un horario disponible."
+                );
+            }
+        });
+
+        // Consultar automáticamente si la página
+        // ya tiene servicio, fisioterapeuta y fecha.
+        cargarHorarios(true);
+    </script>
 
 </body>
 </html>

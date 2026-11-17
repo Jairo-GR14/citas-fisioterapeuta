@@ -14,7 +14,7 @@
 
     <header class="border-b border-blue-100 bg-white">
 
-        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
 
             <div>
                 <h1 class="text-xl font-semibold text-blue-900">
@@ -26,12 +26,10 @@
                 </p>
             </div>
 
-            <a
-                href="{% url 'administracion:detalle_usuario' usuario_seleccionado.id %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-            >
-                Cancelar
-            </a>
+            <nav aria-label="Navegación de Administración" class="flex flex-wrap items-center justify-end gap-3">
+
+                {% include "componentes/boton_volver_panel.html" %}
+            </nav>
 
         </div>
 
@@ -143,14 +141,31 @@
             </div>
 
 
-            <div class="border-t border-slate-200 bg-slate-50 p-6">
 
-                <button
-                    type="submit"
-                    class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
-                >
-                    Guardar cambios
-                </button>
+                <!-- BOTONES INFERIORES DEL FORMULARIO -->
+                <div class="border-t border-slate-200 bg-slate-50 p-6">
+
+                    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+
+                        <!-- CANCELAR -->
+                        <a
+                            href="{% url 'administracion:detalle_usuario' usuario_seleccionado.id %}"
+                            class="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-700 sm:w-auto"
+                        >
+                            Cancelar
+                        </a>
+
+                        <!-- GUARDAR CAMBIOS -->
+                        <button
+                            type="submit"
+                            class="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white transition hover:from-blue-700 hover:to-emerald-700 sm:w-auto"
+                        >
+                            Guardar cambios
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 

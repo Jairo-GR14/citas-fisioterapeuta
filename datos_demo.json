@@ -1,0 +1,772 @@
+[
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "!",
+      "last_login": "2026-11-17T17:46:40.939Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "Jairo",
+      "last_name": "Gutierrez",
+      "email": "jaijai2006n@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-10-28T21:53:24.077Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "!",
+      "last_login": "2026-11-17T18:15:26.725Z",
+      "is_superuser": false,
+      "username": "paciente1",
+      "first_name": "Kevin",
+      "last_name": "Moreno",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T14:04:05Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "!",
+      "last_login": "2026-11-17T18:15:59.199Z",
+      "is_superuser": false,
+      "username": "recepcion1",
+      "first_name": "Juan",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T14:08:58Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "!",
+      "last_login": "2026-11-17T18:16:09.698Z",
+      "is_superuser": false,
+      "username": "fisio1",
+      "first_name": "Josue",
+      "last_name": "lopez",
+      "email": "1224100713.jasl@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T14:14:42Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "!",
+      "last_login": "2026-10-29T15:28:50.255Z",
+      "is_superuser": false,
+      "username": "pacienteprueba",
+      "first_name": "Prueba1",
+      "last_name": "Paciente",
+      "email": "prueba.paciente@example.com",
+      "is_staff": false,
+      "is_active": false,
+      "date_joined": "2026-10-29T15:08:50.631Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "usuarios.perfilusuario",
+    "pk": 1,
+    "fields": {
+      "usuario": [
+        "paciente1"
+      ],
+      "rol": "PACIENTE",
+      "telefono": "",
+      "activo": true,
+      "fecha_creacion": "2026-10-29T14:07:00.317Z",
+      "fecha_actualizacion": "2026-10-29T14:33:33.467Z"
+    }
+  },
+  {
+    "model": "usuarios.perfilusuario",
+    "pk": 2,
+    "fields": {
+      "usuario": [
+        "recepcion1"
+      ],
+      "rol": "RECEPCIONISTA",
+      "telefono": "",
+      "activo": true,
+      "fecha_creacion": "2026-10-29T14:09:25.201Z",
+      "fecha_actualizacion": "2026-10-29T14:33:13.653Z"
+    }
+  },
+  {
+    "model": "usuarios.perfilusuario",
+    "pk": 3,
+    "fields": {
+      "usuario": [
+        "fisio1"
+      ],
+      "rol": "FISIOTERAPEUTA",
+      "telefono": "",
+      "activo": true,
+      "fecha_creacion": "2026-10-29T14:16:16.204Z",
+      "fecha_actualizacion": "2026-11-17T17:15:24.796Z"
+    }
+  },
+  {
+    "model": "usuarios.perfilusuario",
+    "pk": 4,
+    "fields": {
+      "usuario": [
+        "admin"
+      ],
+      "rol": "ADMINISTRADOR",
+      "telefono": "7293897503",
+      "activo": true,
+      "fecha_creacion": "2026-10-29T14:32:54.943Z",
+      "fecha_actualizacion": "2026-10-29T14:40:10.541Z"
+    }
+  },
+  {
+    "model": "usuarios.perfilusuario",
+    "pk": 5,
+    "fields": {
+      "usuario": [
+        "pacienteprueba"
+      ],
+      "rol": "PACIENTE",
+      "telefono": "5551234567",
+      "activo": false,
+      "fecha_creacion": "2026-10-29T15:08:52.130Z",
+      "fecha_actualizacion": "2026-11-17T06:38:22.387Z"
+    }
+  },
+  {
+    "model": "pacientes.paciente",
+    "pk": 1,
+    "fields": {
+      "usuario": 5,
+      "fecha_nacimiento": "1990-06-08",
+      "direccion": "",
+      "contacto_emergencia": "",
+      "telefono_emergencia": "",
+      "antecedentes_medicos": "",
+      "activo": false,
+      "fecha_registro": "2026-10-29T15:08:52.131Z",
+      "fecha_actualizacion": "2026-11-17T06:37:58.540Z"
+    }
+  },
+  {
+    "model": "pacientes.paciente",
+    "pk": 2,
+    "fields": {
+      "usuario": 1,
+      "fecha_nacimiento": null,
+      "direccion": "",
+      "contacto_emergencia": "",
+      "telefono_emergencia": "",
+      "antecedentes_medicos": "",
+      "activo": true,
+      "fecha_registro": "2026-11-12T07:06:52.796Z",
+      "fecha_actualizacion": "2026-11-12T07:06:52.796Z"
+    }
+  },
+  {
+    "model": "fisioterapeutas.fisioterapeuta",
+    "pk": 1,
+    "fields": {
+      "usuario": 3,
+      "especialidad": "Fisioterapia de prueba",
+      "cedula_profesional": "PRUEBA-NO-VALIDA-001",
+      "descripcion": "Cuenta ficticia para pruebas del sistema",
+      "activo": true,
+      "fecha_registro": "2026-11-12T07:06:57.556Z",
+      "fecha_actualizacion": "2026-11-12T07:06:57.556Z"
+    }
+  },
+  {
+    "model": "fisioterapeutas.horariodisponible",
+    "pk": 1,
+    "fields": {
+      "fisioterapeuta": 1,
+      "dia_semana": 5,
+      "hora_inicio": "09:00:00",
+      "hora_fin": "13:00:00",
+      "activo": true
+    }
+  },
+  {
+    "model": "fisioterapeutas.horariodisponible",
+    "pk": 2,
+    "fields": {
+      "fisioterapeuta": 1,
+      "dia_semana": 1,
+      "hora_inicio": "09:00:00",
+      "hora_fin": "14:00:00",
+      "activo": true
+    }
+  },
+  {
+    "model": "fisioterapeutas.horariodisponible",
+    "pk": 3,
+    "fields": {
+      "fisioterapeuta": 1,
+      "dia_semana": 2,
+      "hora_inicio": "09:00:00",
+      "hora_fin": "14:00:00",
+      "activo": true
+    }
+  },
+  {
+    "model": "citas.motivoconsulta",
+    "pk": 1,
+    "fields": {
+      "nombre": "Valoración inicial (PRUEBA)",
+      "descripcion": "Evaluación fisioterapéutica para pruebas del sistema",
+      "activo": true
+    }
+  },
+  {
+    "model": "citas.cita",
+    "pk": 1,
+    "fields": {
+      "paciente": 2,
+      "fisioterapeuta": 1,
+      "servicio": 1,
+      "motivo": 1,
+      "fecha": "2026-11-13",
+      "hora": "10:00:00",
+      "duracion_minutos": 60,
+      "estado": "FINALIZADA",
+      "costo_estimado": "400.00",
+      "costo_final": "400.00",
+      "observaciones": "Cita de prueba para validar el sistema",
+      "motivo_cancelacion": "",
+      "fecha_creacion": "2026-11-12T07:21:29.515Z",
+      "fecha_actualizacion": "2026-11-17T06:30:05.195Z"
+    }
+  },
+  {
+    "model": "citas.cita",
+    "pk": 2,
+    "fields": {
+      "paciente": 2,
+      "fisioterapeuta": 1,
+      "servicio": 2,
+      "motivo": 1,
+      "fecha": "2026-11-23",
+      "hora": "09:00:00",
+      "duracion_minutos": 90,
+      "estado": "CONFIRMADA",
+      "costo_estimado": "1000.00",
+      "costo_final": null,
+      "observaciones": "",
+      "motivo_cancelacion": "",
+      "fecha_creacion": "2026-11-17T07:42:55.790Z",
+      "fecha_actualizacion": "2026-11-17T07:43:01.626Z"
+    }
+  },
+  {
+    "model": "citas.cita",
+    "pk": 3,
+    "fields": {
+      "paciente": 2,
+      "fisioterapeuta": 1,
+      "servicio": 1,
+      "motivo": 1,
+      "fecha": "2026-11-24",
+      "hora": "09:00:00",
+      "duracion_minutos": 60,
+      "estado": "CONFIRMADA",
+      "costo_estimado": "400.00",
+      "costo_final": null,
+      "observaciones": "",
+      "motivo_cancelacion": "",
+      "fecha_creacion": "2026-11-17T08:07:23.549Z",
+      "fecha_actualizacion": "2026-11-17T17:52:55.149Z"
+    }
+  },
+  {
+    "model": "citas.cita",
+    "pk": 4,
+    "fields": {
+      "paciente": 2,
+      "fisioterapeuta": 1,
+      "servicio": 2,
+      "motivo": 1,
+      "fecha": "2026-11-30",
+      "hora": "09:00:00",
+      "duracion_minutos": 90,
+      "estado": "CANCELADA",
+      "costo_estimado": "1000.00",
+      "costo_final": null,
+      "observaciones": "",
+      "motivo_cancelacion": "Cambio de horario",
+      "fecha_creacion": "2026-11-17T08:08:53.334Z",
+      "fecha_actualizacion": "2026-11-17T17:52:37.128Z"
+    }
+  },
+  {
+    "model": "citas.cita",
+    "pk": 5,
+    "fields": {
+      "paciente": 2,
+      "fisioterapeuta": 1,
+      "servicio": 1,
+      "motivo": 1,
+      "fecha": "2026-11-17",
+      "hora": "13:00:00",
+      "duracion_minutos": 60,
+      "estado": "CONFIRMADA",
+      "costo_estimado": "400.00",
+      "costo_final": null,
+      "observaciones": "",
+      "motivo_cancelacion": "",
+      "fecha_creacion": "2026-11-17T18:15:41.525Z",
+      "fecha_actualizacion": "2026-11-17T18:16:04.000Z"
+    }
+  },
+  {
+    "model": "consultas.consulta",
+    "pk": 1,
+    "fields": {
+      "cita": 1,
+      "valoracion_inicial": "hjdfdghsdfgfd",
+      "diagnostico": "dfgaggfdgdf",
+      "informacion_atencion": "dfgfdgdfg",
+      "observaciones": "dfgfdggdf",
+      "fecha_inicio": "2026-11-14T02:08:06.540Z",
+      "fecha_finalizacion": "2026-11-17T06:30:05.192Z",
+      "fecha_creacion": "2026-11-14T02:08:06.541Z",
+      "fecha_actualizacion": "2026-11-17T06:30:05.192Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 1,
+    "fields": {
+      "usuario": 4,
+      "accion": "EDITAR_USUARIO",
+      "descripcion": "Se editó el usuario pacienteprueba. Rol anterior: PACIENTE. Rol nuevo: PACIENTE.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T06:37:29.817Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 2,
+    "fields": {
+      "usuario": 4,
+      "accion": "ACTIVAR_USUARIO",
+      "descripcion": "Se activó la cuenta pacienteprueba.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T06:37:55.310Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 3,
+    "fields": {
+      "usuario": 4,
+      "accion": "DESACTIVAR_USUARIO",
+      "descripcion": "Se desactivó la cuenta pacienteprueba.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T06:37:58.541Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 4,
+    "fields": {
+      "usuario": 4,
+      "accion": "EDITAR_USUARIO",
+      "descripcion": "Se editó el usuario pacienteprueba. Rol anterior: PACIENTE. Rol nuevo: PACIENTE.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T06:38:22.390Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 5,
+    "fields": {
+      "usuario": 4,
+      "accion": "EDITAR_USUARIO",
+      "descripcion": "Se editó el usuario fisio1. Rol anterior: FISIOTERAPEUTA. Rol nuevo: FISIOTERAPEUTA.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T17:08:21.761Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 6,
+    "fields": {
+      "usuario": 4,
+      "accion": "EDITAR_USUARIO",
+      "descripcion": "Se editó el usuario fisio1. Rol anterior: FISIOTERAPEUTA. Rol nuevo: FISIOTERAPEUTA.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T17:08:27.780Z"
+    }
+  },
+  {
+    "model": "administracion.registroactividad",
+    "pk": 7,
+    "fields": {
+      "usuario": 4,
+      "accion": "EDITAR_USUARIO",
+      "descripcion": "Se editó el usuario fisio1. Rol anterior: FISIOTERAPEUTA. Rol nuevo: FISIOTERAPEUTA.",
+      "modulo": "administracion",
+      "fecha": "2026-11-17T17:15:24.798Z"
+    }
+  },
+  {
+    "model": "precios.servicio",
+    "pk": 1,
+    "fields": {
+      "nombre": "Valoración fisioterapéutica (PRUEBA)",
+      "descripcion": "Servicio ficticio para probar el sistema",
+      "precio_base": "400.00",
+      "duracion_minutos": 60,
+      "activo": true,
+      "fecha_creacion": "2026-11-12T07:12:04.805Z",
+      "fecha_actualizacion": "2026-11-12T07:12:04.805Z"
+    }
+  },
+  {
+    "model": "precios.servicio",
+    "pk": 2,
+    "fields": {
+      "nombre": "Prueva45min",
+      "descripcion": "45 min",
+      "precio_base": "1000.00",
+      "duracion_minutos": 88,
+      "activo": true,
+      "fecha_creacion": "2026-11-17T07:16:30.701Z",
+      "fecha_actualizacion": "2026-11-17T17:17:34.008Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 1,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-12T07:21:29.532Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 2,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Programada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-12T07:21:29.544Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 3,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Confirmada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-12T07:38:48.269Z",
+      "fecha_lectura": "2026-11-12T13:39:39.039Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 4,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Confirmada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-12T07:38:48.279Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 5,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Consulta iniciada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: En proceso.",
+      "leida": false,
+      "fecha_creacion": "2026-11-14T02:08:06.555Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 6,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Consulta iniciada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: En proceso.",
+      "leida": true,
+      "fecha_creacion": "2026-11-14T02:08:06.563Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 7,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Consulta finalizada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Finalizada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T06:30:05.205Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 8,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Consulta finalizada",
+      "mensaje": "La cita #1 (Valoración fisioterapéutica (PRUEBA)) para el 13/11/2026 a las 10:00 tiene el estado: Finalizada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T06:30:05.211Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 9,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #2 (Prueva45min) para el 23/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T07:42:55.800Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 10,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #2 (Prueva45min) para el 23/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T07:42:55.807Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 11,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #2 (Prueva45min) para el 23/11/2026 a las 09:00 tiene el estado: Confirmada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T07:43:01.636Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 12,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #2 (Prueva45min) para el 23/11/2026 a las 09:00 tiene el estado: Confirmada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T07:43:01.643Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 13,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #3 (Valoración fisioterapéutica (PRUEBA)) para el 24/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T08:07:23.559Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 14,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #3 (Valoración fisioterapéutica (PRUEBA)) para el 24/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T08:07:23.565Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 15,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #4 (Prueva45min) para el 30/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T08:08:53.344Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 16,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #4 (Prueva45min) para el 30/11/2026 a las 09:00 tiene el estado: Programada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T08:08:53.350Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 17,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Cita cancelada",
+      "mensaje": "La cita #4 (Prueva45min) para el 30/11/2026 a las 09:00 tiene el estado: Cancelada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T17:52:37.138Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 18,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Cita cancelada",
+      "mensaje": "La cita #4 (Prueva45min) para el 30/11/2026 a las 09:00 tiene el estado: Cancelada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T17:52:37.144Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 19,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #3 (Valoración fisioterapéutica (PRUEBA)) para el 24/11/2026 a las 09:00 tiene el estado: Confirmada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T17:52:55.158Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 20,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #3 (Valoración fisioterapéutica (PRUEBA)) para el 24/11/2026 a las 09:00 tiene el estado: Confirmada.",
+      "leida": true,
+      "fecha_creacion": "2026-11-17T17:52:55.163Z",
+      "fecha_lectura": "2026-11-17T17:57:48.519Z"
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 21,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #5 (Valoración fisioterapéutica (PRUEBA)) para el 17/11/2026 a las 13:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T18:15:41.534Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 22,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Nueva cita programada",
+      "mensaje": "La cita #5 (Valoración fisioterapéutica (PRUEBA)) para el 17/11/2026 a las 13:00 tiene el estado: Programada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T18:15:41.539Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 23,
+    "fields": {
+      "usuario": 1,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #5 (Valoración fisioterapéutica (PRUEBA)) para el 17/11/2026 a las 13:00 tiene el estado: Confirmada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T18:16:04.008Z",
+      "fecha_lectura": null
+    }
+  },
+  {
+    "model": "notificaciones.notificacion",
+    "pk": 24,
+    "fields": {
+      "usuario": 3,
+      "tipo": "CITA",
+      "titulo": "Cita confirmada",
+      "mensaje": "La cita #5 (Valoración fisioterapéutica (PRUEBA)) para el 17/11/2026 a las 13:00 tiene el estado: Confirmada.",
+      "leida": false,
+      "fecha_creacion": "2026-11-17T18:16:04.013Z",
+      "fecha_lectura": null
+    }
+  }
+]

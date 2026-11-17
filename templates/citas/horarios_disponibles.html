@@ -4,66 +4,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Horarios disponibles</title>
-
+    <title>Consultar horarios - Clínica de Fisioterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-    <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
-
-        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-
+        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4 flex-wrap gap-4">
             <div>
                 <h1 class="font-semibold text-blue-900">
                     Clínica de Fisioterapia
                 </h1>
-
-                <p class="text-xs text-slate-400">
+                <p class="text-xs text-slate-500">
                     Disponibilidad de citas
                 </p>
             </div>
 
-            <a
+            <nav aria-label="Navegación de citas"
+     class="ml-auto flex flex-wrap items-center justify-end gap-3">
+<a
                 href="{% url 'citas:agendar_cita' %}"
-                class="text-sm font-semibold text-blue-700"
+                class="text-sm font-semibold text-blue-700 hover:underline"
             >
                 Volver a agendar
             </a>
+{% include "componentes/boton_volver_panel.html" %}
+</nav>
 
         </div>
-
     </header>
 
-
-    <!-- CONTENIDO -->
     <main class="mx-auto max-w-5xl px-6 py-10">
 
-        <h2 class="mb-2 text-3xl font-bold text-blue-950">
+        <h2 class="text-3xl font-bold text-blue-950">
             Consultar horarios
         </h2>
 
-        <p class="mb-7 text-sm text-slate-500">
-            Selecciona un fisioterapeuta y una fecha
-            para revisar bloques de 60 minutos.
+        <p class="mb-7 mt-2 text-sm text-slate-600">
+            Selecciona un servicio, un fisioterapeuta
+            y una fecha para consultar la disponibilidad.
         </p>
 
+        <!-- FILTROS -->
 
-        <!-- FILTROS DE BÚSQUEDA -->
         <form
             method="get"
             action="{% url 'citas:horarios_disponibles' %}"
-            class="grid gap-4 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+            class="grid gap-4 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:grid-cols-3"
         >
 
             <div>
-                <label
-                    for="fisioterapeuta"
-                    class="mb-2 block text-sm font-semibold"
+                <label for="servicio" class="mb-2 block text-sm font-semibold">
+                    Servicio
+                </label>
+
+                <select
+                    id="servicio"
+                    name="servicio"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm"
                 >
+                    <option value="">Seleccionar servicio</option>
+
+                    {% for item in servicios %}
+                        <option
+                            value="{{ item.pk }}"
+                            {% if servicio_id == item.pk|stringformat:'s' %}selected{% endif %}
+                        >
+                            {{ item.nombre }} ({{ item.duracion_minutos }} min)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="fisioterapeuta" class="mb-2 block text-sm font-semibold">
                     Fisioterapeuta
                 </label>
 
@@ -71,33 +87,23 @@
                     id="fisioterapeuta"
                     name="fisioterapeuta"
                     required
-                    class="w-full rounded-xl border border-slate-300 p-3 text-sm"
+                    class="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm"
                 >
+                    <option value="">Seleccionar fisioterapeuta</option>
 
-                    <option value="">
-                        Seleccionar
-                    </option>
-
-                    {% for profesional in fisioterapeutas %}
-
+                    {% for item in fisioterapeutas %}
                         <option
-                            value="{{ profesional.pk }}"
-                            {% if fisioterapeuta_id == profesional.pk|stringformat:'s' %}selected{% endif %}
+                            value="{{ item.pk }}"
+                            {% if fisioterapeuta_id == item.pk|stringformat:'s' %}selected{% endif %}
                         >
-                            {{ profesional.usuario.usuario.get_full_name|default:profesional.usuario.usuario.username }}
+                            {{ item.usuario.usuario.get_full_name|default:item.usuario.usuario.username }}
                         </option>
-
                     {% endfor %}
-
                 </select>
             </div>
 
-
             <div>
-                <label
-                    for="fecha"
-                    class="mb-2 block text-sm font-semibold"
-                >
+                <label for="fecha" class="mb-2 block text-sm font-semibold">
                     Fecha
                 </label>
 
@@ -111,45 +117,58 @@
                 >
             </div>
 
-
-            <button
-                type="submit"
-                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white"
-            >
-                Consultar
-            </button>
-
+            <div class="flex justify-end md:col-span-3">
+                <button
+                    type="submit"
+                    class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+                >
+                    Consultar disponibilidad
+                </button>
+            </div>
         </form>
 
-
         <!-- ERRORES -->
+
         {% if error %}
-
-            <p class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <div
+                role="alert"
+                class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            >
                 {{ error }}
-            </p>
-
+            </div>
         {% endif %}
 
+        <!-- HORARIOS -->
 
-        <!-- RESULTADOS -->
         {% if fisioterapeuta and not error %}
 
             <section class="mt-7 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
 
-                <h3 class="mb-2 text-xl font-semibold text-blue-900">
+                <h3 class="text-xl font-semibold text-blue-950">
                     {{ fisioterapeuta.usuario.usuario.get_full_name|default:fisioterapeuta.usuario.usuario.username }}
                 </h3>
 
-                <p class="mb-5 text-sm text-slate-500">
-                    {{ fecha }} · Selecciona un horario disponible
+                <p class="mt-2 text-sm text-slate-600">
+                    {{ fecha }}
+                    · Duración:
+                    <strong>{{ duracion_minutos }} minutos</strong>
+
+                    {% if servicio %}
+                        · {{ servicio.nombre }}
+                    {% else %}
+                        · Referencia de 60 minutos
+                    {% endif %}
                 </p>
 
+                <p class="mt-2 text-xs text-slate-500">
+                    Por ahora, las citas comienzan por hora.
+                    Después habilitaremos intervalos de 15 minutos.
+                </p>
 
-                <!-- ENVIAR SELECCIÓN A AGENDAR CITA -->
                 <form
                     method="get"
                     action="{% url 'citas:agendar_cita' %}"
+                    class="mt-6"
                 >
 
                     <input
@@ -164,56 +183,86 @@
                         value="{{ fecha }}"
                     >
 
+                    {% if servicio %}
+                        <input
+                            type="hidden"
+                            name="servicio"
+                            value="{{ servicio.pk }}"
+                        >
+                    {% endif %}
 
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
 
-                        {% for horario in horarios %}
+                        {% for item in horarios %}
 
-                            {% if horario.disponible %}
+                            {% if item.disponible and servicio %}
 
                                 <label class="cursor-pointer">
-
                                     <input
-                                        class="peer sr-only"
                                         type="radio"
                                         name="hora"
-                                        value="{{ horario.hora }}"
+                                        value="{{ item.hora }}"
                                         required
+                                        class="peer sr-only"
                                     >
 
-                                    <span class="block rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-center text-sm font-semibold text-emerald-700 peer-checked:bg-blue-700 peer-checked:text-white">
-                                        {{ horario.hora }}
+                                    <span class="block rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-center text-sm text-emerald-800 peer-checked:border-blue-700 peer-checked:bg-blue-700 peer-checked:text-white">
+                                        <strong>{{ item.hora }}</strong>
+                                        <span class="block text-xs">
+                                            hasta {{ item.fin }}
+                                        </span>
                                     </span>
-
                                 </label>
+
+                            {% elif item.disponible %}
+
+                                <div class="rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-800">
+                                    {{ item.hora }}–{{ item.fin }}
+                                </div>
 
                             {% else %}
 
-                                <span class="block rounded-xl bg-slate-100 p-4 text-center text-sm text-slate-400">
-                                    {{ horario.hora }} (ocupado)
-                                </span>
+                                <div class="rounded-xl bg-slate-100 p-3 text-center text-sm text-slate-500">
+                                    {{ item.hora }}–{{ item.fin }}
+                                    <span class="block text-xs">
+                                        No disponible
+                                    </span>
+                                </div>
 
                             {% endif %}
 
                         {% empty %}
 
-                            <p class="col-span-full rounded-xl bg-slate-50 p-5 text-sm text-slate-500">
-                                No hay bloques disponibles en esa jornada.
+                            <p class="col-span-full rounded-xl bg-slate-50 p-5 text-sm text-slate-600">
+                                No hay horarios que permitan completar
+                                esta sesión dentro de la jornada.
                             </p>
 
                         {% endfor %}
 
                     </div>
 
+                    {% if servicio and hay_disponibles %}
 
-                    {% if hay_disponibles %}
+                        <p class="mt-5 text-xs text-amber-800">
+                            Al continuar, selecciona el mismo servicio
+                            en el formulario de reserva.
+                            La disponibilidad volverá a validarse al guardar.
+                        </p>
 
                         <button
                             type="submit"
-                            class="mt-6 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white"
+                            class="mt-4 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
                         >
                             Continuar a la reservación
                         </button>
+
+                    {% elif not servicio %}
+
+                        <p class="mt-5 text-sm text-amber-800">
+                            Selecciona un servicio para reservar
+                            según su duración real.
+                        </p>
 
                     {% endif %}
 

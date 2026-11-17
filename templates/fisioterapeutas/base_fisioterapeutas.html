@@ -4,7 +4,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         {% block titulo %}Fisioterapeutas{% endblock %}
@@ -15,6 +19,8 @@
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
+
+    <!-- ENCABEZADO -->
 
     <header class="border-b border-blue-100 bg-white">
 
@@ -30,34 +36,44 @@
                 </p>
             </div>
 
-            <!-- NAVEGACIÓN SEGÚN EL ORIGEN -->
-            {% if request.GET.desde == "reportes" %}
+            <!-- NAVEGACIÓN -->
 
-                <a
-                    href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100"
-                >
-                    ← Volver al reporte de fisioterapeutas
-                </a>
+            <nav
+                aria-label="Navegación de fisioterapeutas"
+                class="flex flex-wrap items-center justify-end gap-3"
+            >
 
-            {% else %}
+                <!-- REGRESAR AL REPORTE SI PROVIENE DE ÉL -->
 
-                <a
-                    href="{% url 'usuarios:redireccion_por_rol' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100"
-                >
-                    Volver al panel
-                </a>
+                {% if request.GET.desde == "reportes" %}
 
-            {% endif %}
+                    <a
+                        href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+                        class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                        ← Volver al reporte
+                    </a>
+
+                {% endif %}
+
+                <!-- BOTÓN ESTÁNDAR -->
+
+                {% include "componentes/boton_volver_panel.html" %}
+
+            </nav>
 
         </div>
 
     </header>
 
+    <!-- CONTENIDO -->
+
     <main class="mx-auto max-w-6xl px-6 py-10">
 
+        <!-- MENSAJES -->
+
         {% if messages %}
+
             {% for message in messages %}
 
                 <div class="mb-5 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
@@ -65,7 +81,10 @@
                 </div>
 
             {% endfor %}
+
         {% endif %}
+
+        <!-- CONTENIDO DE CADA PANTALLA -->
 
         {% block contenido %}
         {% endblock %}

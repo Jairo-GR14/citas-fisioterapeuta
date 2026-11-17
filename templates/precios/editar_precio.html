@@ -1,131 +1,209 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar servicio</title>
+
+    <title>Editar servicio - Clínica de Fisioterapia</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b border-blue-100 bg-white">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <header class="border-b border-blue-100 bg-white">
+        <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
 
-        <h1 class="text-xl font-bold text-blue-900">
-            Clínica de Fisioterapia
+            <h1 class="text-xl font-bold text-blue-900">
+                Clínica de Fisioterapia
+            </h1>
+
+            <nav aria-label="Navegación de servicios" class="flex flex-wrap items-center justify-end gap-3">
+<a
+                href="{% url 'precios:lista_precios' %}"
+                class="text-sm font-semibold text-blue-700 hover:text-blue-900"
+            >
+                Volver a servicios
+            </a>
+                {% include "componentes/boton_volver_panel.html" %}
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-3xl px-6 py-10">
+
+        <p class="text-sm font-semibold text-emerald-600">
+            Administración
+        </p>
+
+        <h1 class="mt-2 text-3xl font-bold text-blue-950">
+            Editar servicio
         </h1>
 
-        <a
-            href="{% url 'precios:lista_precios' %}"
-            class="text-sm font-semibold text-blue-700"
+        <p class="mt-2 text-sm text-slate-500">
+            Modifica la información de
+            <span class="font-semibold text-blue-900">
+                {{ servicio.nombre }}
+            </span>.
+        </p>
+
+        <form
+            method="POST"
+            action="{% url 'precios:editar_precio' servicio.pk %}"
+            class="mt-8 rounded-2xl border border-blue-100 bg-white p-7 shadow-sm"
         >
-            Volver a servicios
-        </a>
 
-    </div>
-</header>
+            {% csrf_token %}
 
-<main class="mx-auto max-w-3xl px-6 py-10">
+            {% if form.non_field_errors %}
+                <div class="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
 
-    <p class="text-sm font-semibold text-emerald-600">
-        Administración
-    </p>
+            <div class="space-y-6">
 
-    <h1 class="mt-2 text-3xl font-bold text-blue-950">
-        Editar servicio
-    </h1>
+                <!-- NOMBRE -->
 
-    <p class="mt-2 text-sm text-slate-500">
-        Modifica el servicio: {{ servicio.nombre }}.
-    </p>
+                <div>
+                    <label
+                        for="{{ form.nombre.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-950"
+                    >
+                        Nombre del servicio
+                    </label>
 
-    <form
-        method="POST"
-        action="{% url 'precios:editar_precio' servicio.pk %}"
-        class="mt-8 rounded-2xl border border-blue-100 bg-white p-7 shadow-sm"
-    >
+                    {{ form.nombre }}
 
-        {% csrf_token %}
+                    {% for error in form.nombre.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
 
-        {% if form.non_field_errors %}
-            <div class="mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
+                <!-- DESCRIPCIÓN -->
 
-        <div class="space-y-6">
+                <div>
+                    <label
+                        for="{{ form.descripcion.id_for_label }}"
+                        class="mb-2 block text-sm font-semibold text-blue-950"
+                    >
+                        Descripción
+                    </label>
 
-            <div>
-                <label class="mb-2 block text-sm font-semibold">
-                    Nombre del servicio
+                    {{ form.descripcion }}
+
+                    {% for error in form.descripcion.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+                <!-- PRECIO Y DURACIÓN -->
+
+                <div class="grid gap-6 sm:grid-cols-2">
+
+                    <div>
+                        <label
+                            for="{{ form.precio_base.id_for_label }}"
+                            class="mb-2 block text-sm font-semibold text-blue-950"
+                        >
+                            Precio base (MXN)
+                        </label>
+
+                        {{ form.precio_base }}
+
+                        {% for error in form.precio_base.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    <div>
+                        <label
+                            for="{{ form.duracion_minutos.id_for_label }}"
+                            class="mb-2 block text-sm font-semibold text-blue-950"
+                        >
+                            Duración de la sesión (minutos)
+                        </label>
+
+                        {{ form.duracion_minutos }}
+
+                        {% for error in form.duracion_minutos.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+
+                        <p class="mt-2 text-xs text-slate-500">
+                            {{ form.duracion_minutos.help_text }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- INFORMACIÓN -->
+
+                <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+
+                    <p class="text-sm font-semibold text-amber-900">
+                        Importante sobre la duración
+                    </p>
+
+                    <p class="mt-2 text-sm leading-6 text-amber-800">
+                        La duración de este servicio se utilizará
+                        para calcular los horarios disponibles
+                        de las próximas citas.
+
+                        No cambiará automáticamente la fecha
+                        ni la hora de las citas ya registradas.
+                    </p>
+
+                </div>
+
+                <!-- ESTADO -->
+
+                <label class="flex items-center gap-3 rounded-xl bg-blue-50 p-4">
+
+                    {{ form.activo }}
+
+                    <span class="text-sm font-semibold text-blue-900">
+                        Servicio activo
+                    </span>
+
                 </label>
 
-                {{ form.nombre }}
-
-                <div class="mt-1 text-sm text-red-600">
-                    {{ form.nombre.errors }}
-                </div>
             </div>
 
-            <div>
-                <label class="mb-2 block text-sm font-semibold">
-                    Descripción
-                </label>
+            <!-- ACCIONES -->
 
-                {{ form.descripcion }}
+            <div class="mt-8 flex flex-wrap justify-end gap-3">
 
-                <div class="mt-1 text-sm text-red-600">
-                    {{ form.descripcion.errors }}
-                </div>
+                <a
+                    href="{% url 'precios:lista_precios' %}"
+                    class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-emerald-700"
+                >
+                    Guardar cambios
+                </button>
+
             </div>
 
-            <div>
-                <label class="mb-2 block text-sm font-semibold">
-                    Precio base (MXN)
-                </label>
+        </form>
 
-                {{ form.precio_base }}
-
-                <div class="mt-1 text-sm text-red-600">
-                    {{ form.precio_base.errors }}
-                </div>
-            </div>
-
-            <label class="flex items-center gap-3 rounded-xl bg-blue-50 p-4">
-
-                {{ form.activo }}
-
-                <span class="text-sm font-semibold text-blue-900">
-                    Servicio activo
-                </span>
-
-            </label>
-
-        </div>
-
-        <div class="mt-8 flex justify-end gap-3">
-
-            <a
-                href="{% url 'precios:lista_precios' %}"
-                class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700"
-            >
-                Cancelar
-            </a>
-
-            <button
-                type="submit"
-                class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
-            >
-                Guardar cambios
-            </button>
-
-        </div>
-
-    </form>
-
-</main>
+    </main>
 
 </body>
 </html>

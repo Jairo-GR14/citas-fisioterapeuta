@@ -13,14 +13,13 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-    <!-- ================================================= -->
-    <!-- ENCABEZADO -->
-    <!-- ================================================= -->
 
+    <!-- ENCABEZADO -->
     <header class="border-b border-blue-100 bg-white">
 
-        <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
+        <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
 
+            <!-- TÍTULO -->
             <div>
                 <h1 class="font-semibold text-blue-900">
                     Clínica de Fisioterapia
@@ -31,36 +30,44 @@
                 </p>
             </div>
 
-            <!-- NAVEGACIÓN SEGÚN ROL -->
+            <!-- BOTONES AGRUPADOS -->
+            <nav
+                aria-label="Navegación de detalle de cita"
+                class="ml-auto flex flex-wrap items-center justify-end gap-3"
+            >
 
-            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" %}
+                {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" %}
 
-                <a
-                    href="{% url 'citas:agenda' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
-                    ← Volver a la agenda
-                </a>
+                    <a
+                        href="{% url 'citas:agenda' %}"
+                        class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                    >
+                        ← Volver a la agenda
+                    </a>
 
-            {% elif request.user.perfil.rol == "FISIOTERAPEUTA" %}
+                {% elif request.user.perfil.rol == "FISIOTERAPEUTA" %}
 
-                <a
-                    href="{% url 'usuarios:dashboard_fisioterapeuta' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
-                    ← Mi panel
-                </a>
+                    <a
+                        href="{% url 'citas:agenda' %}"
+                        class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                    >
+                        ← Mi agenda
+                    </a>
 
-            {% else %}
+                {% else %}
 
-                <a
-                    href="{% url 'citas:mis_citas' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
-                    ← Mis citas
-                </a>
+                    <a
+                        href="{% url 'citas:mis_citas' %}"
+                        class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                    >
+                        ← Mis citas
+                    </a>
 
-            {% endif %}
+                {% endif %}
+
+                {% include "componentes/boton_volver_panel.html" %}
+
+            </nav>
 
         </div>
 

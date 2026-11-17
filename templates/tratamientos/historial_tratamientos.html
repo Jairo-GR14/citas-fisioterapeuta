@@ -21,12 +21,15 @@
                 </p>
             </div>
 
-            <a
+            <nav aria-label="Navegación de tratamientos" class="ml-auto flex flex-wrap items-center justify-end gap-3">
+<a
                 href="{% url 'consultas:detalle_consulta' consulta.id %}"
                 class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700"
             >
                 Volver a consulta
             </a>
+{% include "componentes/boton_volver_panel.html" %}
+</nav>
 
         </div>
     </header>

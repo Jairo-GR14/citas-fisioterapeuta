@@ -27,23 +27,16 @@
                 </p>
             </div>
 
-            <div class="flex flex-wrap gap-3">
-
+            <nav aria-label="Navegación de consultas" class="ml-auto flex flex-wrap items-center justify-end gap-3">
                 <a
-                    href="{% url 'usuarios:perfil' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                >
-                    Mi perfil
-                </a>
+                                    href="{% url 'usuarios:perfil' %}"
+                                    class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                                >
+                                    Mi perfil
+                                </a>
 
-                <a
-                    href="{% url 'usuarios:redireccion_por_rol' %}"
-                    class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
-                    Volver al panel
-                </a>
-
-            </div>
+                {% include "componentes/boton_volver_panel.html" %}
+            </nav>
         </div>
 
     </header>

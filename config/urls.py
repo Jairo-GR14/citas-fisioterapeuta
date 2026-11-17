@@ -1,9 +1,25 @@
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
+
+    # =====================================================
+    # PÁGINA PRINCIPAL
+    # =====================================================
+    # Redirige al login si no hay sesión activa.
+    # Si el usuario ya inició sesión, lo dirige
+    # a su dashboard correspondiente.
+    path(
+        "",
+        RedirectView.as_view(
+            pattern_name="usuarios:redireccion_por_rol",
+            permanent=False,
+        ),
+        name="inicio",
+    ),
 
     # =====================================================
     # PANEL DE ADMINISTRACIÓN DE DJANGO

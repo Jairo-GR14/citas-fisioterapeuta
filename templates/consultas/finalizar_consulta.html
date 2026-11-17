@@ -417,6 +417,15 @@
 
                     {% endif %}
 
+                {% elif cita.estado == "FINALIZADA" %}
+
+                    <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                        <p class="text-sm text-emerald-700">
+                            Esta consulta ya fue finalizada.
+                            No es necesario volver a cerrarla.
+                        </p>
+                    </div>
+
                 {% else %}
 
                     <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -479,6 +488,12 @@
                             </p>
 
                             {{ formulario_cierre.costo_final }}
+
+                            {% if formulario_cierre.costo_final.help_text %}
+                                <p class="mt-2 text-xs text-slate-500">
+                                    {{ formulario_cierre.costo_final.help_text }}
+                                </p>
+                            {% endif %}
 
                             {% for error in formulario_cierre.costo_final.errors %}
 

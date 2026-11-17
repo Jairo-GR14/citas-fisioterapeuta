@@ -5,11 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -23,38 +19,58 @@ from .forms import (
 from .models import Fisioterapeuta
 
 
+# =========================================================
+# ROLES AUTORIZADOS
+# =========================================================
+
 GESTION = (
     PerfilUsuario.Rol.ADMINISTRADOR,
     PerfilUsuario.Rol.RECEPCIONISTA,
 )
 
 
-# COMPROBAR ROL
+# =========================================================
+# COMPROBAR ROL Y ESTADO DEL USUARIO
+# =========================================================
 
 def rol_actual(request):
+    """
+    Valida cuenta y perfil incluso cuando es superusuario.
+    """
+
     usuario = request.user
 
-    if not usuario.is_active:
+    if not usuario.is_authenticated or not usuario.is_active:
         raise PermissionDenied(
-            "Tu cuenta está desactivada."
+            "Tu cuenta no está activa."
         )
-
-    if usuario.is_superuser:
-        return PerfilUsuario.Rol.ADMINISTRADOR
 
     perfil = getattr(usuario, "perfil", None)
 
-    if perfil is None or not perfil.activo:
+    # Esta comprobación también aplica a superusuarios.
+    if perfil is not None and not perfil.activo:
         raise PermissionDenied(
-            "No tienes un perfil activo."
+            "Tu perfil está desactivado."
+        )
+
+    # Los superusuarios activos pueden no tener perfil.
+    if usuario.is_superuser:
+        return PerfilUsuario.Rol.ADMINISTRADOR
+
+    if perfil is None:
+        raise PermissionDenied(
+            "No tienes un perfil asignado."
         )
 
     return perfil.rol
 
 
-# FILTRAR FISIOTERAPEUTAS
+# =========================================================
+# FILTRAR PROFESIONALES SEGÚN PERMISOS
+# =========================================================
 
 def profesionales_visibles(request):
+
     rol = rol_actual(request)
 
     profesionales = Fisioterapeuta.objects.select_related(
@@ -71,33 +87,27 @@ def profesionales_visibles(request):
     )
 
 
-# LISTADO
+# =========================================================
+# LISTAR FISIOTERAPEUTAS
+# =========================================================
 
 @login_required
 def lista_fisioterapeutas(request):
+
     rol = rol_actual(request)
 
     profesionales = profesionales_visibles(request)
 
     buscar = request.GET.get(
-        "buscar",
-        "",
+        "buscar", ""
     ).strip()
 
     if buscar:
         profesionales = profesionales.filter(
-            Q(
-                usuario__usuario__first_name__icontains=buscar
-            )
-            | Q(
-                usuario__usuario__last_name__icontains=buscar
-            )
-            | Q(
-                especialidad__icontains=buscar
-            )
-            | Q(
-                cedula_profesional__icontains=buscar
-            )
+            Q(usuario__usuario__first_name__icontains=buscar)
+            | Q(usuario__usuario__last_name__icontains=buscar)
+            | Q(especialidad__icontains=buscar)
+            | Q(cedula_profesional__icontains=buscar)
         )
 
     return render(
@@ -114,21 +124,24 @@ def lista_fisioterapeutas(request):
     )
 
 
-# REGISTRAR
+# =========================================================
+# REGISTRAR FISIOTERAPEUTA
+# =========================================================
 
 @login_required
 def registrar_fisioterapeuta(request):
+
     if rol_actual(request) not in GESTION:
-        raise PermissionDenied
+        raise PermissionDenied(
+            "No puedes registrar fisioterapeutas."
+        )
 
     formulario = RegistrarFisioterapeutaForm(
-        request.POST or None
+        request.POST if request.method == "POST" else None
     )
 
-    if (
-        request.method == "POST"
-        and formulario.is_valid()
-    ):
+    if request.method == "POST" and formulario.is_valid():
+
         datos = formulario.cleaned_data
 
         try:
@@ -158,6 +171,7 @@ def registrar_fisioterapeuta(request):
                 )
 
         except IntegrityError:
+
             formulario.add_error(
                 None,
                 "No se pudo crear la cuenta. "
@@ -165,6 +179,7 @@ def registrar_fisioterapeuta(request):
             )
 
         else:
+
             messages.success(
                 request,
                 "Fisioterapeuta registrado correctamente.",
@@ -184,10 +199,13 @@ def registrar_fisioterapeuta(request):
     )
 
 
-# DETALLE
+# =========================================================
+# DETALLE DEL FISIOTERAPEUTA
+# =========================================================
 
 @login_required
 def detalle_fisioterapeuta(request, fisioterapeuta_id):
+
     rol = rol_actual(request)
 
     profesional = get_object_or_404(
@@ -197,8 +215,11 @@ def detalle_fisioterapeuta(request, fisioterapeuta_id):
 
     es_propio = (
         not request.user.is_superuser
-        and getattr(request.user, "perfil", None)
-        == profesional.usuario
+        and getattr(
+            request.user,
+            "perfil",
+            None,
+        ) == profesional.usuario
     )
 
     return render(
@@ -217,12 +238,17 @@ def detalle_fisioterapeuta(request, fisioterapeuta_id):
     )
 
 
-# EDITAR
+# =========================================================
+# EDITAR FISIOTERAPEUTA
+# =========================================================
 
 @login_required
 def editar_fisioterapeuta(request, fisioterapeuta_id):
+
     if rol_actual(request) not in GESTION:
-        raise PermissionDenied
+        raise PermissionDenied(
+            "No puedes editar fisioterapeutas."
+        )
 
     profesional = get_object_or_404(
         Fisioterapeuta.objects.select_related(
@@ -250,10 +276,8 @@ def editar_fisioterapeuta(request, fisioterapeuta_id):
         fisioterapeuta_actual=profesional,
     )
 
-    if (
-        request.method == "POST"
-        and formulario.is_valid()
-    ):
+    if request.method == "POST" and formulario.is_valid():
+
         datos = formulario.cleaned_data
 
         with transaction.atomic():
@@ -316,10 +340,14 @@ def editar_fisioterapeuta(request, fisioterapeuta_id):
     )
 
 
+# =========================================================
 # CONSULTAR HORARIOS
+# La URL utiliza la versión de horarios_views.py.
+# =========================================================
 
 @login_required
 def horario_fisioterapeuta(request, fisioterapeuta_id):
+
     profesional = get_object_or_404(
         profesionales_visibles(request),
         pk=fisioterapeuta_id,
@@ -331,7 +359,9 @@ def horario_fisioterapeuta(request, fisioterapeuta_id):
     )
 
     if rol_actual(request) not in GESTION:
-        horarios = horarios.filter(activo=True)
+        horarios = horarios.filter(
+            activo=True
+        )
 
     return render(
         request,
@@ -343,7 +373,9 @@ def horario_fisioterapeuta(request, fisioterapeuta_id):
     )
 
 
-# DESACTIVAR O REACTIVAR
+# =========================================================
+# ACTIVAR O DESACTIVAR FISIOTERAPEUTA
+# =========================================================
 
 @login_required
 @require_POST
@@ -351,10 +383,11 @@ def cambiar_estado_fisioterapeuta(
     request,
     fisioterapeuta_id,
 ):
-    if rol_actual(request) != (
-        PerfilUsuario.Rol.ADMINISTRADOR
-    ):
-        raise PermissionDenied
+
+    if rol_actual(request) != PerfilUsuario.Rol.ADMINISTRADOR:
+        raise PermissionDenied(
+            "Solo administración puede cambiar el estado."
+        )
 
     with transaction.atomic():
 
@@ -368,6 +401,7 @@ def cambiar_estado_fisioterapeuta(
         activar = not profesional.activo
 
         if not activar:
+
             tiene_pendientes = profesional.citas.filter(
                 Q(
                     estado=Cita.Estado.EN_PROCESO
@@ -382,6 +416,7 @@ def cambiar_estado_fisioterapeuta(
             ).exists()
 
             if tiene_pendientes:
+
                 messages.error(
                     request,
                     "No se puede desactivar: "
@@ -403,6 +438,7 @@ def cambiar_estado_fisioterapeuta(
         )
 
         perfil = profesional.usuario
+
         perfil.activo = activar
 
         perfil.save(
@@ -413,6 +449,7 @@ def cambiar_estado_fisioterapeuta(
         )
 
         usuario = perfil.usuario
+
         usuario.is_active = activar
 
         usuario.save(

@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from django import forms
 
+from citas.models import Cita
+
 from .models import Consulta
 
 
@@ -63,17 +65,27 @@ class ConsultaForm(forms.ModelForm):
 
 class FinalizarConsultaForm(forms.Form):
 
+    # Usar la misma precisión del modelo Cita.
+    _campo_costo = Cita._meta.get_field("costo_final")
+
     costo_final = forms.DecimalField(
         label="Costo final de la atención (MXN)",
         required=True,
-        max_digits=8,
-        decimal_places=2,
+        max_digits=_campo_costo.max_digits,
+        decimal_places=_campo_costo.decimal_places,
         min_value=Decimal("0.00"),
+
         error_messages={
             "required": "Debes registrar el costo final.",
             "invalid": "Ingresa un importe válido.",
             "min_value": "El costo final no puede ser negativo.",
         },
+
+        help_text=(
+            "Escribe el costo final de la atención. "
+            "Si fue gratuita, registra 0.00."
+        ),
+
         widget=forms.NumberInput(
             attrs={
                 "class": (

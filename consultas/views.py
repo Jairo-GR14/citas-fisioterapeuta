@@ -16,32 +16,42 @@ from .models import Consulta
 
 
 # =========================================================
-# VERIFICAR ACCESO
+# VERIFICAR PERMISOS
 # =========================================================
 
 def verificar_acceso(request, cita):
 
-    if request.user.is_superuser:
-        return
+    usuario = request.user
 
-    perfil = getattr(
-        request.user,
-        "perfil",
-        None,
-    )
-
-    if (
-        perfil is None
-        or not perfil.activo
-        or not request.user.is_active
-    ):
+    # El usuario debe estar autenticado y activo.
+    if not usuario.is_authenticated or not usuario.is_active:
         raise PermissionDenied(
-            "Tu cuenta no tiene un perfil activo."
+            "Tu cuenta no está activa o no has iniciado sesión."
         )
 
+    # Los superusuarios activos tienen acceso.
+    if usuario.is_superuser:
+        return
+
+    # Obtener perfil.
+    perfil = getattr(usuario, "perfil", None)
+
+    if perfil is None:
+        raise PermissionDenied(
+            "No tienes un perfil registrado en el sistema."
+        )
+
+    # Bloquear perfiles desactivados.
+    if not perfil.activo:
+        raise PermissionDenied(
+            "Tu perfil está desactivado."
+        )
+
+    # Permitir administradores.
     if perfil.rol == PerfilUsuario.Rol.ADMINISTRADOR:
         return
 
+    # Permitir al fisioterapeuta asignado.
     if (
         perfil.rol == PerfilUsuario.Rol.FISIOTERAPEUTA
         and cita.fisioterapeuta.usuario_id == perfil.pk
@@ -79,37 +89,57 @@ def obtener_consulta(request, consulta_id):
 
 
 # =========================================================
-# COMPROBAR HORARIO PARA INICIAR
+# FECHA Y HORA PROGRAMADAS
 # =========================================================
 
-def puede_iniciar_ahora(cita):
+def _fecha_hora_programada(cita):
+
+    fecha_hora = datetime.combine(
+        cita.fecha,
+        cita.hora,
+    )
+
+    # Convertir a la zona horaria configurada
+    # cuando Django utiliza fechas conscientes.
+    if timezone.is_aware(timezone.now()):
+
+        fecha_hora = timezone.make_aware(
+            fecha_hora,
+            timezone.get_current_timezone(),
+        )
+
+    return fecha_hora
+
+
+# =========================================================
+# VALIDAR SI UNA CITA PUEDE INICIARSE
+# =========================================================
+
+def _motivo_inicio_no_permitido(cita):
+
+    if cita.estado == Cita.Estado.CANCELADA:
+        return "No puedes iniciar una cita cancelada."
+
+    if cita.estado == Cita.Estado.FINALIZADA:
+        return "Esta cita ya fue finalizada."
 
     if cita.estado != Cita.Estado.CONFIRMADA:
         return (
-            False,
-            "Solo puedes iniciar una cita confirmada.",
+            "La cita debe estar confirmada "
+            "para iniciar la consulta."
         )
 
-    momento_cita = timezone.make_aware(
-        datetime.combine(
-            cita.fecha,
-            cita.hora,
-        ),
-        timezone.get_current_timezone(),
-    )
-
-    if timezone.now() < momento_cita:
+    if timezone.now() < _fecha_hora_programada(cita):
         return (
-            False,
-            "Todavía no puedes iniciar esta consulta. "
-            "Debes esperar a la fecha y hora programadas.",
+            "No puedes iniciar la consulta antes "
+            "de la fecha y hora programadas."
         )
 
-    return True, ""
+    return None
 
 
 # =========================================================
-# COMPROBAR DATOS CLÍNICOS OBLIGATORIOS
+# VALIDAR DATOS CLINICOS
 # =========================================================
 
 def valoracion_completa(consulta):
@@ -144,78 +174,93 @@ def iniciar_consulta(request, cita_id):
         pk=cita_id,
     )
 
-    verificar_acceso(
-        request,
-        cita,
-    )
+    verificar_acceso(request, cita)
 
-    # Evitar crear dos consultas para la misma cita.
+    # Bloquear citas canceladas o finalizadas.
+    if cita.estado in (
+        Cita.Estado.CANCELADA,
+        Cita.Estado.FINALIZADA,
+    ):
+
+        messages.error(
+            request,
+            _motivo_inicio_no_permitido(cita),
+        )
+
+        return redirect(
+            "usuarios:redireccion_por_rol"
+        )
+
+    # Si ya existe consulta, abrir su detalle.
     consulta_existente = Consulta.objects.filter(
         cita=cita
     ).first()
 
     if consulta_existente:
+
         return redirect(
             "consultas:detalle_consulta",
             consulta_id=consulta_existente.pk,
         )
 
-    permitido, mensaje = puede_iniciar_ahora(cita)
+    # Validar estado y horario.
+    motivo = _motivo_inicio_no_permitido(cita)
 
-    if not permitido:
-        messages.warning(
-            request,
-            mensaje,
-        )
+    if motivo:
+
+        messages.error(request, motivo)
 
         return redirect(
-            "citas:detalle_cita",
-            cita_id=cita.pk,
+            "usuarios:redireccion_por_rol"
         )
 
     if request.method == "POST":
 
         with transaction.atomic():
 
-            cita = get_object_or_404(
-                Cita.objects.select_for_update(),
-                pk=cita.pk,
+            # Bloquear la cita durante la operación.
+            cita_actual = Cita.objects.select_for_update().get(
+                pk=cita.pk
             )
 
             verificar_acceso(
                 request,
-                cita,
+                cita_actual,
             )
 
+            # Comprobar nuevamente si existe
+            # una consulta relacionada.
             consulta_existente = Consulta.objects.filter(
-                cita=cita
+                cita=cita_actual
             ).first()
 
             if consulta_existente:
+
                 return redirect(
                     "consultas:detalle_consulta",
                     consulta_id=consulta_existente.pk,
                 )
 
-            # Validar nuevamente antes de guardar.
-            permitido, mensaje = puede_iniciar_ahora(cita)
+            # Volver a validar dentro de la transacción.
+            motivo = _motivo_inicio_no_permitido(
+                cita_actual
+            )
 
-            if not permitido:
-                messages.warning(
+            if motivo:
+
+                messages.error(
                     request,
-                    mensaje,
+                    motivo,
                 )
 
                 return redirect(
-                    "citas:detalle_cita",
-                    cita_id=cita.pk,
+                    "usuarios:redireccion_por_rol"
                 )
 
+            # Crear consulta.
             consulta, creada = Consulta.objects.get_or_create(
-                cita=cita,
-                defaults={
-                    "fecha_inicio": timezone.now(),
-                },
+                cita=cita_actual,
+                defaults={"fecha_inicio": timezone.now()},
             )
 
             if not creada:
@@ -224,13 +269,11 @@ def iniciar_consulta(request, cita_id):
                     consulta_id=consulta.pk,
                 )
 
-            cita.estado = Cita.Estado.EN_PROCESO
+            # Actualizar estado de la cita.
+            cita_actual.estado = Cita.Estado.EN_PROCESO
 
-            cita.save(
-                update_fields=[
-                    "estado",
-                    "fecha_actualizacion",
-                ]
+            cita_actual.save(
+                update_fields=["estado", "fecha_actualizacion"]
             )
 
         messages.success(
@@ -265,6 +308,7 @@ def registrar_valoracion(request, consulta_id):
     )
 
     if consulta.cita.estado != Cita.Estado.EN_PROCESO:
+
         messages.error(
             request,
             "Solo puedes modificar una consulta en proceso.",
@@ -336,7 +380,7 @@ def detalle_consulta(request, consulta_id):
 
 
 # =========================================================
-# FINALIZAR CONSULTA Y REGISTRAR COSTO FINAL
+# FINALIZAR CONSULTA
 # =========================================================
 
 @rol_requerido(["ADMINISTRADOR", "FISIOTERAPEUTA"])

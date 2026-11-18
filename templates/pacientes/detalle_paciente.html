@@ -1,10 +1,70 @@
 
 {% extends "pacientes/base_pacientes.html" %}
 
-{% block titulo %}Detalle de paciente{% endblock %}
+
+{% block navegacion_detalle_paciente %}
+
+    {% if puede_ver_lista %}
+        <a
+            href="{% url 'pacientes:lista_pacientes' %}"
+            aria-label="Volver a la lista de pacientes"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+
+            <span>Volver a la lista</span>
+        </a>
+    {% endif %}
+
+{% endblock %}
+
+
+<!-- BOTÓN SUPERIOR JUNTO A VOLVER AL PANEL -->
+{% block navegacion_detalle_paciente %}
+
+    {% if puede_ver_lista %}
+        <a
+            href="{% url 'pacientes:lista_pacientes' %}"
+            aria-label="Volver a la lista de pacientes"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+            <span>Volver a la lista</span>
+        </a>
+    {% endif %}
+
+{% endblock %}
+
 
 {% block contenido %}
 
+<!-- ENCABEZADO DEL PACIENTE -->
 <div class="mb-7 flex flex-wrap items-start justify-between gap-4">
 
     <div>
@@ -27,7 +87,7 @@
         {% if puede_gestionar %}
             <a
                 href="{% url 'pacientes:editar_paciente' paciente.pk %}"
-                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
             >
                 Editar
             </a>
@@ -36,7 +96,7 @@
         {% if puede_historial %}
             <a
                 href="{% url 'pacientes:historial_paciente' paciente.pk %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
             >
                 Historial de citas
             </a>
@@ -45,15 +105,15 @@
         {% if puede_desactivar and paciente.activo %}
             <a
                 href="{% url 'pacientes:eliminar_paciente' paciente.pk %}"
-                class="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-700 hover:bg-red-50"
+                class="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-50"
             >
                 Desactivar
             </a>
         {% endif %}
 
     </div>
-
 </div>
+
 
 <!-- INFORMACIÓN GENERAL -->
 <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
@@ -146,8 +206,8 @@
         </div>
 
     </dl>
-
 </section>
+
 
 <!-- INFORMACIÓN CLÍNICA -->
 {% if puede_ver_antecedentes %}
@@ -165,39 +225,5 @@
     </section>
 
 {% endif %}
-
-<!-- NAVEGACIÓN INFERIOR -->
-<div class="mt-8">
-
-    {% if request.GET.desde == "reportes" %}
-
-        <a
-            href="{% url 'reportes:reporte_pacientes' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
-            class="text-sm font-semibold text-blue-700 hover:underline"
-        >
-            ← Volver al reporte de pacientes
-        </a>
-
-    {% elif puede_ver_lista %}
-
-        <a
-            href="{% url 'pacientes:lista_pacientes' %}"
-            class="text-sm font-semibold text-blue-700 hover:underline"
-        >
-            Volver a la lista
-        </a>
-
-    {% else %}
-
-        <a
-            href="{% url 'usuarios:redireccion_por_rol' %}"
-            class="text-sm font-semibold text-blue-700 hover:underline"
-        >
-            Volver a mi panel
-        </a>
-
-    {% endif %}
-
-</div>
 
 {% endblock %}

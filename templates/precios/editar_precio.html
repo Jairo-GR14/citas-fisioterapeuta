@@ -21,12 +21,29 @@
             </h1>
 
             <nav aria-label="Navegación de servicios" class="flex flex-wrap items-center justify-end gap-3">
-<a
+
+            <a
                 href="{% url 'precios:lista_precios' %}"
-                class="text-sm font-semibold text-blue-700 hover:text-blue-900"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
-                Volver a servicios
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+
+                <span>Volver a servicios</span>
             </a>
+
                 {% include "componentes/boton_volver_panel.html" %}
             </nav>
 

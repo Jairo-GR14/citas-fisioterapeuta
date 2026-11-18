@@ -38,12 +38,32 @@
 
                 {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" or request.user.perfil.rol == "RECEPCIONISTA" %}
 
-                    <a
-                        href="{% url 'citas:agenda' %}"
-                        class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
-                    >
-                        ← Volver a la agenda
-                    </a>
+
+
+            <a
+                href="{% url 'citas:agenda' %}"
+                aria-label="Volver a la agenda"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+
+                <span>Volver a la agenda</span>
+            </a>
+
+
 
                 {% elif request.user.perfil.rol == "FISIOTERAPEUTA" %}
 

@@ -24,12 +24,30 @@
                 </p>
             </div>
 
+
             <a
                 href="{% url 'usuarios:redireccion_por_rol' %}"
-                class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
+                aria-label="Volver al panel principal"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
-                Volver a mi panel
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+
+                <span>Volver al panel</span>
             </a>
+
 
         </div>
 
@@ -162,27 +180,10 @@
 
             </table>
 
+
         </section>
 
-
-        <!-- REGRESAR -->
-        <div class="mt-7 flex justify-end">
-
-            <a
-                href="{% url 'usuarios:redireccion_por_rol' %}"
-                class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800"
-            >
-                Regresar a mi panel
-            </a>
-
-        </div>
-
     </main>
-
-
-    <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
-        © 2026 Clínica de Fisioterapia
-    </footer>
 
 </body>
 </html>

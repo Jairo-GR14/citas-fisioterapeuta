@@ -183,11 +183,29 @@ def mis_calificaciones(request):
         .order_by("-id")
     )
 
+    # Citas finalizadas del paciente que aun no tienen una calificacion.
+    # Las citas programadas, confirmadas, en proceso y canceladas
+    # no pueden calificarse.
+    citas_pendientes = (
+        Cita.objects
+        .filter(
+            paciente__usuario__usuario=request.user,
+            estado=Cita.Estado.FINALIZADA,
+            calificacion__isnull=True,
+        )
+        .select_related(
+            "fisioterapeuta__usuario__usuario",
+            "servicio",
+        )
+        .order_by("-fecha", "-hora", "-id")
+    )
+
     return render(
         request,
         "calificaciones/mis_calificaciones.html",
         {
             "calificaciones": calificaciones,
+            "citas_pendientes": citas_pendientes,
         },
     )
 

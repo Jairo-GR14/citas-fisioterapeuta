@@ -3,8 +3,40 @@
 
 {% block titulo %}Detalle del fisioterapeuta{% endblock %}
 
+<!-- NAVEGACIÓN SUPERIOR -->
+{% block navegacion_detalle_fisioterapeuta %}
+
+    {% if request.GET.desde != "reportes" %}
+        <a
+            href="{% url 'fisioterapeutas:lista_fisioterapeutas' %}"
+            aria-label="Volver al directorio"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+
+            <span>Volver al directorio</span>
+        </a>
+    {% endif %}
+
+{% endblock %}
+
+
 {% block contenido %}
 
+<!-- ENCABEZADO DEL FISIOTERAPEUTA -->
 <div class="mb-7 flex flex-wrap items-start justify-between gap-4">
 
     <div>
@@ -26,25 +58,23 @@
 
         <a
             href="{% url 'fisioterapeutas:horario_fisioterapeuta' fisioterapeuta.pk %}"
-            class="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 hover:bg-emerald-100"
+            class="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
         >
             Ver horario
         </a>
 
         {% if puede_gestionar %}
-
             <a
                 href="{% url 'fisioterapeutas:editar_fisioterapeuta' fisioterapeuta.pk %}"
-                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+                class="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
             >
                 Editar
             </a>
-
         {% endif %}
 
     </div>
-
 </div>
+
 
 <!-- INFORMACIÓN PROFESIONAL -->
 <section class="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
@@ -140,8 +170,8 @@
         </div>
 
     </dl>
-
 </section>
+
 
 <!-- ACTIVAR / DESACTIVAR -->
 {% if puede_desactivar %}
@@ -167,7 +197,7 @@
 
             <button
                 type="submit"
-                class="rounded-xl px-5 py-3 text-sm font-semibold text-white {% if fisioterapeuta.activo %}bg-red-700{% else %}bg-emerald-700{% endif %}"
+                class="rounded-xl px-5 py-3 text-sm font-semibold text-white transition {% if fisioterapeuta.activo %}bg-red-700 hover:bg-red-800{% else %}bg-emerald-700 hover:bg-emerald-800{% endif %}"
             >
                 {% if fisioterapeuta.activo %}
                     Desactivar fisioterapeuta
@@ -179,27 +209,6 @@
         </form>
 
     </section>
-
-{% endif %}
-
-<!-- NAVEGACIÓN INFERIOR -->
-{% if request.GET.desde == "reportes" %}
-
-    <a
-        href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
-        class="mt-7 inline-block text-sm font-semibold text-blue-700 hover:underline"
-    >
-        ← Volver al reporte de fisioterapeutas
-    </a>
-
-{% else %}
-
-    <a
-        href="{% url 'fisioterapeutas:lista_fisioterapeutas' %}"
-        class="mt-7 inline-block text-sm font-semibold text-blue-700 hover:underline"
-    >
-        Volver al directorio
-    </a>
 
 {% endif %}
 

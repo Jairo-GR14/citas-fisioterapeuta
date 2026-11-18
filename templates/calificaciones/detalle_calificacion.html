@@ -26,25 +26,71 @@
             </div>
 
 
-            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" %}
 
-                <a
-                    href="{% url 'calificaciones:lista_calificaciones' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
-                >
-                    Todas las calificaciones
-                </a>
+            <!-- BOTONES SUPERIORES -->
+            <nav
+                aria-label="Navegación de calificaciones"
+                class="flex flex-wrap items-center justify-end gap-3"
+            >
 
-            {% else %}
+                <!-- VOLVER A CALIFICACIONES -->
+                {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" %}
 
-                <a
-                    href="{% url 'calificaciones:mis_calificaciones' %}"
-                    class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700"
-                >
-                    Mis calificaciones
-                </a>
+                    <a
+                        href="{% url 'calificaciones:lista_calificaciones' %}"
+                        aria-label="Volver a todas las calificaciones"
+                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="m15 18-6-6 6-6"></path>
+                        </svg>
 
-            {% endif %}
+                        <span>Volver a calificaciones</span>
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'calificaciones:mis_calificaciones' %}"
+                        aria-label="Volver a mis calificaciones"
+                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="m15 18-6-6 6-6"></path>
+                        </svg>
+
+                        <span>Volver a mis calificaciones</span>
+                    </a>
+
+                {% endif %}
+
+                <!-- VOLVER AL PANEL -->
+                {% include "componentes/boton_volver_panel.html" %}
+
+            </nav>
+
 
         </div>
 
@@ -215,34 +261,7 @@
 
         </section>
 
-
-        <!-- REGRESAR -->
-        <div class="mt-8 flex flex-wrap justify-end gap-3">
-
-            {% if request.user.is_superuser or request.user.perfil.rol == "ADMINISTRADOR" %}
-
-                <a
-                    href="{% url 'calificaciones:lista_calificaciones' %}"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
-                >
-                    Volver a calificaciones
-                </a>
-
-            {% else %}
-
-                <a
-                    href="{% url 'calificaciones:mis_calificaciones' %}"
-                    class="rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white"
-                >
-                    Volver a mis calificaciones
-                </a>
-
-            {% endif %}
-
-        </div>
-
     </main>
-
 
     <footer class="mt-8 border-t border-blue-100 bg-white py-5 text-center text-sm text-slate-500">
         © 2026 Clínica de Fisioterapia

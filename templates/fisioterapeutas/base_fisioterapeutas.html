@@ -36,31 +36,49 @@
                 </p>
             </div>
 
-            <!-- NAVEGACIÓN -->
 
-            <nav
-                aria-label="Navegación de fisioterapeutas"
-                class="flex flex-wrap items-center justify-end gap-3"
-            >
+        <!-- NAVEGACIÓN -->
+        <nav
+            aria-label="Navegación de fisioterapeutas"
+            class="flex flex-wrap items-center justify-end gap-3"
+        >
 
-                <!-- REGRESAR AL REPORTE SI PROVIENE DE ÉL -->
+            <!-- REGRESAR AL REPORTE SI PROVIENE DE ÉL -->
+            {% if request.GET.desde == "reportes" %}
 
-                {% if request.GET.desde == "reportes" %}
-
-                    <a
-                        href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
-                        class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                <a
+                    href="{% url 'reportes:reporte_fisioterapeutas' %}{% if request.GET.buscar %}?buscar={{ request.GET.buscar|urlencode }}{% endif %}"
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
                     >
-                        ← Volver al reporte
-                    </a>
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
 
-                {% endif %}
+                    <span>Volver al reporte</span>
+                </a>
 
-                <!-- BOTÓN ESTÁNDAR -->
+            {% endif %}
 
-                {% include "componentes/boton_volver_panel.html" %}
+            <!-- BOTÓN ADICIONAL DEL DETALLE -->
+            {% block navegacion_detalle_fisioterapeuta %}
+            {% endblock %}
 
-            </nav>
+            <!-- VOLVER AL PANEL PRINCIPAL -->
+            {% include "componentes/boton_volver_panel.html" %}
+
+        </nav>
+
 
         </div>
 

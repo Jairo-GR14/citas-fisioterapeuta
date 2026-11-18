@@ -1104,6 +1104,75 @@ class MisCalificacionesTests(DatosCalificaciones):
 
 
 # =========================================================
+# CITAS PENDIENTES POR CALIFICAR
+# =========================================================
+
+class CitasPendientesCalificacionTests(DatosCalificaciones):
+
+    def test_muestra_solo_citas_finalizadas_del_paciente_sin_calificacion(self):
+        self.client.force_login(self.ana)
+        respuesta = self.client.get(self.ruta("mis_calificaciones"))
+
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(
+            list(respuesta.context["citas_pendientes"]),
+            [self.cita_ana_otra, self.cita_ana_finalizada],
+        )
+        self.assertNotContains(
+            respuesta,
+            reverse(
+                "calificaciones:registrar_calificacion",
+                args=[self.cita_bruno_finalizada.id],
+            ),
+        )
+        self.assertNotContains(
+            respuesta,
+            reverse(
+                "calificaciones:registrar_calificacion",
+                args=[self.cita_programada.id],
+            ),
+        )
+
+    def test_no_muestra_como_pendiente_una_cita_ya_calificada(self):
+        calificacion = self.crear_calificacion()
+        self.client.force_login(self.ana)
+        respuesta = self.client.get(self.ruta("mis_calificaciones"))
+
+        self.assertEqual(
+            list(respuesta.context["citas_pendientes"]),
+            [self.cita_ana_otra],
+        )
+        self.assertContains(
+            respuesta,
+            reverse(
+                "calificaciones:detalle_calificacion",
+                args=[calificacion.id],
+            ),
+        )
+        self.assertNotContains(
+            respuesta,
+            reverse(
+                "calificaciones:registrar_calificacion",
+                args=[self.cita_ana_finalizada.id],
+            ),
+        )
+
+    def test_pendiente_tiene_enlace_para_calificar(self):
+        self.client.force_login(self.ana)
+        respuesta = self.client.get(self.ruta("mis_calificaciones"))
+
+        self.assertContains(respuesta, "Pendientes por calificar")
+        self.assertContains(respuesta, "Calificar")
+        self.assertContains(
+            respuesta,
+            reverse(
+                "calificaciones:registrar_calificacion",
+                args=[self.cita_ana_finalizada.id],
+            ),
+        )
+
+
+# =========================================================
 # 5. LISTADO Y ESTADÍSTICAS DE ADMINISTRACIÓN
 # 7 PRUEBAS
 # =========================================================
